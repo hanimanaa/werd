@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/action_Register"
+        android:title="הרשמה"
+        android:orderInCategory="100"
+
+        />
+    <item
+        android:id="@+id/action_Update"
+        android:title="עדכון פרטים"
+        android:orderInCategory="200"
+        />
+    <item
+        android:id="@+id/action_Exit"
+        android:title="יציאה"
+        android:orderInCategory="300"
+        />
+    <item
+        android:id="@+id/action_Admin"
+        android:title="מנהל"
+        android:orderInCategory="450"
+        />
+
+
+</menu>
