@@ -110,14 +110,23 @@ public class MainActivity extends AppCompatActivity {
             startActivity(intent);
             return true;
         } else if (id == R.id.action_Update) {
-            Toast.makeText(this, "you selected עדכון", Toast.LENGTH_LONG).show();
+            Toast.makeText(this, "you selected עדכון קבטצה", Toast.LENGTH_LONG).show();
+            Intent intent = new Intent(getApplicationContext(),AddGroupsToUserActivity.class);
+            startActivity(intent);
             return true;
         } else if (id == R.id.action_Admin) {
-            Toast.makeText(this, "you selected מנהל", Toast.LENGTH_LONG).show();
-            //   Intent intent = new Intent(getApplicationContext(),NewProductActivity.class);
-            //   startActivity(intent);
+            Toast.makeText(this, "you selectedמנהל הוספת קבוצה ", Toast.LENGTH_LONG).show();
+            Intent intent = new Intent(getApplicationContext(),AddGroupAdminActivity.class);
+            startActivity(intent);
             return true;
-        } else if (id == R.id.action_Exit) {
+        }
+        else if (id == R.id.action_Settings) {
+            Toast.makeText(this, " עדכון פרטים", Toast.LENGTH_LONG).show();
+            Intent intent = new Intent(getApplicationContext(),SettingsActivity.class);
+            startActivity(intent);
+            return true;
+        }
+        else if (id == R.id.action_Exit) {
             Toast.makeText(this, "you selected יציאה", Toast.LENGTH_LONG).show();
             android.os.Process.killProcess(android.os.Process.myPid());
             System.exit(1);

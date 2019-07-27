@@ -11,7 +11,6 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
-import com.dimatechs.werd.Model.Users;
 import com.dimatechs.werd.Prevalent.Prevalent;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -23,68 +22,61 @@ import com.google.firebase.database.ValueEventListener;
 
 import java.util.HashMap;
 
-public class RegisterActivity extends AppCompatActivity {
+public class AddGroupsToUserActivity extends AppCompatActivity {
 
-    private Button CreateAccountBtn;
-    private EditText Edname,Edphone,Edpassword;
+    private Button AddGroupToUserBtn;
+    private EditText Edgroup,EdPartNum;
     private ProgressDialog loadingBar;
+    String st="no user";
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_register);
+        setContentView(R.layout.activity_add_groups_to_user);
 
-        CreateAccountBtn=(Button)findViewById(R.id.Add_btn);
-        Edname=(EditText)findViewById(R.id.Edname);
-        Edphone=(EditText)findViewById(R.id.Edphone);
-        Edpassword=(EditText)findViewById(R.id.Edpassword);
-
+        AddGroupToUserBtn=(Button)findViewById(R.id.add_group_Add_btn);
+        Edgroup=(EditText)findViewById(R.id.add_group_Edgroup);
+        EdPartNum=(EditText)findViewById(R.id.add_group_EdPartnum);
 
         loadingBar=new ProgressDialog(this);
 
-        CreateAccountBtn.setOnClickListener(new View.OnClickListener() {
+        AddGroupToUserBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                CreateAccount();
+                st= Prevalent.currentOnlineUser.getPhone().toString();
+                Toast.makeText(AddGroupsToUserActivity.this,st, Toast.LENGTH_SHORT).show();
+                Addgroup();
             }
         });
+
     }
 
-    private void CreateAccount()
+    private void Addgroup()
     {
-        String name =Edname.getText().toString();
-        String phone =Edphone.getText().toString();
-        String password =Edpassword.getText().toString();
+        String group =Edgroup.getText().toString();
+        String partNum =EdPartNum.getText().toString();
 
-
-
-        if(TextUtils.isEmpty(name))
+        if(TextUtils.isEmpty(group))
         {
-            Toast.makeText(this, "ادخل الاسم اذا سمحت . . .", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "ادخل رقم المجموعه . . .", Toast.LENGTH_SHORT).show();
         }
-        else if(TextUtils.isEmpty(phone))
+        else if(TextUtils.isEmpty(partNum))
         {
-            Toast.makeText(this, "ادخل رقم الهاتف اذا سمحت . . .", Toast.LENGTH_SHORT).show();
-        }
-        else if(TextUtils.isEmpty(password))
-        {
-            Toast.makeText(this, "ادخل كلمة السر . . .", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "ادخل رقم الجزء . . .", Toast.LENGTH_SHORT).show();
         }
         else
         {
-            loadingBar.setTitle("انشاء حساب");
+            loadingBar.setTitle("اضافة مجموعه");
             loadingBar.setMessage("انتظر");
             loadingBar.setCanceledOnTouchOutside(false);
             loadingBar.show();
 
-            ValidatePhoneNumber(name,phone,password);
+            ValidateGroupNumber(group,partNum);
 
         }
 
-
-
     }
 
-    private void ValidatePhoneNumber(final String name,final String phone,final String password)
+    private void ValidateGroupNumber(final String group,final String partNum)
     {
         final DatabaseReference RootRef;
         RootRef = FirebaseDatabase.getInstance().getReference();
@@ -93,28 +85,30 @@ public class RegisterActivity extends AppCompatActivity {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot)
             {
-                if(!dataSnapshot.child("Users").child(phone).exists())
+                if(dataSnapshot.child("Groups").child(group).exists())
                 {
-                    HashMap<String,Object> userdataMap = new HashMap<>();
-                    userdataMap.put("name",name);
-                    userdataMap.put("phone",phone);
-                    userdataMap.put("password",password);
+                    HashMap<String,Object> groupdataMap = new HashMap<>();
+                    groupdataMap.put("groupNum",group);
+                    groupdataMap.put("partNum",partNum);
 
-                    RootRef.child("Users").child(phone).updateChildren(userdataMap)
+
+                    RootRef.child("UsersGroups").child(Prevalent.currentOnlineUser.getPhone())
+                            .child("group").child(group)
+                            .updateChildren(groupdataMap)
                             .addOnCompleteListener(new OnCompleteListener<Void>() {
                                 @Override
                                 public void onComplete(@NonNull Task<Void> task)
                                 {
                                     if(task.isSuccessful())
                                     {
-                                        Toast.makeText(RegisterActivity.this, "تمت الاضافه بنجاح", Toast.LENGTH_SHORT).show();
+                                        Toast.makeText(AddGroupsToUserActivity.this, "تمت الاضافه بنجاح", Toast.LENGTH_SHORT).show();
                                         loadingBar.dismiss();
-                                        Intent intent=new Intent(RegisterActivity.this,LoginActivity.class);
+                                        Intent intent=new Intent(AddGroupsToUserActivity.this,MainActivity.class);
                                         startActivity(intent);
                                     }
                                     else
                                     {
-                                        Toast.makeText(RegisterActivity.this, "שגיאת רשת", Toast.LENGTH_SHORT).show();
+                                        Toast.makeText(AddGroupsToUserActivity.this, "שגיאת רשת", Toast.LENGTH_SHORT).show();
                                         loadingBar.dismiss();
 
                                     }
@@ -123,10 +117,10 @@ public class RegisterActivity extends AppCompatActivity {
                 }
                 else
                 {
-                    Toast.makeText(RegisterActivity.this, "المستخدم مسجل", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(AddGroupsToUserActivity.this, "المجموعه غير موجودة", Toast.LENGTH_SHORT).show();
                     loadingBar.dismiss();
-                    Intent intent=new Intent(RegisterActivity.this,LoginActivity.class);
-                    startActivity(intent);
+                    //   Intent intent=new Intent(RegisterActivity.this,MainActivity.class);
+                    //    startActivity(intent);
 
                 }
             }
@@ -137,6 +131,6 @@ public class RegisterActivity extends AppCompatActivity {
 
             }
         });
-    }
 
+    }
 }

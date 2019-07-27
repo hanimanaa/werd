@@ -11,8 +11,6 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
-import com.dimatechs.werd.Model.Users;
-import com.dimatechs.werd.Prevalent.Prevalent;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.database.DataSnapshot;
@@ -23,68 +21,52 @@ import com.google.firebase.database.ValueEventListener;
 
 import java.util.HashMap;
 
-public class RegisterActivity extends AppCompatActivity {
+public class AddGroupAdminActivity extends AppCompatActivity {
 
-    private Button CreateAccountBtn;
-    private EditText Edname,Edphone,Edpassword;
+    private Button AddGroupBtn;
+    private EditText Edgroup;
     private ProgressDialog loadingBar;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_register);
+        setContentView(R.layout.activity_add_group_admin);
 
-        CreateAccountBtn=(Button)findViewById(R.id.Add_btn);
-        Edname=(EditText)findViewById(R.id.Edname);
-        Edphone=(EditText)findViewById(R.id.Edphone);
-        Edpassword=(EditText)findViewById(R.id.Edpassword);
-
+        AddGroupBtn=(Button)findViewById(R.id.add_group_admin_btn);
+        Edgroup=(EditText)findViewById(R.id.add_group_admin_Edgroup);
 
         loadingBar=new ProgressDialog(this);
 
-        CreateAccountBtn.setOnClickListener(new View.OnClickListener() {
+        AddGroupBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                CreateAccount();
+                AddGroup();
             }
         });
     }
 
-    private void CreateAccount()
+    private void AddGroup()
     {
-        String name =Edname.getText().toString();
-        String phone =Edphone.getText().toString();
-        String password =Edpassword.getText().toString();
+        String group =Edgroup.getText().toString();
 
 
-
-        if(TextUtils.isEmpty(name))
+        if(TextUtils.isEmpty(group))
         {
-            Toast.makeText(this, "ادخل الاسم اذا سمحت . . .", Toast.LENGTH_SHORT).show();
-        }
-        else if(TextUtils.isEmpty(phone))
-        {
-            Toast.makeText(this, "ادخل رقم الهاتف اذا سمحت . . .", Toast.LENGTH_SHORT).show();
-        }
-        else if(TextUtils.isEmpty(password))
-        {
-            Toast.makeText(this, "ادخل كلمة السر . . .", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "ادخل رقم الجموعه . . .", Toast.LENGTH_SHORT).show();
         }
         else
         {
-            loadingBar.setTitle("انشاء حساب");
+            loadingBar.setTitle("انشاء مجموعه");
             loadingBar.setMessage("انتظر");
             loadingBar.setCanceledOnTouchOutside(false);
             loadingBar.show();
 
-            ValidatePhoneNumber(name,phone,password);
+            ValidateGroup(group);
 
         }
-
-
-
     }
 
-    private void ValidatePhoneNumber(final String name,final String phone,final String password)
+    private void ValidateGroup(final String group)
     {
         final DatabaseReference RootRef;
         RootRef = FirebaseDatabase.getInstance().getReference();
@@ -93,28 +75,28 @@ public class RegisterActivity extends AppCompatActivity {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot)
             {
-                if(!dataSnapshot.child("Users").child(phone).exists())
+                if(!dataSnapshot.child("Groups").child(group).exists())
                 {
                     HashMap<String,Object> userdataMap = new HashMap<>();
-                    userdataMap.put("name",name);
-                    userdataMap.put("phone",phone);
-                    userdataMap.put("password",password);
+                    userdataMap.put("group",group);
 
-                    RootRef.child("Users").child(phone).updateChildren(userdataMap)
+
+
+                    RootRef.child("Groups").child(group).updateChildren(userdataMap)
                             .addOnCompleteListener(new OnCompleteListener<Void>() {
                                 @Override
                                 public void onComplete(@NonNull Task<Void> task)
                                 {
                                     if(task.isSuccessful())
                                     {
-                                        Toast.makeText(RegisterActivity.this, "تمت الاضافه بنجاح", Toast.LENGTH_SHORT).show();
+                                        Toast.makeText(AddGroupAdminActivity.this, "تمت الاضافه بنجاح", Toast.LENGTH_SHORT).show();
                                         loadingBar.dismiss();
-                                        Intent intent=new Intent(RegisterActivity.this,LoginActivity.class);
+                                        Intent intent=new Intent(AddGroupAdminActivity.this,MainActivity.class);
                                         startActivity(intent);
                                     }
                                     else
                                     {
-                                        Toast.makeText(RegisterActivity.this, "שגיאת רשת", Toast.LENGTH_SHORT).show();
+                                        Toast.makeText(AddGroupAdminActivity.this, "שגיאת רשת", Toast.LENGTH_SHORT).show();
                                         loadingBar.dismiss();
 
                                     }
@@ -123,10 +105,10 @@ public class RegisterActivity extends AppCompatActivity {
                 }
                 else
                 {
-                    Toast.makeText(RegisterActivity.this, "المستخدم مسجل", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(AddGroupAdminActivity.this, "المجموعه مسجله", Toast.LENGTH_SHORT).show();
                     loadingBar.dismiss();
-                    Intent intent=new Intent(RegisterActivity.this,LoginActivity.class);
-                    startActivity(intent);
+                    //   Intent intent=new Intent(RegisterActivity.this,MainActivity.class);
+                    //    startActivity(intent);
 
                 }
             }
@@ -138,5 +120,4 @@ public class RegisterActivity extends AppCompatActivity {
             }
         });
     }
-
 }

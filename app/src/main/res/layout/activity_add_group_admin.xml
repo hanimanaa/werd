@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".RegisterActivity">
+    tools:context=".AddGroupAdminActivity">
 
     <ScrollView
         android:layout_width="match_parent"
@@ -19,82 +19,57 @@
             android:layout_gravity="center">
 
             <TextView
-                android:id="@+id/app_name"
+                android:id="@+id/add_group_admin_app_name"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="انشاء مستخدم جديد"
+                android:text="اضافة مجموعه "
                 android:textStyle="italic"
                 android:layout_alignParentTop="true"
-                android:layout_marginTop="20dp"
+                android:layout_marginTop="40dp"
                 android:gravity="center"
                 android:textSize="40sp"
-                android:layout_marginLeft="20dp"
-                android:layout_marginRight="20dp"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
                 />
 
             <ImageView
-                android:id="@+id/logo"
+                android:id="@+id/add_group_admin_logo"
                 android:layout_width="300dp"
                 android:layout_height="100dp"
                 android:layout_centerHorizontal="true"
                 android:layout_marginTop="10dp"
                 android:layout_gravity="center"
-                android:layout_below="@+id/app_name"
-                android:src="@drawable/new_user"/>
+                android:layout_below="@+id/add_group_admin_app_name"
+                android:src="@drawable/add_user_group"/>
+
 
 
 
             <EditText
-                android:id="@+id/Edname"
+                android:id="@+id/add_group_admin_Edgroup"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="15dp"
                 android:layout_marginRight="15dp"
-                android:textDirection="rtl"
                 android:background="@drawable/input_design"
                 android:padding="20dp"
-                android:layout_marginTop="20dp"
-                android:layout_below="@id/logo"
-                android:hint="الاسم الشخصي"
-                />
-            <EditText
-                android:id="@+id/Edphone"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="15dp"
-                android:layout_marginRight="15dp"
+                android:layout_marginTop="10dp"
+                android:layout_below="@id/add_group_admin_logo"
                 android:inputType="number"
                 android:textDirection="rtl"
-                android:background="@drawable/input_design"
-                android:padding="20dp"
-                android:layout_marginTop="10dp"
-                android:layout_below="@id/Edname"
-                android:hint="رقم الهاتف"
-                />
-            <EditText
-                android:id="@+id/Edpassword"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="15dp"
-                android:layout_marginRight="15dp"
-                android:background="@drawable/input_design"
-                android:padding="20dp"
-                android:textDirection="rtl"
-                android:layout_marginTop="10dp"
-                android:layout_below="@id/Edphone"
-                android:hint="الرقم السري"
+                android:hint="رقم المجموعه"
                 />
 
 
             <Button
-                android:id="@+id/Add_btn"
+                android:id="@+id/add_group_admin_btn"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="10dp"
                 android:layout_marginLeft="15dp"
                 android:layout_marginRight="15dp"
                 android:layout_marginTop="10dp"
-                android:layout_below="@id/Edpassword"
+                android:layout_below="@id/add_group_admin_Edgroup"
                 android:background="@drawable/buttons"
                 android:padding="20dp"
                 android:textAllCaps="false"
