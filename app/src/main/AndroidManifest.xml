@@ -9,7 +9,9 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".SettingsActivity"></activity>
+        <activity android:name=".testActivity"></activity>
+        <activity android:name=".UsersGroupActivity" />
+        <activity android:name=".SettingsActivity" />
         <activity android:name=".AddGroupAdminActivity" />
         <activity android:name=".LoginActivity" />
         <activity android:name=".AddGroupsToUserActivity" />

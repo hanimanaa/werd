@@ -24,7 +24,7 @@ import java.util.HashMap;
 public class AddGroupAdminActivity extends AppCompatActivity {
 
     private Button AddGroupBtn;
-    private EditText Edgroup;
+    private EditText EdgroupNum,EdgroupName;
     private ProgressDialog loadingBar;
 
     @Override
@@ -33,7 +33,8 @@ public class AddGroupAdminActivity extends AppCompatActivity {
         setContentView(R.layout.activity_add_group_admin);
 
         AddGroupBtn=(Button)findViewById(R.id.add_group_admin_btn);
-        Edgroup=(EditText)findViewById(R.id.add_group_admin_Edgroup);
+        EdgroupNum=(EditText)findViewById(R.id.add_groupNum_admin);
+        EdgroupName=(EditText)findViewById(R.id.add_groupName_admin);
 
         loadingBar=new ProgressDialog(this);
 
@@ -47,12 +48,17 @@ public class AddGroupAdminActivity extends AppCompatActivity {
 
     private void AddGroup()
     {
-        String group =Edgroup.getText().toString();
+        String groupNum =EdgroupNum.getText().toString();
+        String groupName =EdgroupName.getText().toString();
 
 
-        if(TextUtils.isEmpty(group))
+        if(TextUtils.isEmpty(groupNum))
         {
             Toast.makeText(this, "ادخل رقم الجموعه . . .", Toast.LENGTH_SHORT).show();
+        }
+        else if(TextUtils.isEmpty(groupName))
+        {
+            Toast.makeText(this, "ادخل اسم الجموعه . . .", Toast.LENGTH_SHORT).show();
         }
         else
         {
@@ -61,12 +67,12 @@ public class AddGroupAdminActivity extends AppCompatActivity {
             loadingBar.setCanceledOnTouchOutside(false);
             loadingBar.show();
 
-            ValidateGroup(group);
+            ValidateGroup(groupNum,groupName);
 
         }
     }
 
-    private void ValidateGroup(final String group)
+    private void ValidateGroup(final String groupNum,final String groupName)
     {
         final DatabaseReference RootRef;
         RootRef = FirebaseDatabase.getInstance().getReference();
@@ -75,14 +81,15 @@ public class AddGroupAdminActivity extends AppCompatActivity {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot)
             {
-                if(!dataSnapshot.child("Groups").child(group).exists())
+                if(!dataSnapshot.child("Groups").child(groupNum).exists())
                 {
                     HashMap<String,Object> userdataMap = new HashMap<>();
-                    userdataMap.put("group",group);
+                    userdataMap.put("groupNum",groupNum);
+                    userdataMap.put("groupName",groupName);
 
 
 
-                    RootRef.child("Groups").child(group).updateChildren(userdataMap)
+                    RootRef.child("Groups").child(groupNum).updateChildren(userdataMap)
                             .addOnCompleteListener(new OnCompleteListener<Void>() {
                                 @Override
                                 public void onComplete(@NonNull Task<Void> task)
@@ -91,7 +98,7 @@ public class AddGroupAdminActivity extends AppCompatActivity {
                                     {
                                         Toast.makeText(AddGroupAdminActivity.this, "تمت الاضافه بنجاح", Toast.LENGTH_SHORT).show();
                                         loadingBar.dismiss();
-                                        Intent intent=new Intent(AddGroupAdminActivity.this,MainActivity.class);
+                                        Intent intent=new Intent(AddGroupAdminActivity.this,UsersGroupActivity.class);
                                         startActivity(intent);
                                     }
                                     else

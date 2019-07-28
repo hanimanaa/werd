@@ -2,20 +2,29 @@ package com.dimatechs.werd.Model;
 
 public class Groups
 {
-    private String group;
+    private String groupNum,groupName;
 
     public Groups() {
     }
 
-    public Groups(String group) {
-        this.group = group;
+    public Groups(String groupNum, String groupName) {
+        this.groupNum = groupNum;
+        this.groupName = groupName;
     }
 
-    public String getGroup() {
-        return group;
+    public String getGroupNum() {
+        return groupNum;
     }
 
-    public void setGroup(String group) {
-        this.group = group;
+    public void setGroupNum(String groupNum) {
+        this.groupNum = groupNum;
+    }
+
+    public String getGroupName() {
+        return groupName;
+    }
+
+    public void setGroupName(String groupName) {
+        this.groupName = groupName;
     }
 }

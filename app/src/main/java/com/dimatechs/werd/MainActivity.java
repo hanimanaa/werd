@@ -15,18 +15,24 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.Toast;
 
+import com.dimatechs.werd.Model.Groups;
 import com.dimatechs.werd.Model.Users;
 import com.dimatechs.werd.ViewHolder.WerdViewHolder;
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.firebase.ui.database.FirebaseRecyclerOptions;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 public class MainActivity extends AppCompatActivity {
 
     private Button RegisterAccountBtn;
     private RecyclerView recyclerView;
     private DatabaseReference UsersRef;
+
+
     RecyclerView.LayoutManager layoutManager;
 
     @Override
@@ -134,6 +140,8 @@ public class MainActivity extends AppCompatActivity {
         }
         return true;
     }
+
+
 }
 
 

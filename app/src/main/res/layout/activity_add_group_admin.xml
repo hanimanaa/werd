@@ -46,7 +46,7 @@
 
 
             <EditText
-                android:id="@+id/add_group_admin_Edgroup"
+                android:id="@+id/add_groupNum_admin"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="15dp"
@@ -60,6 +60,19 @@
                 android:hint="رقم المجموعه"
                 />
 
+            <EditText
+                android:id="@+id/add_groupName_admin"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="15dp"
+                android:layout_marginRight="15dp"
+                android:background="@drawable/input_design"
+                android:padding="20dp"
+                android:layout_marginTop="10dp"
+                android:layout_below="@id/add_groupNum_admin"
+                android:textDirection="rtl"
+                android:hint="اسم المجموعه"
+                />
 
             <Button
                 android:id="@+id/add_group_admin_btn"
@@ -69,7 +82,7 @@
                 android:layout_marginLeft="15dp"
                 android:layout_marginRight="15dp"
                 android:layout_marginTop="10dp"
-                android:layout_below="@id/add_group_admin_Edgroup"
+                android:layout_below="@id/add_groupName_admin"
                 android:background="@drawable/buttons"
                 android:padding="20dp"
                 android:textAllCaps="false"

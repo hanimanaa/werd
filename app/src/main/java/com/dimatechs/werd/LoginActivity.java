@@ -137,7 +137,9 @@ public class LoginActivity extends AppCompatActivity {
                             String fullName = usersData.getName() ;
                             Toast.makeText(LoginActivity.this, "السلام عليكم " + fullName, Toast.LENGTH_SHORT).show();
                             loadingBar.dismiss();
-                            Intent intent=new Intent(LoginActivity.this,MainActivity.class);
+
+                            Intent intent=new Intent(LoginActivity.this,UsersGroupActivity.class);
+                            Paper.book().write("username",fullName);
                             Prevalent.currentOnlineUser = usersData;
                             startActivity(intent);
                         }
