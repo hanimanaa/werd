@@ -117,6 +117,7 @@ public class AddGroupsToUserActivity extends AppCompatActivity {
                     groupdataMap.put("groupNum",group);
                     groupdataMap.put("groupName",dataSnapshot.child("Groups").child(group).child("groupName").getValue(String.class));
                     groupdataMap.put("partNum",partNum);
+                    groupdataMap.put("done","no");
 
 
                     RootRef.child("UsersGroups").child(Prevalent.currentOnlineUser.getPhone())

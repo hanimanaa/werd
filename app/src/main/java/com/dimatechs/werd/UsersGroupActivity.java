@@ -11,6 +11,8 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
@@ -50,6 +52,9 @@ public class UsersGroupActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_users_group);
 
+        Log.d("done", "onCreate");
+
+
         Paper.init(this);
 
         username = Paper.book().read("username");
@@ -69,9 +74,14 @@ public class UsersGroupActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         });
+    }
 
 
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
 
+        getMenuInflater().inflate(R.menu.main_menu, menu);
+        return true;
     }
 
     @Override
@@ -83,7 +93,7 @@ public class UsersGroupActivity extends AppCompatActivity {
 
         final DatabaseReference ListRef= FirebaseDatabase.getInstance().getReference().child("UsersGroups");
         RootRef=FirebaseDatabase.getInstance().getReference().child("Groups");
-        Log.d("cart", "onStart");
+
 
         FirebaseRecyclerOptions<UsersGroups> options=
                 new FirebaseRecyclerOptions.Builder<UsersGroups>()
@@ -99,17 +109,42 @@ public class UsersGroupActivity extends AppCompatActivity {
                     {
                       //  GetGroupNameFromFireBase(model.getGroupNum());
 
+                        Log.d("done", "onBindViewHolder");
                         holder.txtGroupNum.setText("رقم المجموعه : "+model.getGroupNum());
                         holder.txtGroupName.setText("اسم المجموعه : "+model.getGroupName());
                         holder.txtPartNum.setText("جزء رقم : "+model.getPartNum());
+                        if(model.getDone().equals("done")) {
+                            holder.imageView.setImageResource(R.drawable.ic_person_green);
+                        }
+
                         holder.itemView.setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View view)
                             {
+                               // Paper.book().write("groupnum",model.getGroupNum());
                                 Intent intent=new Intent(UsersGroupActivity.this,MainActivity.class);
+                                intent.putExtra("groupNum",model.getGroupNum());
                                 startActivity(intent);
                             }
                         });
+
+                        holder.itemView.setOnLongClickListener(new View.OnLongClickListener() {
+                            @Override
+                            public boolean onLongClick(View v)
+                            {
+                                AlertDialog.Builder builder = new AlertDialog.Builder(UsersGroupActivity.this);
+                                builder.setTitle("الورد اليومي");
+                                builder.setMessage("هل اتممت قراءة الجزء ؟");
+                                builder.setCancelable(true);
+                                builder.setPositiveButton("نعم بحمد الله", new HandleAlertDialogListener());
+                                builder.setNegativeButton("للاسف لا", new HandleAlertDialogListener());
+                                AlertDialog dialog=builder.create();
+                                dialog.show();
+                                return false;
+                            }
+                        });
+
+
                     }
 
                     @NonNull
@@ -152,5 +187,57 @@ public class UsersGroupActivity extends AppCompatActivity {
         });
     }
 
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+        Log.d("hani", "onOptionsItemSelected");
+        //noinspection SimplifiableIfStatement
+        if (id == R.id.action_Register) {
+            Toast.makeText(this, "you selected הרשמה", Toast.LENGTH_LONG).show();
+            Intent intent = new Intent(getApplicationContext(), RegisterActivity.class);
+            startActivity(intent);
+            return true;
+        } else if (id == R.id.action_Update) {
+            Toast.makeText(this, "you selected עדכון קבטצה", Toast.LENGTH_LONG).show();
+            Intent intent = new Intent(getApplicationContext(),AddGroupsToUserActivity.class);
+            startActivity(intent);
+            return true;
+        } else if (id == R.id.action_Admin) {
+            Toast.makeText(this, "you selectedמנהל הוספת קבוצה ", Toast.LENGTH_LONG).show();
+            Intent intent = new Intent(getApplicationContext(),AddGroupAdminActivity.class);
+            startActivity(intent);
+            return true;
+        }
+        else if (id == R.id.action_Settings) {
+            Toast.makeText(this, " עדכון פרטים", Toast.LENGTH_LONG).show();
+            Intent intent = new Intent(getApplicationContext(),SettingsActivity.class);
+            startActivity(intent);
+            return true;
+        }
+        else if (id == R.id.action_Exit) {
+            Toast.makeText(this, "you selected יציאה", Toast.LENGTH_LONG).show();
+            android.os.Process.killProcess(android.os.Process.myPid());
+            System.exit(1);
+            return true;
+        }
+        return true;
+    }
+
+
+    private final class  HandleAlertDialogListener implements DialogInterface.OnClickListener
+    {
+        @Override
+        public void onClick(DialogInterface dialog, int which) {
+            if(which==-1)
+            {
+                Toast.makeText(UsersGroupActivity.this, "نعم", Toast.LENGTH_SHORT).show();
+            }else
+            {
+                Toast.makeText(UsersGroupActivity.this, "لا", Toast.LENGTH_SHORT).show();
+            }
+        }
+    }
+
 
 }
+

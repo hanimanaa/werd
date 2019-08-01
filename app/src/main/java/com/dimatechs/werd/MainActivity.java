@@ -26,11 +26,14 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import io.paperdb.Paper;
+
 public class MainActivity extends AppCompatActivity {
 
     private Button RegisterAccountBtn;
     private RecyclerView recyclerView;
     private DatabaseReference UsersRef;
+    private String groupNum;
 
 
     RecyclerView.LayoutManager layoutManager;
@@ -41,6 +44,9 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         Log.d("hani", "onCreate");
 
+        //Paper.init(this);
+        //groupNum = Paper.book().read("groupnum");
+        groupNum=getIntent().getStringExtra("groupnum");
 
         UsersRef = FirebaseDatabase.getInstance().getReference().child("Users");
 
@@ -75,6 +81,7 @@ public class MainActivity extends AppCompatActivity {
                 new FirebaseRecyclerAdapter<Users, WerdViewHolder>(options) {
                     @Override
                     protected void onBindViewHolder(@NonNull WerdViewHolder holder, int position, @NonNull final Users model) {
+
                         holder.txtName.setText(model.getName());
                         holder.txtPhone.setText(model.getPhone());
                         holder.txtNum.setText(" جزء رقم : " + model.getNum());

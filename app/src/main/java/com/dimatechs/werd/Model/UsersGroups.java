@@ -1,15 +1,24 @@
 package com.dimatechs.werd.Model;
 
 public class UsersGroups {
-    private String groupNum, groupName, partNum;
+    private String groupNum, groupName, partNum,done;
 
     public UsersGroups() {
     }
 
-    public UsersGroups(String groupNum, String groupName, String partNum) {
+    public UsersGroups(String groupNum, String groupName, String partNum,String done) {
         this.groupNum = groupNum;
         this.groupName = groupName;
         this.partNum = partNum;
+        this.done=done;
+    }
+
+    public String getDone() {
+        return done;
+    }
+
+    public void setDone(String done) {
+        this.done = done;
     }
 
     public String getGroupNum() {
