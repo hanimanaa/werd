@@ -141,6 +141,7 @@ public class LoginActivity extends AppCompatActivity {
                             Intent intent=new Intent(LoginActivity.this,UsersGroupActivity.class);
                             Paper.book().write("fullName",fullName);
                             Prevalent.currentOnlineUser = usersData;
+
                             startActivity(intent);
                         }
                         else
