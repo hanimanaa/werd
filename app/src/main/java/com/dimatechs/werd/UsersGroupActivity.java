@@ -9,6 +9,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.helper.ItemTouchHelper;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -32,7 +33,9 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
+
 
 import io.paperdb.Paper;
 
@@ -43,8 +46,8 @@ public class UsersGroupActivity extends AppCompatActivity {
     private TextView txtWell;
     private FloatingActionButton addBtn;
     private DatabaseReference RootRef;
-    private String groupN="";
-    private String username;
+    private String groupN="",phone="",id;
+    private String fullName;
 
 
     @Override
@@ -52,12 +55,9 @@ public class UsersGroupActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_users_group);
 
-        Log.d("done", "onCreate");
-
 
         Paper.init(this);
-
-        username = Paper.book().read("username");
+        fullName = Paper.book().read("fullName");
 
         recyclerView=(RecyclerView)findViewById(R.id.usersGroup_list);
         recyclerView.setHasFixedSize(true);
@@ -74,6 +74,22 @@ public class UsersGroupActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         });
+
+        /*
+        new ItemTouchHelper(new ItemTouchHelper.SimpleCallback(0,ItemTouchHelper.RIGHT) {
+            @Override
+            public boolean onMove(@NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder, @NonNull RecyclerView.ViewHolder viewHolder1) {
+                return false;
+            }
+
+            @Override
+            public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int i) {
+                Toast.makeText(UsersGroupActivity.this, "swip", Toast.LENGTH_SHORT).show();
+
+            }
+        }).attachToRecyclerView(recyclerView);
+
+*/
     }
 
 
@@ -89,49 +105,37 @@ public class UsersGroupActivity extends AppCompatActivity {
     {
         super.onStart();
 
-        txtWell.setText(" السلام عليكم " + username + "\n الرجاء اختيار المجموعه او التسجيل لمجموعه جديدة");
+        txtWell.setText(" السلام عليكم " + fullName + "\n الرجاء اختيار المجموعه او التسجيل لمجموعه جديدة");
 
         final DatabaseReference ListRef= FirebaseDatabase.getInstance().getReference().child("UsersGroups");
-        RootRef=FirebaseDatabase.getInstance().getReference().child("Groups");
 
-
+        Query query =ListRef.orderByChild("userPhone").equalTo(Prevalent.currentOnlineUser.getPhone());
         FirebaseRecyclerOptions<UsersGroups> options=
                 new FirebaseRecyclerOptions.Builder<UsersGroups>()
-                        .setQuery(ListRef.child(Prevalent.currentOnlineUser.getPhone())
-                                .child("group"),UsersGroups.class)
+                        .setQuery(query,UsersGroups.class)
                         .build();
 
         FirebaseRecyclerAdapter<UsersGroups, UsersGroupViewHolder> adapter=
                 new FirebaseRecyclerAdapter<UsersGroups, UsersGroupViewHolder>(options) {
 
                     @Override
-                    protected void onBindViewHolder(@NonNull UsersGroupViewHolder holder, int position, @NonNull final UsersGroups model)
+                    protected void onBindViewHolder(@NonNull final UsersGroupViewHolder holder, int position, @NonNull final UsersGroups model)
                     {
-                      //  GetGroupNameFromFireBase(model.getGroupNum());
-
-                        Log.d("done", "onBindViewHolder");
-                        holder.txtGroupNum.setText("رقم المجموعه : "+model.getGroupNum());
-                        holder.txtGroupName.setText("اسم المجموعه : "+model.getGroupName());
-                        holder.txtPartNum.setText("جزء رقم : "+model.getPartNum());
-                        if(model.getDone().equals("done")) {
-                            holder.imageView.setImageResource(R.drawable.ic_person_green);
-                        }
-
-                        holder.itemView.setOnClickListener(new View.OnClickListener() {
-                            @Override
-                            public void onClick(View view)
-                            {
-                               // Paper.book().write("groupnum",model.getGroupNum());
-                                Intent intent=new Intent(UsersGroupActivity.this,MainActivity.class);
-                                intent.putExtra("groupNum",model.getGroupNum());
-                                startActivity(intent);
+                            holder.txtGroupNum.setText("رقم المجموعه : " + model.getGroupNum());
+                            holder.txtGroupName.setText("اسم المجموعه : " + model.getGroupName());
+                            holder.txtPartNum.setText("جزء رقم : " + model.getPartNum());
+                            if (model.getDone().equals("done")) {
+                                holder.imageView.setImageResource(R.drawable.ic_person_green);
                             }
-                        });
 
-                        holder.itemView.setOnLongClickListener(new View.OnLongClickListener() {
+
+                        holder.imageView.setOnClickListener(new View.OnClickListener() {
                             @Override
-                            public boolean onLongClick(View v)
-                            {
+                            public void onClick(View v) {
+                                groupN=model.getGroupNum();
+                                phone=Prevalent.currentOnlineUser.getPhone();
+                                id=model.getId();
+
                                 AlertDialog.Builder builder = new AlertDialog.Builder(UsersGroupActivity.this);
                                 builder.setTitle("الورد اليومي");
                                 builder.setMessage("هل اتممت قراءة الجزء ؟");
@@ -140,10 +144,17 @@ public class UsersGroupActivity extends AppCompatActivity {
                                 builder.setNegativeButton("للاسف لا", new HandleAlertDialogListener());
                                 AlertDialog dialog=builder.create();
                                 dialog.show();
-                                return false;
                             }
                         });
 
+                        holder.txtmore.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                Intent intent=new Intent(UsersGroupActivity.this,MainActivity.class);
+                                intent.putExtra("groupNum",model.getGroupNum());
+                                startActivity(intent);
+                            }
+                        });
 
                     }
 
@@ -158,6 +169,12 @@ public class UsersGroupActivity extends AppCompatActivity {
                 };
         recyclerView.setAdapter(adapter);
         adapter.startListening();
+    }
+
+    private void UpdateStatus(String id,String done)
+    {
+        DatabaseReference ref = FirebaseDatabase.getInstance().getReference().child("UsersGroups");
+        ref.child(id).child("done").setValue(done);
     }
 
     private void GetGroupNameFromFireBase(final String groupNum)
@@ -230,10 +247,13 @@ public class UsersGroupActivity extends AppCompatActivity {
         public void onClick(DialogInterface dialog, int which) {
             if(which==-1)
             {
-                Toast.makeText(UsersGroupActivity.this, "نعم", Toast.LENGTH_SHORT).show();
-            }else
+               Toast.makeText(UsersGroupActivity.this,"بارك الله فيك", Toast.LENGTH_SHORT).show();
+               UpdateStatus(id,"done");
+            }
+            else
             {
                 Toast.makeText(UsersGroupActivity.this, "لا", Toast.LENGTH_SHORT).show();
+                UpdateStatus(id,"no");
             }
         }
     }

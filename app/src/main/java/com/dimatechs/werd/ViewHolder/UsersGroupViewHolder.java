@@ -10,7 +10,7 @@ import com.dimatechs.werd.R;
 
 public class UsersGroupViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener
 {
-    public TextView txtGroupNum,txtGroupName,txtPartNum;
+    public TextView txtGroupNum,txtGroupName,txtPartNum,txtmore;
     public ImageView imageView;
     public ItemClickListner listner;
 
@@ -22,6 +22,7 @@ public class UsersGroupViewHolder extends RecyclerView.ViewHolder implements Vie
         txtGroupName = (TextView) itemView.findViewById(R.id.groupName_item);
         txtPartNum = (TextView) itemView.findViewById(R.id.partNum_item);
         imageView = (ImageView) itemView.findViewById(R.id.done_item);
+        txtmore=(TextView) itemView.findViewById(R.id.more);
 
     }
 

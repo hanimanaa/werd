@@ -21,6 +21,8 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.HashMap;
 
 public class AddGroupsToUserActivity extends AppCompatActivity {
@@ -28,6 +30,9 @@ public class AddGroupsToUserActivity extends AppCompatActivity {
     private Button AddGroupToUserBtn;
     private EditText EdgroupNum,EdPartNum;
     private ProgressDialog loadingBar;
+
+    private String saveCurrentDate,saveCurrentTime;
+    private String RandomKey;
   //  String st="no user";
   //  private String groupN="";
     @Override
@@ -79,30 +84,19 @@ public class AddGroupsToUserActivity extends AppCompatActivity {
         }
 
     }
-/*
-    private void GetGroupNameFromFireBase(final String groupNum)
-    {
-        final DatabaseReference RootRef;
-        RootRef = FirebaseDatabase.getInstance().getReference();
-        RootRef.orderByChild("Groups").equalTo(groupNum).addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot)
-            {
-                Groups groups= dataSnapshot.getChildren().iterator().next().getValue(Groups.class);
-                Toast.makeText(AddGroupsToUserActivity.this, groups.getGroupName().toString(), Toast.LENGTH_SHORT).show();
 
-
-            }
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError)
-            {
-
-            }
-        });
-    }
-*/
     private void ValidateGroupNumber(final String group,final String partNum)
     {
+        Calendar calendar=Calendar.getInstance();
+
+        SimpleDateFormat currentDate = new SimpleDateFormat("MMM dd, yyyy");
+        saveCurrentDate=currentDate.format(calendar.getTime());
+
+        SimpleDateFormat currentTime = new SimpleDateFormat("HH:mm:ss a");
+        saveCurrentTime=currentTime.format(calendar.getTime());
+
+        RandomKey=saveCurrentDate+saveCurrentTime;
+
         final DatabaseReference RootRef;
         RootRef = FirebaseDatabase.getInstance().getReference();
 
@@ -112,16 +106,18 @@ public class AddGroupsToUserActivity extends AppCompatActivity {
             {
                 if(dataSnapshot.child("Groups").child(group).exists())
                 {
-                    dataSnapshot.child("Groups").child(group).child("groupName").getValue(String.class);
+                   // dataSnapshot.child("Groups").child(group).child("groupName").getValue(String.class);
                     HashMap<String,Object> groupdataMap = new HashMap<>();
+                    groupdataMap.put("id",RandomKey);
                     groupdataMap.put("groupNum",group);
                     groupdataMap.put("groupName",dataSnapshot.child("Groups").child(group).child("groupName").getValue(String.class));
                     groupdataMap.put("partNum",partNum);
                     groupdataMap.put("done","no");
+                    groupdataMap.put("userName",dataSnapshot.child("Users").child(Prevalent.currentOnlineUser.getPhone()).child("name").getValue(String.class));
+                    groupdataMap.put("userPhone",Prevalent.currentOnlineUser.getPhone());
 
 
-                    RootRef.child("UsersGroups").child(Prevalent.currentOnlineUser.getPhone())
-                            .child("group").child(group)
+                    RootRef.child("UsersGroups").child(RandomKey)
                             .updateChildren(groupdataMap)
                             .addOnCompleteListener(new OnCompleteListener<Void>() {
                                 @Override

@@ -139,7 +139,7 @@ public class LoginActivity extends AppCompatActivity {
                             loadingBar.dismiss();
 
                             Intent intent=new Intent(LoginActivity.this,UsersGroupActivity.class);
-                            Paper.book().write("username",fullName);
+                            Paper.book().write("fullName",fullName);
                             Prevalent.currentOnlineUser = usersData;
                             startActivity(intent);
                         }
