@@ -101,4 +101,16 @@
         android:text="تسجيل"
         android:textColor="@android:color/white"/>
 
+    <TextView
+        android:id="@+id/admin_panel_link"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/register_btn"
+        android:text="دخول مدير المجموعه"
+        android:textSize="18sp"
+        android:padding="17dp"
+        android:textColor="@color/colorPrimaryDark"
+        />
+
 </RelativeLayout>
+

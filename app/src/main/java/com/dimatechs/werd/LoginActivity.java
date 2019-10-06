@@ -12,6 +12,7 @@ import android.widget.Button;
 
 import android.widget.EditText;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.dimatechs.werd.Model.Users;
@@ -35,6 +36,7 @@ public class LoginActivity extends AppCompatActivity {
     private ProgressDialog loadingBar;
     private String parentDbName="Users";
     private CheckBox chkBoxRememberMe;
+    private TextView AdminLink;
 
 
     @Override
@@ -47,6 +49,7 @@ public class LoginActivity extends AppCompatActivity {
         InputNumber = (EditText) findViewById(R.id.login_phone_number_input);
         InputPassword = (EditText) findViewById(R.id.login_password_input);
         loadingBar = new ProgressDialog(this);
+        AdminLink=(TextView)findViewById(R.id.admin_panel_link);
 
         chkBoxRememberMe = (CheckBox) findViewById(R.id.remember_me_chkb);
         Paper.init(this);
@@ -79,6 +82,16 @@ public class LoginActivity extends AppCompatActivity {
             {
                 Intent intent=new Intent(LoginActivity.this,RegisterActivity.class);
                 startActivity(intent);
+            }
+        });
+
+        AdminLink.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                LoginButton.setText("دخول المدير");
+                AdminLink.setText("دخول عضو");
+               // AdminLink.setVisibility(View.INVISIBLE);
+                parentDbName ="Admins";
             }
         });
 
