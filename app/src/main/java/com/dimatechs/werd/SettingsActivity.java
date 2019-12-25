@@ -2,7 +2,6 @@ package com.dimatechs.werd;
 
 
 import android.content.Intent;
-import android.net.Uri;
 
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -20,14 +19,9 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 ;
-import com.google.firebase.storage.StorageReference;
-import com.google.firebase.storage.StorageTask;
-
 
 
 import java.util.HashMap;
-
-import de.hdodenhof.circleimageview.CircleImageView;
 
 public class SettingsActivity extends AppCompatActivity
 {
@@ -81,7 +75,7 @@ public class SettingsActivity extends AppCompatActivity
 
             ref.child(Prevalent.currentOnlineUser.getPhone()).updateChildren(userMap);
 
-            startActivity(new Intent(SettingsActivity.this, MainActivity.class));
+            startActivity(new Intent(SettingsActivity.this, GroupMainActivity.class));
             Toast.makeText(SettingsActivity.this, "تم التحديث بنجاح", Toast.LENGTH_SHORT).show();
             finish();
         }

@@ -9,26 +9,21 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.helper.ItemTouchHelper;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.dimatechs.werd.Model.Groups;
-import com.dimatechs.werd.Model.Users;
 import com.dimatechs.werd.Model.UsersGroups;
 import com.dimatechs.werd.Prevalent.Prevalent;
 import com.dimatechs.werd.ViewHolder.UsersGroupViewHolder;
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.firebase.ui.database.FirebaseRecyclerOptions;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -70,8 +65,30 @@ public class UsersGroupActivity extends AppCompatActivity {
         addBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(getApplicationContext(),AddGroupsToUserActivity.class);
-                startActivity(intent);
+
+                CharSequence options[] = new CharSequence[]
+                        {
+                                "انشاء مجموعه جديدة",
+                                "انتساب الى مجموعة"
+                        };
+                AlertDialog.Builder builder = new AlertDialog.Builder(UsersGroupActivity.this);
+                builder.setTitle("امكانيات : ");
+
+                builder.setItems(options, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        if (i == 0) {
+                             Intent intent = new Intent(getApplicationContext(),AddGroupAdminActivity.class);
+                             startActivity(intent);
+                        }
+                        if (i == 1) {
+                            Intent intent = new Intent(getApplicationContext(),GroupsActivity.class);
+                            startActivity(intent);
+                        }
+                    }
+                });
+                builder.show();
+
             }
         });
 
@@ -150,7 +167,7 @@ public class UsersGroupActivity extends AppCompatActivity {
                         holder.txtmore.setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View v) {
-                                Intent intent=new Intent(UsersGroupActivity.this,MainActivity.class);
+                                Intent intent=new Intent(UsersGroupActivity.this, GroupMainActivity.class);
                                 intent.putExtra("groupNum",model.getGroupNum());
                                 startActivity(intent);
                             }

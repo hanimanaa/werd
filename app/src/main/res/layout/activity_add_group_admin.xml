@@ -39,26 +39,8 @@
                 android:layout_centerHorizontal="true"
                 android:layout_marginTop="10dp"
                 android:layout_gravity="center"
-                android:layout_below="@+id/add_group_admin_app_name"
+               android:layout_below="@id/add_group_admin_app_name"
                 android:src="@drawable/add_user_group"/>
-
-
-
-
-            <EditText
-                android:id="@+id/add_groupNum_admin"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="15dp"
-                android:layout_marginRight="15dp"
-                android:background="@drawable/input_design"
-                android:padding="20dp"
-                android:layout_marginTop="10dp"
-                android:layout_below="@id/add_group_admin_logo"
-                android:inputType="number"
-                android:textDirection="rtl"
-                android:hint="رقم المجموعه"
-                />
 
             <EditText
                 android:id="@+id/add_groupName_admin"
@@ -69,7 +51,7 @@
                 android:background="@drawable/input_design"
                 android:padding="20dp"
                 android:layout_marginTop="10dp"
-                android:layout_below="@id/add_groupNum_admin"
+                android:layout_below="@id/add_group_admin_logo"
                 android:textDirection="rtl"
                 android:hint="اسم المجموعه"
                 />

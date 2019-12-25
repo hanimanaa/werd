@@ -11,6 +11,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.dimatechs.werd.Prevalent.Prevalent;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.database.DataSnapshot;
@@ -19,13 +20,23 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.HashMap;
+
+import io.paperdb.Paper;
 
 public class AddGroupAdminActivity extends AppCompatActivity {
 
     private Button AddGroupBtn;
-    private EditText EdgroupNum,EdgroupName;
+    private EditText EdgroupName;
     private ProgressDialog loadingBar;
+    DatabaseReference groupListRef;
+
+    private String saveCurrentDate,saveCurrentTime;
+    private String RandomKey;
+    String groupNum="0";
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,7 +44,6 @@ public class AddGroupAdminActivity extends AppCompatActivity {
         setContentView(R.layout.activity_add_group_admin);
 
         AddGroupBtn=(Button)findViewById(R.id.add_group_admin_btn);
-        EdgroupNum=(EditText)findViewById(R.id.add_groupNum_admin);
         EdgroupName=(EditText)findViewById(R.id.add_groupName_admin);
 
         loadingBar=new ProgressDialog(this);
@@ -44,19 +54,34 @@ public class AddGroupAdminActivity extends AppCompatActivity {
                 AddGroup();
             }
         });
+
+        groupListRef=FirebaseDatabase.getInstance().getReference().child("GroupAutoNum");
+        groupListRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot)
+            {
+                if(dataSnapshot.exists())
+                {
+                    //new group num
+                    groupNum = (dataSnapshot.getValue().toString());
+                    int x= Integer.parseInt(groupNum)+1;
+                    groupListRef.setValue(x);
+                }
+
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
     }
 
     private void AddGroup()
     {
-        String groupNum =EdgroupNum.getText().toString();
         String groupName =EdgroupName.getText().toString();
 
-
-        if(TextUtils.isEmpty(groupNum))
-        {
-            Toast.makeText(this, "ادخل رقم الجموعه . . .", Toast.LENGTH_SHORT).show();
-        }
-        else if(TextUtils.isEmpty(groupName))
+        if(TextUtils.isEmpty(groupName))
         {
             Toast.makeText(this, "ادخل اسم الجموعه . . .", Toast.LENGTH_SHORT).show();
         }
@@ -96,7 +121,8 @@ public class AddGroupAdminActivity extends AppCompatActivity {
                                 {
                                     if(task.isSuccessful())
                                     {
-                                        Toast.makeText(AddGroupAdminActivity.this, "تمت الاضافه بنجاح", Toast.LENGTH_SHORT).show();
+                                        AddGroupAdmin(groupNum);
+                                        Toast.makeText(AddGroupAdminActivity.this, "تمت اضافة المجموعه بنجاح", Toast.LENGTH_SHORT).show();
                                         loadingBar.dismiss();
                                         Intent intent=new Intent(AddGroupAdminActivity.this,UsersGroupActivity.class);
                                         startActivity(intent);
@@ -112,11 +138,8 @@ public class AddGroupAdminActivity extends AppCompatActivity {
                 }
                 else
                 {
-                    Toast.makeText(AddGroupAdminActivity.this, "المجموعه مسجله", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(AddGroupAdminActivity.this, "اسم المجموعه موجود. اختر اسم اخر اذا سمحت !!", Toast.LENGTH_SHORT).show();
                     loadingBar.dismiss();
-                    //   Intent intent=new Intent(RegisterActivity.this,MainActivity.class);
-                    //    startActivity(intent);
-
                 }
             }
 
@@ -126,5 +149,72 @@ public class AddGroupAdminActivity extends AppCompatActivity {
 
             }
         });
+    }
+
+    private void AddGroupAdmin(final String group)
+    {
+        Calendar calendar=Calendar.getInstance();
+
+        SimpleDateFormat currentDate = new SimpleDateFormat("MMM dd, yyyy");
+        saveCurrentDate=currentDate.format(calendar.getTime());
+
+        SimpleDateFormat currentTime = new SimpleDateFormat("HH:mm:ss a");
+        saveCurrentTime=currentTime.format(calendar.getTime());
+
+        RandomKey=saveCurrentDate+saveCurrentTime;
+
+        final DatabaseReference RootRef;
+        RootRef = FirebaseDatabase.getInstance().getReference();
+
+        RootRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot)
+            {
+                if(dataSnapshot.child("Groups").child(group).exists())
+                {
+                    // dataSnapshot.child("Groups").child(group).child("groupName").getValue(String.class);
+                    HashMap<String,Object> groupdataMap = new HashMap<>();
+                    groupdataMap.put("id",RandomKey);
+                    groupdataMap.put("groupNum",group);
+                    groupdataMap.put("groupName",dataSnapshot.child("Groups").child(group).child("groupName").getValue(String.class));
+                    groupdataMap.put("partNum","1");
+                    groupdataMap.put("done","no");
+                    groupdataMap.put("userName",dataSnapshot.child("Users").child(Prevalent.currentOnlineUser.getPhone()).child("name").getValue(String.class));
+                    groupdataMap.put("userPhone",Prevalent.currentOnlineUser.getPhone());
+                    groupdataMap.put("admin","yes");
+
+
+                    RootRef.child("UsersGroups").child(RandomKey)
+                            .updateChildren(groupdataMap)
+                            .addOnCompleteListener(new OnCompleteListener<Void>() {
+                                @Override
+                                public void onComplete(@NonNull Task<Void> task)
+                                {
+                                    if(task.isSuccessful())
+                                    {
+                                        loadingBar.dismiss();
+                                    }
+                                    else
+                                    {
+                                        Toast.makeText(AddGroupAdminActivity.this, "שגיאת רשת", Toast.LENGTH_SHORT).show();
+                                        loadingBar.dismiss();
+                                    }
+                                }
+                            });
+                }
+                else
+                {
+                    Toast.makeText(AddGroupAdminActivity.this, "المجموعه غير موجودة", Toast.LENGTH_SHORT).show();
+                    loadingBar.dismiss();
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError)
+            {
+
+            }
+        });
+
     }
 }
