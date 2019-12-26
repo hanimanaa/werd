@@ -231,12 +231,7 @@ public class UsersGroupActivity extends AppCompatActivity {
             Intent intent = new Intent(getApplicationContext(), RegisterActivity.class);
             startActivity(intent);
             return true;
-        } else if (id == R.id.action_Update) {
-            Toast.makeText(this, "you selected עדכון קבטצה", Toast.LENGTH_LONG).show();
-            Intent intent = new Intent(getApplicationContext(),AddGroupsToUserActivity.class);
-            startActivity(intent);
-            return true;
-        } else if (id == R.id.action_Admin) {
+         } else if (id == R.id.action_Admin) {
             Toast.makeText(this, "you selectedמנהל הוספת קבוצה ", Toast.LENGTH_LONG).show();
             Intent intent = new Intent(getApplicationContext(),AddGroupAdminActivity.class);
             startActivity(intent);

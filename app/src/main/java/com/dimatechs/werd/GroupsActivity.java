@@ -9,6 +9,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -40,12 +42,12 @@ public class GroupsActivity extends AppCompatActivity {
     private RecyclerView recyclerView;
     private EditText search_bar;
     private RecyclerView.LayoutManager layoutManager;
-    private String groupN="",phone="",id;
+    private String groupN="",phone;
     private ProgressDialog loadingBar;
 
     private String saveCurrentDate,saveCurrentTime;
     private String RandomKey;
-    String groupNum="0";
+    private DatabaseReference ListRef;
 
 
 
@@ -59,23 +61,47 @@ public class GroupsActivity extends AppCompatActivity {
         recyclerView.setHasFixedSize(true);
         layoutManager = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(layoutManager);
-
         loadingBar=new ProgressDialog(this);
+
+        ListRef= FirebaseDatabase.getInstance().getReference().child("Groups");
+
+        // Search a group
+        search_bar.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                String st=String.valueOf(search_bar.getText());
+                Query query = ListRef.orderByChild("groupName")
+                        .startAt(st)
+                        .endAt(st+'\uf8ff');
+                fillRecyclerView(query);
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
+            }
+        });
 
     }
 
+
+
     @Override
-    protected void onStart()
-    {
-
+    protected void onStart() {
         super.onStart();
+        fillRecyclerView(ListRef);
+    }
 
-
-        final DatabaseReference ListRef= FirebaseDatabase.getInstance().getReference().child("Groups");
+    private void fillRecyclerView(Query query) {
 
         FirebaseRecyclerOptions<Groups> options=
                 new FirebaseRecyclerOptions.Builder<Groups>()
-                        .setQuery(ListRef,Groups.class)
+                        .setQuery(query,Groups.class)
                         .build();
 
         FirebaseRecyclerAdapter<Groups, GroupsViewHolder> adapter=
@@ -119,6 +145,52 @@ public class GroupsActivity extends AppCompatActivity {
         adapter.startListening();
     }
 
+    private final class  HandleAlertDialogListener implements DialogInterface.OnClickListener
+    {
+        @Override
+        public void onClick(DialogInterface dialog, int which) {
+            if(which==-1)
+            {
+                loadingBar.setTitle("انتساب الى مجموعه");
+                loadingBar.setMessage("انتظر");
+                loadingBar.setCanceledOnTouchOutside(false);
+                loadingBar.show();
+                ValidateUser(groupN,phone);
+            }
+            else
+            {
+                Toast.makeText(GroupsActivity.this, "لا", Toast.LENGTH_SHORT).show();
+            }
+        }
+    }
+    private void ValidateUser(final String group,final String phone)
+    {
+        final DatabaseReference RootRef;
+        RootRef = FirebaseDatabase.getInstance().getReference().child("UsersGroups");
+        Query query = RootRef.orderByChild("groupNum").equalTo(group);
+        query.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                if(dataSnapshot.exists())
+                {
+                    Toast.makeText(GroupsActivity.this, "المجموعه موجوده", Toast.LENGTH_SHORT).show();
+                    loadingBar.dismiss();
+                }
+                else
+                {
+                    AddGroup(groupN);
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+
+
+
+    }
     private void AddGroup(final String group)
     {
         Calendar calendar=Calendar.getInstance();
@@ -190,23 +262,5 @@ public class GroupsActivity extends AppCompatActivity {
 
     }
 
-    private final class  HandleAlertDialogListener implements DialogInterface.OnClickListener
-    {
-        @Override
-        public void onClick(DialogInterface dialog, int which) {
-            if(which==-1)
-            {
-                loadingBar.setTitle("انتساب الى مجموعه");
-                loadingBar.setMessage("انتظر");
-                loadingBar.setCanceledOnTouchOutside(false);
-                loadingBar.show();
-                AddGroup(groupN);
-            }
-            else
-            {
-                Toast.makeText(GroupsActivity.this, "لا", Toast.LENGTH_SHORT).show();
-               // UpdateStatus(id,"no");
-            }
-        }
-    }
+
 }
