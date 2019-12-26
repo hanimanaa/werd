@@ -18,6 +18,7 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
 import java.text.SimpleDateFormat;
@@ -55,6 +56,7 @@ public class AddGroupAdminActivity extends AppCompatActivity {
             }
         });
 
+        // Get Group Auto Num
         groupListRef=FirebaseDatabase.getInstance().getReference().child("GroupAutoNum");
         groupListRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
@@ -100,21 +102,18 @@ public class AddGroupAdminActivity extends AppCompatActivity {
     private void ValidateGroup(final String groupNum,final String groupName)
     {
         final DatabaseReference RootRef;
-        RootRef = FirebaseDatabase.getInstance().getReference();
-
-        RootRef.addListenerForSingleValueEvent(new ValueEventListener() {
+        RootRef = FirebaseDatabase.getInstance().getReference().child("Groups");
+        Query query = RootRef.orderByChild("groupName").equalTo(groupName);
+        query.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot)
-            {
-                if(!dataSnapshot.child("Groups").child(groupNum).exists())
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                if(!dataSnapshot.exists())
                 {
                     HashMap<String,Object> userdataMap = new HashMap<>();
                     userdataMap.put("groupNum",groupNum);
                     userdataMap.put("groupName",groupName);
 
-
-
-                    RootRef.child("Groups").child(groupNum).updateChildren(userdataMap)
+                    RootRef.child(groupNum).updateChildren(userdataMap)
                             .addOnCompleteListener(new OnCompleteListener<Void>() {
                                 @Override
                                 public void onComplete(@NonNull Task<Void> task)
@@ -144,11 +143,11 @@ public class AddGroupAdminActivity extends AppCompatActivity {
             }
 
             @Override
-            public void onCancelled(@NonNull DatabaseError databaseError)
-            {
+            public void onCancelled(DatabaseError databaseError) {
 
             }
         });
+
     }
 
     private void AddGroupAdmin(final String group)
@@ -182,7 +181,7 @@ public class AddGroupAdminActivity extends AppCompatActivity {
                     groupdataMap.put("userName",dataSnapshot.child("Users").child(Prevalent.currentOnlineUser.getPhone()).child("name").getValue(String.class));
                     groupdataMap.put("userPhone",Prevalent.currentOnlineUser.getPhone());
                     groupdataMap.put("admin","yes");
-
+                    groupdataMap.put("groupNumPhone",group+"_"+Prevalent.currentOnlineUser.getPhone());
 
                     RootRef.child("UsersGroups").child(RandomKey)
                             .updateChildren(groupdataMap)

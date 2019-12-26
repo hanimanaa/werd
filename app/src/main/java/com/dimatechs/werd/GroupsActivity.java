@@ -167,13 +167,13 @@ public class GroupsActivity extends AppCompatActivity {
     {
         final DatabaseReference RootRef;
         RootRef = FirebaseDatabase.getInstance().getReference().child("UsersGroups");
-        Query query = RootRef.orderByChild("groupNum").equalTo(group);
+        Query query = RootRef.orderByChild("groupNumPhone").equalTo(group+"_"+phone);
         query.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 if(dataSnapshot.exists())
                 {
-                    Toast.makeText(GroupsActivity.this, "المجموعه موجوده", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(GroupsActivity.this, "انت منتسب لهذة المجموعه !!", Toast.LENGTH_SHORT).show();
                     loadingBar.dismiss();
                 }
                 else
@@ -222,6 +222,8 @@ public class GroupsActivity extends AppCompatActivity {
                     groupdataMap.put("userName",dataSnapshot.child("Users").child(Prevalent.currentOnlineUser.getPhone()).child("name").getValue(String.class));
                     groupdataMap.put("userPhone",Prevalent.currentOnlineUser.getPhone());
                     groupdataMap.put("admin","no");
+                    groupdataMap.put("groupNumPhone",group+"_"+Prevalent.currentOnlineUser.getPhone());
+
 
 
                     RootRef.child("UsersGroups").child(RandomKey)
