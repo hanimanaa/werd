@@ -141,6 +141,7 @@ public class UsersGroupActivity extends AppCompatActivity {
                             holder.txtGroupNum.setText("رقم المجموعه : " + model.getGroupNum());
                             holder.txtGroupName.setText("اسم المجموعه : " + model.getGroupName());
                             holder.txtPartNum.setText("جزء رقم : " + model.getPartNum());
+
                             if (model.getDone().equals("done")) {
                                 holder.imageView.setImageResource(R.drawable.ic_person_green);
                             }
@@ -169,6 +170,7 @@ public class UsersGroupActivity extends AppCompatActivity {
                             public void onClick(View v) {
                                 Intent intent=new Intent(UsersGroupActivity.this, GroupMainActivity.class);
                                 intent.putExtra("groupNum",model.getGroupNum());
+                                intent.putExtra("IsAdmin",model.getAdmin());
                                 startActivity(intent);
                             }
                         });

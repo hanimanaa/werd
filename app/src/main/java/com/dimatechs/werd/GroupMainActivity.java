@@ -22,6 +22,7 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+import com.dimatechs.werd.Model.Groups;
 import com.dimatechs.werd.Model.Users;
 import com.dimatechs.werd.Model.UsersGroups;
 import com.dimatechs.werd.Prevalent.Prevalent;
@@ -46,7 +47,7 @@ public class GroupMainActivity extends AppCompatActivity {
     private Button SaveBtn;
     private RecyclerView recyclerView;
     private DatabaseReference RootRef;
-    private String groupNum,stDialogDone="no",stDialogAdmin="no";
+    private String groupNum,IsAdmin,stDialogDone="no",stDialogAdmin="no";
     private Dialog dialog;
     private ImageView dialogDone,dialogAdmin;
     private EditText etDialogPartNum;
@@ -63,6 +64,8 @@ public class GroupMainActivity extends AppCompatActivity {
 
         //Paper.init(this);
         groupNum=getIntent().getStringExtra("groupNum");
+        IsAdmin=getIntent().getStringExtra("IsAdmin");
+
         Toast.makeText(this, groupNum, Toast.LENGTH_SHORT).show();
 
 
@@ -74,8 +77,11 @@ public class GroupMainActivity extends AppCompatActivity {
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.admin_menu, menu);
-        return true;
+        if(IsAdmin.equals("yes")) {
+            getMenuInflater().inflate(R.menu.admin_menu, menu);
+            return true;
+        }else
+            return false;
     }
 
     @Override
@@ -113,101 +119,97 @@ public class GroupMainActivity extends AppCompatActivity {
                                     holder.itemView.setOnClickListener(new View.OnClickListener() {
                                         @Override
                                         public void onClick(View view) {
-                                            dialog= new Dialog(GroupMainActivity.this);
-                                            dialog.setContentView(R.layout.dialog_edit_group_user);
-                                            dialog.setTitle("تحديث");
-                                            dialog.setCancelable(true);
-                                            etDialogPartNum=(EditText)dialog.findViewById(R.id.etDialogPartNum);
-                                            etDialogPartNum.setText(model.getPartNum());
+                                            if (IsAdmin.equals("yes")) {
+                                                dialog = new Dialog(GroupMainActivity.this);
+                                                dialog.setContentView(R.layout.dialog_edit_group_user);
+                                                dialog.setTitle("تحديث");
+                                                dialog.setCancelable(true);
+                                                etDialogPartNum = (EditText) dialog.findViewById(R.id.etDialogPartNum);
+                                                etDialogPartNum.setText(model.getPartNum());
 
-                                            // done
-                                            dialogDone=(ImageView)dialog.findViewById(R.id.dialogDone);
-                                            if (model.getDone().equals("done")) {
-                                                dialogDone.setImageResource(R.drawable.ic_person_green);
-                                                stDialogDone="done";
-                                            }else{
-                                                dialogDone.setImageResource(R.drawable.ic_person_red);
-                                                stDialogDone="no";
-                                            }
-
-                                            dialogDone.setOnClickListener(new View.OnClickListener() {
-                                                @Override
-                                                public void onClick(View v) {
-                                                    if(stDialogDone.equals("done"))
-                                                    {
-                                                        dialogDone.setImageResource(R.drawable.ic_person_red);
-                                                        stDialogDone="no";
-                                                    }
-                                                    else
-                                                    {
-                                                        dialogDone.setImageResource(R.drawable.ic_person_green);
-                                                        stDialogDone="done";
-                                                    }
+                                                // done
+                                                dialogDone = (ImageView) dialog.findViewById(R.id.dialogDone);
+                                                if (model.getDone().equals("done")) {
+                                                    dialogDone.setImageResource(R.drawable.ic_person_green);
+                                                    stDialogDone = "done";
+                                                } else {
+                                                    dialogDone.setImageResource(R.drawable.ic_person_red);
+                                                    stDialogDone = "no";
                                                 }
-                                            });
 
-                                            // admin
-                                            dialogAdmin=(ImageView)dialog.findViewById(R.id.dialogAdmin);
-                                            if (model.getAdmin().equals("yes")) {
-                                                dialogAdmin.setImageResource(R.drawable.ic_person_pin_circle_24dp);
-                                                stDialogAdmin="yes";
-                                            }else{
-                                                dialogAdmin.setImageResource(R.drawable.ic_person_pin_circle_black_24dp);
-                                                stDialogAdmin="no";
-                                            }
+                                                dialogDone.setOnClickListener(new View.OnClickListener() {
+                                                    @Override
+                                                    public void onClick(View v) {
+                                                        if (stDialogDone.equals("done")) {
+                                                            dialogDone.setImageResource(R.drawable.ic_person_red);
+                                                            stDialogDone = "no";
+                                                        } else {
+                                                            dialogDone.setImageResource(R.drawable.ic_person_green);
+                                                            stDialogDone = "done";
+                                                        }
+                                                    }
+                                                });
 
-                                            dialogAdmin.setOnClickListener(new View.OnClickListener() {
-                                                @Override
-                                                public void onClick(View v) {
-                                                    if(stDialogAdmin.equals("yes")) {
-                                                        RootRef.orderByChild("groupNum").equalTo(groupNum).addListenerForSingleValueEvent(new ValueEventListener() {
-                                                            @Override
-                                                            public void onDataChange(DataSnapshot dataSnapshot) {
-                                                                final List<String> admins = new ArrayList<>();
-                                                                for (DataSnapshot areaSnapshot : dataSnapshot.getChildren()) {
-                                                                    String admin = areaSnapshot.child("admin").getValue(String.class);
-                                                                    admins.add(admin);
-                                                                }
+                                                // admin
+                                                dialogAdmin = (ImageView) dialog.findViewById(R.id.dialogAdmin);
+                                                if (model.getAdmin().equals("yes")) {
+                                                    dialogAdmin.setImageResource(R.drawable.ic_person_pin_circle_24dp);
+                                                    stDialogAdmin = "yes";
+                                                } else {
+                                                    dialogAdmin.setImageResource(R.drawable.ic_person_pin_circle_black_24dp);
+                                                    stDialogAdmin = "no";
+                                                }
 
-                                                                int count = 0;
-                                                                for (int i = 0; i < admins.size(); i++) {
-                                                                    if (admins.get(i).equals("yes")) {
-                                                                        count++;
+                                                dialogAdmin.setOnClickListener(new View.OnClickListener() {
+                                                    @Override
+                                                    public void onClick(View v) {
+                                                        if (stDialogAdmin.equals("yes")) {
+                                                            RootRef.orderByChild("groupNum").equalTo(groupNum).addListenerForSingleValueEvent(new ValueEventListener() {
+                                                                @Override
+                                                                public void onDataChange(DataSnapshot dataSnapshot) {
+                                                                    final List<String> admins = new ArrayList<>();
+                                                                    for (DataSnapshot areaSnapshot : dataSnapshot.getChildren()) {
+                                                                        String admin = areaSnapshot.child("admin").getValue(String.class);
+                                                                        admins.add(admin);
                                                                     }
+
+                                                                    int count = 0;
+                                                                    for (int i = 0; i < admins.size(); i++) {
+                                                                        if (admins.get(i).equals("yes")) {
+                                                                            count++;
+                                                                        }
+                                                                    }
+                                                                    if (count > 1) {
+                                                                        dialogAdmin.setImageResource(R.drawable.ic_person_pin_circle_black_24dp);
+                                                                        stDialogAdmin = "no";
+                                                                    } else {
+                                                                        Toast.makeText(GroupMainActivity.this, "يجب ان يكون مدير واحد للمجموعه على الاقل !!!", Toast.LENGTH_SHORT).show();
+                                                                    }
+
                                                                 }
-                                                                if (count > 1) {
-                                                                    dialogAdmin.setImageResource(R.drawable.ic_person_pin_circle_black_24dp);
-                                                                    stDialogAdmin = "no";
-                                                                } else {
-                                                                    Toast.makeText(GroupMainActivity.this, "يجب ان يكون مدير واحد للمجموعه على الاقل !!!", Toast.LENGTH_SHORT).show();
+
+
+                                                                @Override
+                                                                public void onCancelled(DatabaseError databaseError) {
+
                                                                 }
-
-                                                            }
-
-
-                                                            @Override
-                                                            public void onCancelled(DatabaseError databaseError) {
-
-                                                            }
-                                                        });
+                                                            });
+                                                        } else {
+                                                            dialogAdmin.setImageResource(R.drawable.ic_person_pin_circle_24dp);
+                                                            stDialogAdmin = "yes";
+                                                        }
                                                     }
+                                                });
 
-                                                    else
-                                                    {
-                                                        dialogAdmin.setImageResource(R.drawable.ic_person_pin_circle_24dp);
-                                                        stDialogAdmin="yes";
+                                                SaveBtn = (Button) dialog.findViewById(R.id.btnDialogSave);
+                                                SaveBtn.setOnClickListener(new View.OnClickListener() {
+                                                    @Override
+                                                    public void onClick(View v) {
+                                                        SaveInfoToDatabase(model.getId(), etDialogPartNum.getText().toString(), stDialogDone, stDialogAdmin);
                                                     }
-                                                }
-                                            });
-
-                                            SaveBtn=(Button)dialog.findViewById(R.id.btnDialogSave);
-                                            SaveBtn.setOnClickListener(new View.OnClickListener() {
-                                                @Override
-                                                public void onClick(View v) {
-                                                    SaveInfoToDatabase(model.getId(),etDialogPartNum.getText().toString(),stDialogDone,stDialogAdmin);
-                                                }
-                                            });
-                                            dialog.show();
+                                                });
+                                                dialog.show();
+                                            }
                                         }
                                     });
 
@@ -259,31 +261,31 @@ public class GroupMainActivity extends AppCompatActivity {
             return true;
         }
         else if (id == R.id.action_Desc) {
-                AlertDialog.Builder builder = new AlertDialog.Builder(GroupMainActivity.this);
-                builder.setTitle("تحذير");
-                builder.setIcon(R.drawable.ic_report_problem);
-                builder.setMessage("سوف تقوم بتحديث الاجزاء لكل الاعضاء !!!");
-                builder.setCancelable(true);
-                builder.setPositiveButton("انا موافق",
-                        new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialogInterface, int i) {
-                                DescUpdate();
-                            }
+            AlertDialog.Builder builder = new AlertDialog.Builder(GroupMainActivity.this);
+            builder.setTitle("تحذير");
+            builder.setIcon(R.drawable.ic_report_problem);
+            builder.setMessage("سوف تقوم بتحديث الاجزاء لكل الاعضاء !!!");
+            builder.setCancelable(true);
+            builder.setPositiveButton("انا موافق",
+                    new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int i) {
+                            DescUpdate();
                         }
-                );
-                builder.setNegativeButton("الغاء",
-                        new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialogInterface, int i) {
-                            }
+                    }
+            );
+            builder.setNegativeButton("الغاء",
+                    new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int i) {
                         }
+                    }
 
-                );
-                AlertDialog dialog=builder.create();
-                dialog.show();
+            );
+            AlertDialog dialog=builder.create();
+            dialog.show();
 
-                return true;
+            return true;
         }
 
         else if (id == R.id.action_Exit) {
@@ -294,7 +296,6 @@ public class GroupMainActivity extends AppCompatActivity {
         }
         return true;
     }
-
 
     private void SaveInfoToDatabase(String userGroupId,String partNum,String done,String admin)
     {

@@ -10,7 +10,17 @@
         android:title="ترتيب تنازلي"
         android:orderInCategory="150"
         />
-
+    <item
+        android:id="@+id/action_Close"
+        android:title="اغلاق الانتساب للمجموعه"
+        android:orderInCategory="170"
+        />
+    <item
+        android:id="@+id/action_Delete"
+        android:title="حذف للمجموعه"
+        android:icon="@drawable/ic_red_forever_black_24dp"
+        android:orderInCategory="180"
+        />
 
     <item
         android:id="@+id/action_Exit"
