@@ -2,9 +2,11 @@ package com.dimatechs.werd;
 
 import android.app.Dialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.support.annotation.NonNull;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
@@ -72,7 +74,7 @@ public class GroupMainActivity extends AppCompatActivity {
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.main_menu, menu);
+        getMenuInflater().inflate(R.menu.admin_menu, menu);
         return true;
     }
 
@@ -123,7 +125,7 @@ public class GroupMainActivity extends AppCompatActivity {
                                             if (model.getDone().equals("done")) {
                                                 dialogDone.setImageResource(R.drawable.ic_person_green);
                                                 stDialogDone="done";
-                                                }else{
+                                            }else{
                                                 dialogDone.setImageResource(R.drawable.ic_person_red);
                                                 stDialogDone="no";
                                             }
@@ -230,23 +232,60 @@ public class GroupMainActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
         //noinspection SimplifiableIfStatement
-        if (id == R.id.action_Register) {
-            Toast.makeText(this, "you selected הרשמה", Toast.LENGTH_LONG).show();
-            Intent intent = new Intent(getApplicationContext(), RegisterActivity.class);
-            startActivity(intent);
-            return true;
-        } else if (id == R.id.action_Admin) {
-            Toast.makeText(this, "you selectedמנהל הוספת קבוצה ", Toast.LENGTH_LONG).show();
-            Intent intent = new Intent(getApplicationContext(),AddGroupAdminActivity.class);
-            startActivity(intent);
+        if (id == R.id.action_Asc) {
+            AlertDialog.Builder builder = new AlertDialog.Builder(GroupMainActivity.this);
+            builder.setTitle("تحذير");
+            builder.setIcon(R.drawable.ic_report_problem);
+            builder.setMessage("سوف تقوم بتحديث الاجزاء لكل الاعضاء !!!");
+            builder.setCancelable(true);
+            builder.setPositiveButton("انا موافق",
+                    new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int i) {
+                            AscUpdate();
+                        }
+                    }
+            );
+            builder.setNegativeButton("الغاء",
+                    new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int i) {
+                        }
+                    }
+
+            );
+            AlertDialog dialog=builder.create();
+            dialog.show();
             return true;
         }
-        else if (id == R.id.action_Settings) {
-            Toast.makeText(this, " עדכון פרטים", Toast.LENGTH_LONG).show();
-            Intent intent = new Intent(getApplicationContext(),SettingsActivity.class);
-            startActivity(intent);
-            return true;
+        else if (id == R.id.action_Desc) {
+                AlertDialog.Builder builder = new AlertDialog.Builder(GroupMainActivity.this);
+                builder.setTitle("تحذير");
+                builder.setIcon(R.drawable.ic_report_problem);
+                builder.setMessage("سوف تقوم بتحديث الاجزاء لكل الاعضاء !!!");
+                builder.setCancelable(true);
+                builder.setPositiveButton("انا موافق",
+                        new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialogInterface, int i) {
+                                DescUpdate();
+                            }
+                        }
+                );
+                builder.setNegativeButton("الغاء",
+                        new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialogInterface, int i) {
+                            }
+                        }
+
+                );
+                AlertDialog dialog=builder.create();
+                dialog.show();
+
+                return true;
         }
+
         else if (id == R.id.action_Exit) {
             Toast.makeText(this, "you selected יציאה", Toast.LENGTH_LONG).show();
             android.os.Process.killProcess(android.os.Process.myPid());
@@ -255,6 +294,7 @@ public class GroupMainActivity extends AppCompatActivity {
         }
         return true;
     }
+
 
     private void SaveInfoToDatabase(String userGroupId,String partNum,String done,String admin)
     {
@@ -280,6 +320,150 @@ public class GroupMainActivity extends AppCompatActivity {
                         }
                     }
                 });
+    }
+
+    private void AscUpdate() {
+        RootRef.orderByChild("groupNum").equalTo(groupNum).addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                final List<UsersGroups> usersGroups = new ArrayList<>();
+                for (DataSnapshot areaSnapshot : dataSnapshot.getChildren()) {
+                    UsersGroups ug = areaSnapshot.getValue(UsersGroups.class);
+                    usersGroups.add(ug);
+                }
+
+                for (int i = 0; i < usersGroups.size(); i++) {
+                    int oldPart =Integer.parseInt(usersGroups.get(i).getPartNum());
+                    int newPart;
+                    if(oldPart==30)
+                        newPart=1;
+                    else
+                        newPart=oldPart+1;
+                    usersGroups.get(i).setPartNum(String.valueOf(newPart));
+                }
+
+                for (int i = 0; i < usersGroups.size(); i++) {
+
+                    final int finalI = i;
+                    RootRef.addListenerForSingleValueEvent(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                            HashMap<String,Object> groupdataMap = new HashMap<>();
+                            groupdataMap.put("id",usersGroups.get(finalI).getId());
+                            groupdataMap.put("groupNum",usersGroups.get(finalI).getGroupNum());
+                            groupdataMap.put("groupName",usersGroups.get(finalI).getGroupName());
+                            groupdataMap.put("partNum",usersGroups.get(finalI).getPartNum());
+                            groupdataMap.put("done","no");
+                            groupdataMap.put("userName",usersGroups.get(finalI).getUserName());
+                            groupdataMap.put("userPhone",usersGroups.get(finalI).getUserPhone());
+                            groupdataMap.put("admin",usersGroups.get(finalI).getAdmin());
+                            groupdataMap.put("groupNumPhone",usersGroups.get(finalI).getGroupNum()+"_"+usersGroups.get(finalI).getUserPhone());
+
+                            RootRef.child(usersGroups.get(finalI).getId())
+                                    .updateChildren(groupdataMap)
+                                    .addOnCompleteListener(new OnCompleteListener<Void>() {
+                                        @Override
+                                        public void onComplete(@NonNull Task<Void> task)
+                                        {
+                                            if(task.isSuccessful())
+                                            {
+                                                Toast.makeText(GroupMainActivity.this, "تم التحديث بنجاح", Toast.LENGTH_SHORT).show();
+                                            }
+                                            else
+                                            {
+                                                Toast.makeText(GroupMainActivity.this, "للاسف لم يتم التحديث !!!", Toast.LENGTH_SHORT).show();
+                                            }
+                                        }
+                                    });
+
+                        }
+
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                        }
+                    });
+
+                }
+            }
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+
+    }
+
+    private void DescUpdate() {
+        RootRef.orderByChild("groupNum").equalTo(groupNum).addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                final List<UsersGroups> usersGroups = new ArrayList<>();
+                for (DataSnapshot areaSnapshot : dataSnapshot.getChildren()) {
+                    UsersGroups ug = areaSnapshot.getValue(UsersGroups.class);
+                    usersGroups.add(ug);
+                }
+
+                for (int i = 0; i < usersGroups.size(); i++) {
+                    int oldPart =Integer.parseInt(usersGroups.get(i).getPartNum());
+                    int newPart;
+                    if(oldPart==1)
+                        newPart=30;
+                    else
+                        newPart=oldPart-1;
+                    usersGroups.get(i).setPartNum(String.valueOf(newPart));
+                }
+
+                for (int i = 0; i < usersGroups.size(); i++) {
+
+                    final int finalI = i;
+                    RootRef.addListenerForSingleValueEvent(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                            HashMap<String,Object> groupdataMap = new HashMap<>();
+                            groupdataMap.put("id",usersGroups.get(finalI).getId());
+                            groupdataMap.put("groupNum",usersGroups.get(finalI).getGroupNum());
+                            groupdataMap.put("groupName",usersGroups.get(finalI).getGroupName());
+                            groupdataMap.put("partNum",usersGroups.get(finalI).getPartNum());
+                            groupdataMap.put("done","no");
+                            groupdataMap.put("userName",usersGroups.get(finalI).getUserName());
+                            groupdataMap.put("userPhone",usersGroups.get(finalI).getUserPhone());
+                            groupdataMap.put("admin",usersGroups.get(finalI).getAdmin());
+                            groupdataMap.put("groupNumPhone",usersGroups.get(finalI).getGroupNum()+"_"+usersGroups.get(finalI).getUserPhone());
+
+                            RootRef.child(usersGroups.get(finalI).getId())
+                                    .updateChildren(groupdataMap)
+                                    .addOnCompleteListener(new OnCompleteListener<Void>() {
+                                        @Override
+                                        public void onComplete(@NonNull Task<Void> task)
+                                        {
+                                            if(task.isSuccessful())
+                                            {
+                                                Toast.makeText(GroupMainActivity.this, "تم التحديث بنجاح", Toast.LENGTH_SHORT).show();
+                                            }
+                                            else
+                                            {
+                                                Toast.makeText(GroupMainActivity.this, "للاسف لم يتم التحديث !!!", Toast.LENGTH_SHORT).show();
+                                            }
+                                        }
+                                    });
+
+                        }
+
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                        }
+                    });
+
+                }
+            }
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+
     }
 
 }
