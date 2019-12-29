@@ -11,7 +11,7 @@ import com.dimatechs.werd.R;
 public class WerdViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener
 {
     public TextView txtName,txtPhone,txtNum;
-    public ImageView imageView;
+    public ImageView doneImageView,adminImageView;
     public ItemClickListner listner;
 
     public WerdViewHolder(View itemView)
@@ -21,7 +21,9 @@ public class WerdViewHolder extends RecyclerView.ViewHolder implements View.OnCl
         txtName = (TextView) itemView.findViewById(R.id.name_item);
         txtPhone = (TextView) itemView.findViewById(R.id.phone_item);
         txtNum= (TextView) itemView.findViewById(R.id.num_item);
-        imageView = (ImageView) itemView.findViewById(R.id.done_item);
+        doneImageView = (ImageView) itemView.findViewById(R.id.done_item);
+        adminImageView = (ImageView) itemView.findViewById(R.id.admin_item);
+
 
     }
 
