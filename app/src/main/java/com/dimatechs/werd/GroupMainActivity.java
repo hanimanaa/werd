@@ -48,10 +48,7 @@ public class GroupMainActivity extends AppCompatActivity {
     private Dialog dialog;
     private ImageView dialogDone,dialogAdmin;
     private EditText etDialogPartNum;
-
-
-    private int numAdmin=0;
-    RecyclerView.LayoutManager layoutManager;
+    private RecyclerView.LayoutManager layoutManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -60,17 +57,17 @@ public class GroupMainActivity extends AppCompatActivity {
 
         RootRef = FirebaseDatabase.getInstance().getReference().child("UsersGroups");
 
+
+
         //Paper.init(this);
         groupNum=getIntent().getStringExtra("groupNum");
         Toast.makeText(this, groupNum, Toast.LENGTH_SHORT).show();
 
 
         recyclerView=findViewById(R.id.recycler_menu);
-      //  recyclerView.setHasFixedSize(true);
+      //recyclerView.setHasFixedSize(true);
         layoutManager = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(layoutManager);
-
-
     }
 
     @Override
@@ -107,7 +104,6 @@ public class GroupMainActivity extends AppCompatActivity {
 
                                     if(model.getAdmin().equals("yes")) {
                                         holder.adminImageView.setImageResource(R.drawable.ic_person_pin_circle_24dp);
-                                        numAdmin++;
                                     }else{
                                         holder.adminImageView.setImageResource(R.drawable.ic_person_pin_circle_white_24dp);
                                     }
@@ -161,20 +157,43 @@ public class GroupMainActivity extends AppCompatActivity {
                                             dialogAdmin.setOnClickListener(new View.OnClickListener() {
                                                 @Override
                                                 public void onClick(View v) {
-                                                    if(stDialogAdmin.equals("yes"))
-                                                    {
-                                                        dialogAdmin.setImageResource(R.drawable.ic_person_pin_circle_black_24dp);
-                                                        stDialogAdmin="no";
-                                                        numAdmin--;
-                                                        Toast.makeText(GroupMainActivity.this, "num : "+numAdmin, Toast.LENGTH_SHORT).show();
+                                                    if(stDialogAdmin.equals("yes")) {
+                                                        RootRef.orderByChild("groupNum").equalTo(groupNum).addListenerForSingleValueEvent(new ValueEventListener() {
+                                                            @Override
+                                                            public void onDataChange(DataSnapshot dataSnapshot) {
+                                                                final List<String> admins = new ArrayList<>();
+                                                                for (DataSnapshot areaSnapshot : dataSnapshot.getChildren()) {
+                                                                    String admin = areaSnapshot.child("admin").getValue(String.class);
+                                                                    admins.add(admin);
+                                                                }
+
+                                                                int count = 0;
+                                                                for (int i = 0; i < admins.size(); i++) {
+                                                                    if (admins.get(i).equals("yes")) {
+                                                                        count++;
+                                                                    }
+                                                                }
+                                                                if (count > 1) {
+                                                                    dialogAdmin.setImageResource(R.drawable.ic_person_pin_circle_black_24dp);
+                                                                    stDialogAdmin = "no";
+                                                                } else {
+                                                                    Toast.makeText(GroupMainActivity.this, "يجب ان يكون مدير واحد للمجموعه على الاقل !!!", Toast.LENGTH_SHORT).show();
+                                                                }
+
+                                                            }
+
+
+                                                            @Override
+                                                            public void onCancelled(DatabaseError databaseError) {
+
+                                                            }
+                                                        });
                                                     }
+
                                                     else
                                                     {
                                                         dialogAdmin.setImageResource(R.drawable.ic_person_pin_circle_24dp);
                                                         stDialogAdmin="yes";
-                                                        numAdmin++;
-                                                        Toast.makeText(GroupMainActivity.this, "num : "+numAdmin, Toast.LENGTH_SHORT).show();
-
                                                     }
                                                 }
                                             });
@@ -262,10 +281,6 @@ public class GroupMainActivity extends AppCompatActivity {
                     }
                 });
     }
-
-
-
-
 
 }
 
