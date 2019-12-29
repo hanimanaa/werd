@@ -2,14 +2,23 @@ package com.dimatechs.werd.Model;
 
 public class Groups
 {
-    private String groupNum,groupName;
+    private String groupNum,groupName,locked;
 
     public Groups() {
     }
 
-    public Groups(String groupNum, String groupName) {
+    public Groups(String groupNum, String groupName, String locked) {
         this.groupNum = groupNum;
         this.groupName = groupName;
+        this.locked = locked;
+    }
+
+    public String getLocked() {
+        return locked;
+    }
+
+    public void setLocked(String locked) {
+        this.locked = locked;
     }
 
     public String getGroupNum() {

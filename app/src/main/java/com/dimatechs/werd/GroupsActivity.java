@@ -112,22 +112,32 @@ public class GroupsActivity extends AppCompatActivity {
                     {
                         holder.txtGroupNum.setText("رقم المجموعه : " + model.getGroupNum());
                         holder.txtGroupName.setText("اسم المجموعه : " + model.getGroupName());
+                        if(model.getLocked().equals("yes")) {
+                            holder.lockImageView.setImageResource(R.drawable.ic_lock_outline_red_24dp);
+                        }else {
+                            holder.lockImageView.setImageResource(R.drawable.ic_lock_open_green_24dp);
+                        }
 
 
                         holder.itemView.setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View v) {
-                                groupN=model.getGroupNum();
-                                phone=Prevalent.currentOnlineUser.getPhone();
+                                if(model.getLocked().equals("no")) {
+                                    groupN = model.getGroupNum();
+                                    phone = Prevalent.currentOnlineUser.getPhone();
 
-                                AlertDialog.Builder builder = new AlertDialog.Builder(GroupsActivity.this);
-                                builder.setTitle("انتساب الى مجموعة");
-                                builder.setMessage("هل تريد الانتساب ؟");
-                                builder.setCancelable(true);
-                                builder.setPositiveButton("نعم من فضلك", new GroupsActivity.HandleAlertDialogListener());
-                                builder.setNegativeButton("كلا شكرا", new GroupsActivity.HandleAlertDialogListener());
-                                AlertDialog dialog=builder.create();
-                                dialog.show();
+                                    AlertDialog.Builder builder = new AlertDialog.Builder(GroupsActivity.this);
+                                    builder.setTitle("انتساب الى مجموعة");
+                                    builder.setMessage("هل تريد الانتساب ؟");
+                                    builder.setCancelable(true);
+                                    builder.setPositiveButton("نعم من فضلك", new GroupsActivity.HandleAlertDialogListener());
+                                    builder.setNegativeButton("كلا شكرا", new GroupsActivity.HandleAlertDialogListener());
+                                    AlertDialog dialog = builder.create();
+                                    dialog.show();
+                                }
+                                else{
+                                    Toast.makeText(GroupsActivity.this, "المجموعه مغلقة", Toast.LENGTH_SHORT).show();
+                                }
                             }
                         });
                     }

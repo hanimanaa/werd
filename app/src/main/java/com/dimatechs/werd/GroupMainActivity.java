@@ -46,7 +46,7 @@ public class GroupMainActivity extends AppCompatActivity {
 
     private Button SaveBtn;
     private RecyclerView recyclerView;
-    private DatabaseReference RootRef;
+    private DatabaseReference RootRef,GroupRef;
     private String groupNum,IsAdmin,stDialogDone="no",stDialogAdmin="no";
     private Dialog dialog;
     private ImageView dialogDone,dialogAdmin;
@@ -59,6 +59,7 @@ public class GroupMainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_group_main);
 
         RootRef = FirebaseDatabase.getInstance().getReference().child("UsersGroups");
+        GroupRef = FirebaseDatabase.getInstance().getReference().child("Groups");
 
 
 
@@ -228,7 +229,31 @@ public class GroupMainActivity extends AppCompatActivity {
                 }
 
 
+    @Override
+    public boolean onPrepareOptionsMenu(Menu menu) {
+        super.onPrepareOptionsMenu(menu);
+        final Menu Fmenu=menu;
+        GroupRef.orderByChild("groupNum").equalTo(groupNum).addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                for (DataSnapshot areaSnapshot : dataSnapshot.getChildren()) {
+                    String lock = areaSnapshot.child("locked").getValue(String.class);
+                    if (lock.equals("no")) {
+                        Fmenu.findItem(R.id.action_Close).setTitle("اغلاق الانتساب للمجموعه");
+                    } else {
+                        Fmenu.findItem(R.id.action_Close).setTitle("فتح الانتساب للمجموعه");
+                    }
+                }
+            }
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
 
+            }
+        });
+
+
+        return true;
+    }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -286,6 +311,42 @@ public class GroupMainActivity extends AppCompatActivity {
             dialog.show();
 
             return true;
+        }
+        else if (id == R.id.action_Close) {
+            if(item.getTitle().equals("اغلاق الانتساب للمجموعه")) {
+                item.setTitle("فتح الانتساب للمجموعه");
+                HashMap<String, Object> productMap = new HashMap<>();
+                productMap.put("locked", "yes");
+
+                GroupRef.child(groupNum).updateChildren(productMap)
+                        .addOnCompleteListener(new OnCompleteListener<Void>() {
+                            @Override
+                            public void onComplete(@NonNull Task<Void> task) {
+                                if (task.isSuccessful()) {
+                                    Toast.makeText(GroupMainActivity.this, "تم اغلاق المجموعه", Toast.LENGTH_SHORT).show();
+                                } else {
+                                    Toast.makeText(GroupMainActivity.this, "لم يتم الحفظ", Toast.LENGTH_SHORT).show();
+                                }
+                            }
+                        });
+            }else{
+                item.setTitle("اغلاق الانتساب للمجموعه");
+                HashMap<String, Object> productMap = new HashMap<>();
+                productMap.put("locked", "no");
+
+                GroupRef.child(groupNum).updateChildren(productMap)
+                        .addOnCompleteListener(new OnCompleteListener<Void>() {
+                            @Override
+                            public void onComplete(@NonNull Task<Void> task) {
+                                if (task.isSuccessful()) {
+                                    Toast.makeText(GroupMainActivity.this, "تم فتح الانتساب للمجموعه", Toast.LENGTH_SHORT).show();
+                                } else {
+                                    Toast.makeText(GroupMainActivity.this, "لم يتم الحفظ", Toast.LENGTH_SHORT).show();
+                                }
+                            }
+                        });
+            }
+
         }
 
         else if (id == R.id.action_Exit) {

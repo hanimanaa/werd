@@ -112,6 +112,7 @@ public class AddGroupAdminActivity extends AppCompatActivity {
                     HashMap<String,Object> userdataMap = new HashMap<>();
                     userdataMap.put("groupNum",groupNum);
                     userdataMap.put("groupName",groupName);
+                    userdataMap.put("locked","no");
 
                     RootRef.child(groupNum).updateChildren(userdataMap)
                             .addOnCompleteListener(new OnCompleteListener<Void>() {
