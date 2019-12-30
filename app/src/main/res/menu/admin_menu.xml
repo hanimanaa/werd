@@ -2,12 +2,12 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
     <item
         android:id="@+id/action_Asc"
-        android:title="ترتيب تصاعدي"
+        android:title="@string/ascending_order"
         android:orderInCategory="100"
         />
     <item
         android:id="@+id/action_Desc"
-        android:title="ترتيب تنازلي"
+        android:title="@string/descending_Order"
         android:orderInCategory="150"
         />
     <item

@@ -67,6 +67,7 @@ public class GroupMainActivity extends AppCompatActivity {
         groupNum=getIntent().getStringExtra("groupNum");
         IsAdmin=getIntent().getStringExtra("IsAdmin");
 
+
         Toast.makeText(this, groupNum, Toast.LENGTH_SHORT).show();
 
 
@@ -348,6 +349,49 @@ public class GroupMainActivity extends AppCompatActivity {
             }
 
         }
+        else if (id == R.id.action_Delete) {
+            AlertDialog.Builder builder = new AlertDialog.Builder(GroupMainActivity.this);
+            builder.setTitle("تحذير");
+            builder.setIcon(R.drawable.ic_report_problem);
+            builder.setMessage("سوف تقوم بحذف المجموعة !!!");
+            builder.setCancelable(true);
+            builder.setPositiveButton("انا موافق",
+                    new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int i) {
+                            //delete group and user group
+                            GroupRef.child(groupNum).removeValue();
+                            RootRef.orderByChild("groupNum").equalTo(groupNum).addListenerForSingleValueEvent(new ValueEventListener() {
+                                @Override
+                                public void onDataChange(DataSnapshot dataSnapshot) {
+                                    for (DataSnapshot postsnapshot :dataSnapshot.getChildren()) {
+                                        postsnapshot.getRef().removeValue();
+                                    }
+                                    Intent intent=new Intent(GroupMainActivity.this,UsersGroupActivity.class);
+                                    startActivity(intent);
+                                }
+
+                                @Override
+                                public void onCancelled(DatabaseError databaseError) {
+
+                                }
+                            });
+                        }
+                    }
+            );
+            builder.setNegativeButton("الغاء",
+                    new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int i) {
+                        }
+                    }
+
+            );
+            AlertDialog dialog=builder.create();
+            dialog.show();
+            return true;
+        }
+
 
         else if (id == R.id.action_Exit) {
             Toast.makeText(this, "you selected יציאה", Toast.LENGTH_LONG).show();

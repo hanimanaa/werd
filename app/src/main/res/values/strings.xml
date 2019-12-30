@@ -1,3 +1,7 @@
 <resources>
     <string name="app_name">ورد</string>
+    <string name="add_new_group">انشاء مجموعه جديدة</string>
+    <string name="ascending_order">"ترتيب تصاعدي"</string>
+    <string name="descending_Order">"ترتيب تنازلي"</string>
+    <string name="Phone_number">رقم الهاتف</string>
 </resources>
