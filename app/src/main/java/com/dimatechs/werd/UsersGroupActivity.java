@@ -214,29 +214,38 @@ public class UsersGroupActivity extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
-        Log.d("hani", "onOptionsItemSelected");
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_Register) {
-            Toast.makeText(this, "you selected הרשמה", Toast.LENGTH_LONG).show();
-            Intent intent = new Intent(getApplicationContext(), RegisterActivity.class);
-            startActivity(intent);
-            return true;
-         } else if (id == R.id.action_Admin) {
-            Toast.makeText(this, "you selectedמנהל הוספת קבוצה ", Toast.LENGTH_LONG).show();
-            Intent intent = new Intent(getApplicationContext(),AddGroupAdminActivity.class);
-            startActivity(intent);
-            return true;
-        }
-        else if (id == R.id.action_Settings) {
-            Toast.makeText(this, " עדכון פרטים", Toast.LENGTH_LONG).show();
+        if (id == R.id.action_Settings) {
             Intent intent = new Intent(getApplicationContext(),SettingsActivity.class);
             startActivity(intent);
             return true;
         }
         else if (id == R.id.action_Exit) {
-            Toast.makeText(this, "you selected יציאה", Toast.LENGTH_LONG).show();
-            android.os.Process.killProcess(android.os.Process.myPid());
-            System.exit(1);
+            AlertDialog.Builder builder = new AlertDialog.Builder(UsersGroupActivity.this);
+            builder.setTitle("تحذير");
+            builder.setIcon(R.drawable.ic_report_problem);
+            builder.setMessage("سوف تقوم بالخروج !!!");
+            builder.setCancelable(true);
+            builder.setPositiveButton("انا موافق",
+                    new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int i) {
+                            Intent intent=new Intent(UsersGroupActivity.this,LoginActivity.class);
+                            startActivity(intent);
+                            finish();
+                        }
+                    }
+            );
+            builder.setNegativeButton("الغاء",
+                    new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int i) {
+                        }
+                    }
+
+            );
+            AlertDialog dialog=builder.create();
+            dialog.show();
+
             return true;
         }
         return true;

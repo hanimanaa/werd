@@ -1,33 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <item
-        android:id="@+id/action_Register"
-        android:title="הרשמת משתמש חדש"
-        android:orderInCategory="100"
-
-        />
-    <item
-        android:id="@+id/action_Update"
-        android:title="משתמש - הוספה/עדכון קבוצה"
-        android:orderInCategory="200"
-        />
-    <item
-        android:id="@+id/action_Admin"
-        android:title="מנהל - הוספת קבוצה"
-        android:orderInCategory="300"
-        />
-    <item
+   <item
         android:id="@+id/action_Settings"
         android:title="משתמש עדכון פרטים"
-        android:orderInCategory="310"
+        android:checked="true"
+        android:icon="@drawable/ic_person_green"
+        android:orderInCategory="100"
         />
+
+
+
     <item
         android:id="@+id/action_Exit"
         android:title="יציאה"
-        android:orderInCategory="450"
+        android:orderInCategory="200"
         />
-
 
 
 </menu>

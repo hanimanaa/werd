@@ -98,7 +98,7 @@ public class AddGroupAdminActivity extends AppCompatActivity {
 
         if(TextUtils.isEmpty(groupName))
         {
-            Toast.makeText(this, "ادخل اسم الجموعه . . .", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, getResources().getString(R.string.enter_group_name), Toast.LENGTH_SHORT).show();
         }
         else
         {

@@ -10,6 +10,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 
+import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.Toast;
@@ -35,6 +36,7 @@ public class LoginActivity extends AppCompatActivity {
     private ProgressDialog loadingBar;
     private String parentDbName="Users";
     private CheckBox chkBoxRememberMe;
+    String phone="",password="";
 
 
     @Override
@@ -62,10 +64,21 @@ public class LoginActivity extends AppCompatActivity {
                 InputNumber.setText(UserPhoneKey);
                 InputPassword.setText(UserPasswordKey);
                 chkBoxRememberMe.setChecked(true);
-
             }
 
         }
+        chkBoxRememberMe.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if(chkBoxRememberMe.isChecked()){
+                    Paper.book().write(Prevalent.UserPhoneKey, phone);
+                    Paper.book().write(Prevalent.UserPasswordKey, password);
+                }else{
+                    Paper.book().write(Prevalent.UserPhoneKey, "");
+                    Paper.book().write(Prevalent.UserPasswordKey, "");
+                }
+            }
+        });
         LoginButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -86,8 +99,8 @@ public class LoginActivity extends AppCompatActivity {
 
     private void LoginUser()
     {
-        String phone=InputNumber.getText().toString();
-        String password=InputPassword.getText().toString();
+        phone=InputNumber.getText().toString();
+        password=InputPassword.getText().toString();
 
         if(TextUtils.isEmpty(phone))
         {
@@ -143,6 +156,7 @@ public class LoginActivity extends AppCompatActivity {
                             Prevalent.currentOnlineUser = usersData;
 
                             startActivity(intent);
+                            finish();
                         }
                         else
                         {

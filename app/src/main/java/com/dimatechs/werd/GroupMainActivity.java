@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Color;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -12,14 +13,17 @@ import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
+import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.dimatechs.werd.Model.Groups;
@@ -404,9 +408,31 @@ public class GroupMainActivity extends AppCompatActivity {
         }
 
         else if (id == R.id.action_Exit) {
-            Toast.makeText(this, "you selected יציאה", Toast.LENGTH_LONG).show();
-            android.os.Process.killProcess(android.os.Process.myPid());
-            System.exit(1);
+            AlertDialog.Builder builder = new AlertDialog.Builder(GroupMainActivity.this);
+            builder.setTitle("تحذير");
+            builder.setIcon(R.drawable.ic_report_problem);
+            builder.setMessage("سوف تقوم بالخروج !!!");
+            builder.setCancelable(true);
+            builder.setPositiveButton("انا موافق",
+                    new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int i) {
+                            Intent intent=new Intent(GroupMainActivity.this,LoginActivity.class);
+                            startActivity(intent);
+                            finish();
+                        }
+                    }
+            );
+            builder.setNegativeButton("الغاء",
+                    new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int i) {
+                        }
+                    }
+
+            );
+            AlertDialog dialog=builder.create();
+            dialog.show();
             return true;
         }
         return true;
@@ -451,10 +477,14 @@ public class GroupMainActivity extends AppCompatActivity {
                 for (int i = 0; i < usersGroups.size(); i++) {
                     int oldPart =Integer.parseInt(usersGroups.get(i).getPartNum());
                     int newPart;
-                    if(oldPart==30)
-                        newPart=1;
-                    else
-                        newPart=oldPart+1;
+                    if(oldPart!=0) {
+                        if (oldPart == 30)
+                            newPart = 1;
+                        else
+                            newPart = oldPart + 1;
+                    }else{
+                        newPart = oldPart;
+                    }
                     usersGroups.get(i).setPartNum(String.valueOf(newPart));
                 }
 
@@ -523,10 +553,14 @@ public class GroupMainActivity extends AppCompatActivity {
                 for (int i = 0; i < usersGroups.size(); i++) {
                     int oldPart =Integer.parseInt(usersGroups.get(i).getPartNum());
                     int newPart;
-                    if(oldPart==1)
-                        newPart=30;
-                    else
-                        newPart=oldPart-1;
+                    if(oldPart!=0) {
+                        if (oldPart == 1)
+                            newPart = 30;
+                        else
+                            newPart = oldPart - 1;
+                    }else{
+                        newPart = oldPart;
+                    }
                     usersGroups.get(i).setPartNum(String.valueOf(newPart));
                 }
 
@@ -582,6 +616,12 @@ public class GroupMainActivity extends AppCompatActivity {
 
     }
 
-}
+
+
+    }
+
+
+
+
 
 
