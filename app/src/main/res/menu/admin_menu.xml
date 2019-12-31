@@ -21,6 +21,12 @@
         android:icon="@drawable/ic_red_forever_black_24dp"
         android:orderInCategory="180"
         />
+    <item
+        android:id="@+id/action_Update_Group"
+        android:title="تغيير اسم المجموعه"
+        android:icon="@drawable/ic_red_forever_black_24dp"
+        android:orderInCategory="190"
+        />
 
     <item
         android:id="@+id/action_Exit"

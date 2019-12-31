@@ -171,6 +171,7 @@ public class UsersGroupActivity extends AppCompatActivity {
                                 Intent intent=new Intent(UsersGroupActivity.this, GroupMainActivity.class);
                                 intent.putExtra("groupNum",model.getGroupNum());
                                 intent.putExtra("IsAdmin",model.getAdmin());
+                                intent.putExtra("groupName",model.getGroupName());
                                 startActivity(intent);
                             }
                         });

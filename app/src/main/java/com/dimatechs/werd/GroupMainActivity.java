@@ -47,7 +47,7 @@ public class GroupMainActivity extends AppCompatActivity {
     private Button SaveBtn;
     private RecyclerView recyclerView;
     private DatabaseReference RootRef,GroupRef;
-    private String groupNum,IsAdmin,stDialogDone="no",stDialogAdmin="no";
+    private String groupNum,groupname,IsAdmin,stDialogDone="no",stDialogAdmin="no";
     private Dialog dialog;
     private ImageView dialogDone,dialogAdmin;
     private EditText etDialogPartNum;
@@ -65,6 +65,7 @@ public class GroupMainActivity extends AppCompatActivity {
 
         //Paper.init(this);
         groupNum=getIntent().getStringExtra("groupNum");
+        groupname=getIntent().getStringExtra("groupName");
         IsAdmin=getIntent().getStringExtra("IsAdmin");
 
 
@@ -211,6 +212,9 @@ public class GroupMainActivity extends AppCompatActivity {
                                                     }
                                                 });
                                                 dialog.show();
+                                            }
+                                            else{
+                                                Toast.makeText(GroupMainActivity.this, "غير متاح", Toast.LENGTH_SHORT).show();
                                             }
                                         }
                                     });
@@ -391,7 +395,13 @@ public class GroupMainActivity extends AppCompatActivity {
             dialog.show();
             return true;
         }
-
+        else if (id == R.id.action_Update_Group){
+            Intent intent=new Intent(GroupMainActivity.this,AddGroupAdminActivity.class);
+            intent.putExtra("groupNum",groupNum);
+            intent.putExtra("groupName",groupname);
+            startActivity(intent);
+            return true;
+        }
 
         else if (id == R.id.action_Exit) {
             Toast.makeText(this, "you selected יציאה", Toast.LENGTH_LONG).show();

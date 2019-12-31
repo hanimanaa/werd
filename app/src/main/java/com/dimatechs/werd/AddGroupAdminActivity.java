@@ -11,6 +11,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.dimatechs.werd.Model.UsersGroups;
 import com.dimatechs.werd.Prevalent.Prevalent;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -22,8 +23,10 @@ import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
+import java.util.List;
 
 import io.paperdb.Paper;
 
@@ -32,11 +35,11 @@ public class AddGroupAdminActivity extends AppCompatActivity {
     private Button AddGroupBtn;
     private EditText EdgroupName;
     private ProgressDialog loadingBar;
-    DatabaseReference groupListRef;
+    DatabaseReference groupListRef,ugRef;
 
     private String saveCurrentDate,saveCurrentTime;
     private String RandomKey;
-    String groupNum="0";
+    String groupNum="0",oldGroupNum,oldgroupName;
 
 
     @Override
@@ -44,8 +47,16 @@ public class AddGroupAdminActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_group_admin);
 
+        ugRef = FirebaseDatabase.getInstance().getReference().child("UsersGroups");
+
+
         AddGroupBtn=(Button)findViewById(R.id.add_group_admin_btn);
         EdgroupName=(EditText)findViewById(R.id.add_groupName_admin);
+
+        oldGroupNum=getIntent().getStringExtra("groupNum");
+        oldgroupName=getIntent().getStringExtra("groupName");
+        EdgroupName.setText(oldgroupName);
+        Toast.makeText(this, ""+oldGroupNum, Toast.LENGTH_SHORT).show();
 
         loadingBar=new ProgressDialog(this);
 
@@ -56,27 +67,29 @@ public class AddGroupAdminActivity extends AppCompatActivity {
             }
         });
 
-        // Get Group Auto Num
-        groupListRef=FirebaseDatabase.getInstance().getReference().child("GroupAutoNum");
-        groupListRef.addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot)
-            {
-                if(dataSnapshot.exists())
-                {
-                    //new group num
-                    groupNum = (dataSnapshot.getValue().toString());
-                    int x= Integer.parseInt(groupNum)+1;
-                    groupListRef.setValue(x);
+        if(oldGroupNum!=null) {
+            groupNum = oldGroupNum;
+        }else {
+            // Get Group Auto Num
+            groupListRef = FirebaseDatabase.getInstance().getReference().child("GroupAutoNum");
+            groupListRef.addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(DataSnapshot dataSnapshot) {
+                    if (dataSnapshot.exists()) {
+                        //new group num
+                        groupNum = (dataSnapshot.getValue().toString());
+                        int x = Integer.parseInt(groupNum) + 1;
+                        groupListRef.setValue(x);
+                    }
+
                 }
 
-            }
+                @Override
+                public void onCancelled(DatabaseError databaseError) {
 
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-
-            }
-        });
+                }
+            });
+        }
     }
 
     private void AddGroup()
@@ -112,7 +125,9 @@ public class AddGroupAdminActivity extends AppCompatActivity {
                     HashMap<String,Object> userdataMap = new HashMap<>();
                     userdataMap.put("groupNum",groupNum);
                     userdataMap.put("groupName",groupName);
-                    userdataMap.put("locked","no");
+                    if(oldGroupNum==null) {
+                        userdataMap.put("locked", "no");
+                    }
 
                     RootRef.child(groupNum).updateChildren(userdataMap)
                             .addOnCompleteListener(new OnCompleteListener<Void>() {
@@ -121,7 +136,14 @@ public class AddGroupAdminActivity extends AppCompatActivity {
                                 {
                                     if(task.isSuccessful())
                                     {
-                                        AddGroupAdmin(groupNum);
+                                        if(oldGroupNum==null){
+                                            //new group
+                                            AddGroupAdmin(groupNum);
+                                        }else{
+                                            //update group
+                                            UpdateGroupName(groupNum,groupName);
+                                        }
+
                                         Toast.makeText(AddGroupAdminActivity.this, "تمت اضافة المجموعه بنجاح", Toast.LENGTH_SHORT).show();
                                         loadingBar.dismiss();
                                         Intent intent=new Intent(AddGroupAdminActivity.this,UsersGroupActivity.class);
@@ -212,6 +234,73 @@ public class AddGroupAdminActivity extends AppCompatActivity {
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError)
             {
+
+            }
+        });
+
+    }
+
+    private void UpdateGroupName(final String groupNum,final String groupName)
+    {
+        ugRef.orderByChild("groupNum").equalTo(groupNum).addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                final List<UsersGroups> usersGroups = new ArrayList<>();
+                for (DataSnapshot areaSnapshot : dataSnapshot.getChildren()) {
+                    UsersGroups ug = areaSnapshot.getValue(UsersGroups.class);
+                    usersGroups.add(ug);
+                }
+
+                for (int i = 0; i < usersGroups.size(); i++) {
+                    usersGroups.get(i).setGroupName(groupName);
+                }
+
+                for (int i = 0; i < usersGroups.size(); i++) {
+
+                    final int finalI = i;
+                    ugRef.addListenerForSingleValueEvent(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                            HashMap<String,Object> groupdataMap = new HashMap<>();
+                            groupdataMap.put("id",usersGroups.get(finalI).getId());
+                            groupdataMap.put("groupNum",usersGroups.get(finalI).getGroupNum());
+                            groupdataMap.put("groupName",usersGroups.get(finalI).getGroupName());
+                            groupdataMap.put("partNum",usersGroups.get(finalI).getPartNum());
+                            groupdataMap.put("done","no");
+                            groupdataMap.put("userName",usersGroups.get(finalI).getUserName());
+                            groupdataMap.put("userPhone",usersGroups.get(finalI).getUserPhone());
+                            groupdataMap.put("admin",usersGroups.get(finalI).getAdmin());
+                            groupdataMap.put("groupNumPhone",usersGroups.get(finalI).getGroupNum()+"_"+usersGroups.get(finalI).getUserPhone());
+
+                            ugRef.child(usersGroups.get(finalI).getId())
+                                    .updateChildren(groupdataMap)
+                                    .addOnCompleteListener(new OnCompleteListener<Void>() {
+                                        @Override
+                                        public void onComplete(@NonNull Task<Void> task)
+                                        {
+                                            if(task.isSuccessful())
+                                            {
+                                                Toast.makeText(AddGroupAdminActivity.this, "تم التحديث بنجاح", Toast.LENGTH_SHORT).show();
+                                            }
+                                            else
+                                            {
+                                                Toast.makeText(AddGroupAdminActivity.this, "للاسف لم يتم التحديث !!!", Toast.LENGTH_SHORT).show();
+                                            }
+                                        }
+                                    });
+
+                        }
+
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                        }
+                    });
+
+                }
+            }
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
 
             }
         });
