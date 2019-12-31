@@ -92,21 +92,7 @@ public class UsersGroupActivity extends AppCompatActivity {
             }
         });
 
-        /*
-        new ItemTouchHelper(new ItemTouchHelper.SimpleCallback(0,ItemTouchHelper.RIGHT) {
-            @Override
-            public boolean onMove(@NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder, @NonNull RecyclerView.ViewHolder viewHolder1) {
-                return false;
-            }
 
-            @Override
-            public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int i) {
-                Toast.makeText(UsersGroupActivity.this, "swip", Toast.LENGTH_SHORT).show();
-
-            }
-        }).attachToRecyclerView(recyclerView);
-
-*/
     }
 
 
@@ -116,6 +102,7 @@ public class UsersGroupActivity extends AppCompatActivity {
         getMenuInflater().inflate(R.menu.main_menu, menu);
         return true;
     }
+
 
     @Override
     protected void onStart()
