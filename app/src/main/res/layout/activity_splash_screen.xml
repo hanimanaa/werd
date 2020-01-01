@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -13,4 +13,16 @@
         android:scaleType="fitXY"
         android:src="@drawable/sp"/>
 
-</android.support.constraint.ConstraintLayout>
+    <TextView
+        android:id="@+id/usersGroup_add_btn"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|end"
+        android:layout_margin="10dp"
+        android:fontFamily="cursive"
+        android:gravity="center"
+        android:text="By Dimatech"
+        android:textColor="#ccac00"
+        android:textSize="30dp" />
+
+</FrameLayout>

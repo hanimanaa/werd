@@ -32,6 +32,9 @@ import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
 
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+
 import io.paperdb.Paper;
 
 public class UsersGroupActivity extends AppCompatActivity {
@@ -40,9 +43,10 @@ public class UsersGroupActivity extends AppCompatActivity {
     private RecyclerView.LayoutManager layoutManager;
     private TextView txtWell;
     private FloatingActionButton addBtn;
-    private DatabaseReference RootRef;
     private String groupN="",phone="",id;
     private String fullName;
+    private String CurrentDate;
+
 
 
     @Override
@@ -53,6 +57,11 @@ public class UsersGroupActivity extends AppCompatActivity {
 
         Paper.init(this);
         fullName = Paper.book().read("fullName");
+
+        Calendar calendar=Calendar.getInstance();
+
+        SimpleDateFormat currentDate = new SimpleDateFormat("EEE, d/MMM/yyyy");
+        CurrentDate=currentDate.format(calendar.getTime());
 
         recyclerView=(RecyclerView)findViewById(R.id.usersGroup_list);
         recyclerView.setHasFixedSize(true);
@@ -109,7 +118,7 @@ public class UsersGroupActivity extends AppCompatActivity {
     {
         super.onStart();
 
-        txtWell.setText(" السلام عليكم " + fullName + "\n الرجاء اختيار المجموعه او التسجيل لمجموعه جديدة");
+        txtWell.setText(""+CurrentDate+ "\n \n" + " السلام عليكم "+fullName +"");
 
         final DatabaseReference ListRef= FirebaseDatabase.getInstance().getReference().child("UsersGroups");
 
@@ -184,32 +193,6 @@ public class UsersGroupActivity extends AppCompatActivity {
         ref.child(id).child("done").setValue(done);
     }
 
-    private void GetGroupNameFromFireBase(final String groupNum)
-    {
-        RootRef = FirebaseDatabase.getInstance().getReference();
-        RootRef.addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                if (dataSnapshot.child("Groups").child(groupNum).exists())
-                {
-                    Groups groupData =dataSnapshot.child("Groups").child(groupNum).getValue(Groups.class);
-                    groupN = "اسم المجموعه: " + groupData.getGroupName().toString();
-                    Toast.makeText(UsersGroupActivity.this,groupN, Toast.LENGTH_SHORT).show();
-
-                }
-                else
-                {
-                    Toast.makeText(UsersGroupActivity.this, "no group", Toast.LENGTH_SHORT).show();
-
-                }
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-
-            }
-        });
-    }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -223,7 +206,7 @@ public class UsersGroupActivity extends AppCompatActivity {
             AlertDialog.Builder builder = new AlertDialog.Builder(UsersGroupActivity.this);
             builder.setTitle("تحذير");
             builder.setIcon(R.drawable.ic_report_problem);
-            builder.setMessage("سوف تقوم بالخروج !!!");
+            builder.setMessage("سوف تقوم بالخروج من البرنامج !!!");
             builder.setCancelable(true);
             builder.setPositiveButton("انا موافق",
                     new DialogInterface.OnClickListener() {

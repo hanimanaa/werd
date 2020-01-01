@@ -252,7 +252,7 @@ public class GroupsActivity extends AppCompatActivity {
                                     }
                                     else
                                     {
-                                        Toast.makeText(GroupsActivity.this, "שגיאת רשת", Toast.LENGTH_SHORT).show();
+                                        Toast.makeText(GroupsActivity.this, "خطا في الشبكة", Toast.LENGTH_SHORT).show();
                                         loadingBar.dismiss();
                                     }
                                 }

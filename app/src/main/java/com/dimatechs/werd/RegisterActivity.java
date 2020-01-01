@@ -114,7 +114,7 @@ public class RegisterActivity extends AppCompatActivity {
                                     }
                                     else
                                     {
-                                        Toast.makeText(RegisterActivity.this, "שגיאת רשת", Toast.LENGTH_SHORT).show();
+                                        Toast.makeText(RegisterActivity.this, "خطا في الشبكة", Toast.LENGTH_SHORT).show();
                                         loadingBar.dismiss();
 
                                     }

@@ -3,7 +3,7 @@
 
    <item
         android:id="@+id/action_Settings"
-        android:title="משתמש עדכון פרטים"
+        android:title="تعديل حساب المستخدم"
         android:checked="true"
         android:icon="@drawable/ic_person_green"
         android:orderInCategory="100"
@@ -13,7 +13,7 @@
 
     <item
         android:id="@+id/action_Exit"
-        android:title="יציאה"
+        android:title="الخروج من البرنامج"
         android:orderInCategory="200"
         />
 

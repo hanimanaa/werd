@@ -73,7 +73,6 @@ public class GroupMainActivity extends AppCompatActivity {
         IsAdmin=getIntent().getStringExtra("IsAdmin");
 
 
-        Toast.makeText(this, groupNum, Toast.LENGTH_SHORT).show();
 
 
         recyclerView=findViewById(R.id.recycler_menu);
@@ -361,7 +360,7 @@ public class GroupMainActivity extends AppCompatActivity {
             AlertDialog.Builder builder = new AlertDialog.Builder(GroupMainActivity.this);
             builder.setTitle("تحذير");
             builder.setIcon(R.drawable.ic_report_problem);
-            builder.setMessage("سوف تقوم بحذف المجموعة !!!");
+            builder.setMessage("سوف تقوم بحذف المجموعة. لن يكون هنالك امكانية لاستعادة البيانات !!!");
             builder.setCancelable(true);
             builder.setPositiveButton("انا موافق",
                     new DialogInterface.OnClickListener() {
@@ -411,7 +410,7 @@ public class GroupMainActivity extends AppCompatActivity {
             AlertDialog.Builder builder = new AlertDialog.Builder(GroupMainActivity.this);
             builder.setTitle("تحذير");
             builder.setIcon(R.drawable.ic_report_problem);
-            builder.setMessage("سوف تقوم بالخروج !!!");
+            builder.setMessage("سوف تقوم بالخروج من البرنامج !!!");
             builder.setCancelable(true);
             builder.setPositiveButton("انا موافق",
                     new DialogInterface.OnClickListener() {
@@ -615,10 +614,7 @@ public class GroupMainActivity extends AppCompatActivity {
         });
 
     }
-
-
-
-    }
+}
 
 
 

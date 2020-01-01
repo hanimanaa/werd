@@ -1,36 +1,57 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <group
+        android:id="@+id/group1"
+        >
+        <item
+            android:title="تعديل الاجزاء"
+            android:enabled="false"
+            android:checkable="false"
+            />
     <item
         android:id="@+id/action_Asc"
         android:title="@string/ascending_order"
-        android:orderInCategory="100"
         />
     <item
         android:id="@+id/action_Desc"
         android:title="@string/descending_Order"
-        android:orderInCategory="150"
         />
+    </group>
+    <group
+        android:id="@+id/group2"
+        >
+        <item
+            android:title="تعديل المجموعه"
+            android:enabled="false"
+            android:checkable="false"
+            />
     <item
         android:id="@+id/action_Close"
         android:title="اغلاق الانتساب للمجموعه"
-        android:orderInCategory="170"
+        />
+
+    <item
+        android:id="@+id/action_Update_Group"
+        android:title="تغيير اسم المجموعه"
+        android:icon="@drawable/ic_red_forever_black_24dp"
         />
     <item
         android:id="@+id/action_Delete"
         android:title="حذف للمجموعه"
         android:icon="@drawable/ic_red_forever_black_24dp"
-        android:orderInCategory="180"
         />
-    <item
-        android:id="@+id/action_Update_Group"
-        android:title="تغيير اسم المجموعه"
-        android:icon="@drawable/ic_red_forever_black_24dp"
-        android:orderInCategory="190"
-        />
-
+    </group>
+    <group
+        android:id="@+id/group3"
+        >
+        <item
+            android:title="اخر"
+            android:enabled="false"
+            android:checkable="false"
+            />
     <item
         android:id="@+id/action_Exit"
         android:title="الخروج من البرنامج"
-        android:orderInCategory="200"
         />
+    </group>
 </menu>

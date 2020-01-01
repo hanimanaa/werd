@@ -148,10 +148,11 @@ public class AddGroupAdminActivity extends AppCompatActivity {
                                         loadingBar.dismiss();
                                         Intent intent=new Intent(AddGroupAdminActivity.this,UsersGroupActivity.class);
                                         startActivity(intent);
+                                        finish();
                                     }
                                     else
                                     {
-                                        Toast.makeText(AddGroupAdminActivity.this, "שגיאת רשת", Toast.LENGTH_SHORT).show();
+                                        Toast.makeText(AddGroupAdminActivity.this, "خطا في الشبكة !!", Toast.LENGTH_SHORT).show();
                                         loadingBar.dismiss();
 
                                     }
@@ -160,7 +161,7 @@ public class AddGroupAdminActivity extends AppCompatActivity {
                 }
                 else
                 {
-                    Toast.makeText(AddGroupAdminActivity.this, "اسم المجموعه موجود. اختر اسم اخر اذا سمحت !!", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(AddGroupAdminActivity.this, "اسم المجموعه مسجل. اختر اسم اخر اذا سمحت !!", Toast.LENGTH_SHORT).show();
                     loadingBar.dismiss();
                 }
             }

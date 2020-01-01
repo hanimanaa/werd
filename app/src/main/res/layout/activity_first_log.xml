@@ -4,12 +4,47 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:orientation="vertical"
     tools:context=".FirstLogActivity">
 
+    <ImageView
+        android:layout_width="300dp"
+        android:layout_height="200dp"
+        android:scaleType="fitXY"
+        android:src="@mipmap/ic_launcher_foreground"
+        android:layout_marginStart="50dp"/>
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="100dp"
+        android:text="ورد"
+        android:textSize="30dp"
+        android:textColor="@color/colorPrimaryDark"
+        android:gravity="center"/>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="200dp"
+        android:text="هذا تطبيق مجاني لوجه الله تعالى  يخدم قارئي القران."
+        android:textSize="20dp"
+        android:gravity="center"
+        android:textColor="@color/colorPrimary"/>
+
     <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
         android:id="@+id/firstLog_btn"
-        android:text="ok"/>
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/login_btn"
+        android:layout_marginTop="10dp"
+        android:layout_marginLeft="15dp"
+        android:layout_marginRight="15dp"
+        android:background="@drawable/buttons"
+        android:padding="17dp"
+        android:textAllCaps="false"
+        android:textSize="18sp"
+        android:text="دخول الى التطبيق"
+        android:textColor="@android:color/white"/>
+
+
+
 
 </LinearLayout>

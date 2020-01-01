@@ -185,8 +185,8 @@ public class SettingsActivity extends AppCompatActivity
         } else
             {
 
-            loadingBar.setTitle("עדכון חשבון");
-            loadingBar.setMessage("המתן בבקשה");
+            loadingBar.setTitle("تعديل الحساب");
+            loadingBar.setMessage("انتظر !!");
             loadingBar.setCanceledOnTouchOutside(false);
             loadingBar.show();
 
@@ -204,13 +204,13 @@ public class SettingsActivity extends AppCompatActivity
                                         @Override
                                         public void onComplete(@NonNull Task<Void> task) {
                                             if (task.isSuccessful()) {
-                                                Toast.makeText(SettingsActivity.this, "לקוח נרשם בהצלחה", Toast.LENGTH_SHORT).show();
+                                                Toast.makeText(SettingsActivity.this, "تم الحفظ بنجاح", Toast.LENGTH_SHORT).show();
                                                 Paper.book().write("fullName",name);
                                                 loadingBar.dismiss();
                                                 Intent intent = new Intent(SettingsActivity.this, UsersGroupActivity.class);
                                                 startActivity(intent);
                                             } else {
-                                                Toast.makeText(SettingsActivity.this, "שגיאת רשת", Toast.LENGTH_SHORT).show();
+                                                Toast.makeText(SettingsActivity.this, "خطا في الشبكة", Toast.LENGTH_SHORT).show();
                                                 loadingBar.dismiss();
                                             }
                                         }
