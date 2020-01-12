@@ -11,26 +11,57 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="150dp"
+        android:layout_height="300dp"
         android:orientation="vertical">
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="100dp"
-        android:orientation="horizontal">
+        android:layout_height="200dp"
+        android:orientation="vertical">
 
     <LinearLayout
-        android:layout_width="200dp"
+            android:layout_width="match_parent"
+            android:layout_height="100dp"
+            android:orientation="vertical"
+            android:layout_weight="5">
+
+            <TextView
+                android:id="@+id/groupName_item"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="اسم المجموعه"
+                android:textSize="30sp"
+                android:textStyle="bold"
+                android:layout_weight="5"
+                android:gravity="center"
+                android:layout_gravity="center"
+                android:textColor="@color/colorPrimary"
+                />
+
+        </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
         android:layout_height="100dp"
-        android:orientation="vertical"
+        android:orientation="horizontal"
         android:layout_weight="5">
 
+        <ImageView
+            android:id="@+id/done_item"
+            android:layout_width="10dp"
+            android:layout_height="80dp"
+            android:layout_weight="5"
+            android:layout_gravity="center"
+            android:scaleType="fitCenter"
+            android:gravity="center"
+            android:src="@drawable/ic_person_red"
+            android:layout_marginBottom="5dp"/>
         <TextView
             android:id="@+id/partNum_item"
             android:layout_width="wrap_content"
             android:layout_height="100dp"
             android:text="الجزء"
-            android:textSize="20sp"
+            android:textSize="25sp"
             android:textStyle="bold"
             android:layout_weight="5"
             android:layout_gravity="center"
@@ -38,49 +69,10 @@
             android:textColor="@color/colorPrimary"
             />
 
-        <ImageView
-            android:id="@+id/done_item"
-            android:layout_width="50dp"
-            android:layout_height="100dp"
-            android:layout_weight="5"
-            android:layout_gravity="center"
-            android:scaleType="fitXY"
-            android:gravity="center"
-            android:src="@drawable/ic_person_red"
-            android:layout_marginBottom="5dp"/>
-    </LinearLayout>
-
-    <LinearLayout
-        android:layout_width="200dp"
-        android:layout_height="100dp"
-        android:orientation="vertical"
-        android:layout_weight="5">
-        <TextView
-            android:id="@+id/groupNum_item"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="رقم المجموعه"
-            android:textSize="20sp"
-            android:textStyle="bold"
-            android:layout_weight="5"
-            android:gravity="center"
-            android:layout_gravity="center"
-            android:textColor="@color/colorPrimary"
-            />
-        <TextView
-            android:id="@+id/groupName_item"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="اسم المجموعه"
-            android:textSize="20sp"
-            android:textStyle="bold"
-            android:layout_weight="5"
-            android:gravity="center"
-            android:layout_gravity="center"
-            android:textColor="@color/colorPrimary"
-            />
 
     </LinearLayout>
+
+
 
     </LinearLayout>
 
@@ -92,7 +84,7 @@
             android:id="@+id/more"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="المزيد.."
+            android:text="..اعضاء المجموعة.."
             android:textSize="20sp"
             android:textStyle="bold"
             android:layout_weight="5"

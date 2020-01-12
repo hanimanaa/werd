@@ -6,9 +6,14 @@ import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.view.Gravity;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.dimatechs.werd.Model.Users;
@@ -107,14 +112,18 @@ public class RegisterActivity extends AppCompatActivity {
                                 {
                                     if(task.isSuccessful())
                                     {
-                                        Toast.makeText(RegisterActivity.this, "تمت الاضافه بنجاح", Toast.LENGTH_SHORT).show();
+                                        //Toast.makeText(RegisterActivity.this, "تمت الاضافه بنجاح", Toast.LENGTH_SHORT).show();
+                                        MakeToast("اضافة مستخدم جديد","تمت الاضافه بنجاح",R.drawable.ok);
+
                                         loadingBar.dismiss();
                                         Intent intent=new Intent(RegisterActivity.this,LoginActivity.class);
                                         startActivity(intent);
                                     }
                                     else
                                     {
-                                        Toast.makeText(RegisterActivity.this, "خطا في الشبكة", Toast.LENGTH_SHORT).show();
+                                       // Toast.makeText(RegisterActivity.this, "خطا في الشبكة", Toast.LENGTH_SHORT).show();
+                                        MakeToast("تحديث","خطا في الشبكة",R.drawable.error1);
+
                                         loadingBar.dismiss();
 
                                     }
@@ -123,10 +132,12 @@ public class RegisterActivity extends AppCompatActivity {
                 }
                 else
                 {
-                    Toast.makeText(RegisterActivity.this, "المستخدم مسجل", Toast.LENGTH_SHORT).show();
+                    //Toast.makeText(RegisterActivity.this, "المستخدم مسجل", Toast.LENGTH_SHORT).show();
+                    MakeToast("خطا","للاسف المستخدم مسجل !!!",R.drawable.error1);
+
                     loadingBar.dismiss();
-                    Intent intent=new Intent(RegisterActivity.this,LoginActivity.class);
-                    startActivity(intent);
+                   // Intent intent=new Intent(RegisterActivity.this,LoginActivity.class);
+                 //   startActivity(intent);
 
                 }
             }
@@ -139,4 +150,25 @@ public class RegisterActivity extends AppCompatActivity {
         });
     }
 
+    private void MakeToast(String headerText, String message,int image)
+    {
+        // MakeToast("hi","jhvgfxfhg",R.drawable.warning1);
+        // image=R.id.toast_image
+        Toast toast = new Toast(getApplicationContext());
+        toast.setDuration(Toast.LENGTH_SHORT);
+        toast.setGravity(Gravity.CENTER,0,0);
+
+        LayoutInflater ly=getLayoutInflater();
+        View v=ly.inflate(R.layout.toast,(ViewGroup)findViewById(R.id.line1));
+        TextView txt1=(TextView)v.findViewById(R.id.toast_text1);
+        TextView txt2=(TextView)v.findViewById(R.id.toast_text2);
+        ImageView img =(ImageView)v.findViewById(R.id.toast_image);
+        txt1.setText(headerText);
+        txt2.setText(message);
+        img.setImageResource(image);
+
+        toast.setView((v));
+        toast.show();
+
+    }
 }

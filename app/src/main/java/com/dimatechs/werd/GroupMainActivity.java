@@ -14,6 +14,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.util.TypedValue;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -189,7 +190,7 @@ public class GroupMainActivity extends AppCompatActivity {
                                                                         dialogAdmin.setImageResource(R.drawable.ic_person_pin_circle_black_24dp);
                                                                         stDialogAdmin = "no";
                                                                     } else {
-                                                                        Toast.makeText(GroupMainActivity.this, "يجب ان يكون مدير واحد للمجموعه على الاقل !!!", Toast.LENGTH_SHORT).show();
+                                                                        MakeToast( "تحذير","يجب ان يكون مدير واحد للمجموعه على الاقل !!!",R.drawable.error1);
                                                                     }
 
                                                                 }
@@ -331,9 +332,9 @@ public class GroupMainActivity extends AppCompatActivity {
                             @Override
                             public void onComplete(@NonNull Task<Void> task) {
                                 if (task.isSuccessful()) {
-                                    Toast.makeText(GroupMainActivity.this, "تم اغلاق المجموعه", Toast.LENGTH_SHORT).show();
+                                    MakeToast("الانتساب للمجموعه","تم اغلاق الانتساب للمجموعه",R.drawable.ok);
                                 } else {
-                                    Toast.makeText(GroupMainActivity.this, "لم يتم الحفظ", Toast.LENGTH_SHORT).show();
+                                    MakeToast("حفظ","لم يتم الحفظ",R.drawable.error1);
                                 }
                             }
                         });
@@ -347,9 +348,9 @@ public class GroupMainActivity extends AppCompatActivity {
                             @Override
                             public void onComplete(@NonNull Task<Void> task) {
                                 if (task.isSuccessful()) {
-                                    Toast.makeText(GroupMainActivity.this, "تم فتح الانتساب للمجموعه", Toast.LENGTH_SHORT).show();
+                                    MakeToast("الانتساب للمجموعه","تم فتح الانتساب للمجموعه",R.drawable.ok);
                                 } else {
-                                    Toast.makeText(GroupMainActivity.this, "لم يتم الحفظ", Toast.LENGTH_SHORT).show();
+                                    MakeToast("حفظ","لم يتم الحفظ",R.drawable.error1);
                                 }
                             }
                         });
@@ -452,12 +453,12 @@ public class GroupMainActivity extends AppCompatActivity {
                         if(task.isSuccessful())
                         {
                             dialog.dismiss();
-                            Toast.makeText(GroupMainActivity.this, "تم الحفظ بنجاح", Toast.LENGTH_SHORT).show();
+                            MakeToast("حفظ","تم الحفظ بنجاح",R.drawable.ok);
                         }
                         else
                         {
                             dialog.dismiss();
-                            Toast.makeText(GroupMainActivity.this, "لم يتم الحفظ", Toast.LENGTH_SHORT).show();
+                            MakeToast("حفظ","للاسف لم يتم الحفظ !!!",R.drawable.error1);
                         }
                     }
                 });
@@ -512,11 +513,11 @@ public class GroupMainActivity extends AppCompatActivity {
                                         {
                                             if(task.isSuccessful())
                                             {
-                                                Toast.makeText(GroupMainActivity.this, "تم التحديث بنجاح", Toast.LENGTH_SHORT).show();
+                                                MakeToast("تحديث","تم التحديث بنجاح",R.drawable.ok);
                                             }
                                             else
                                             {
-                                                Toast.makeText(GroupMainActivity.this, "للاسف لم يتم التحديث !!!", Toast.LENGTH_SHORT).show();
+                                                MakeToast("تحديث","للاسف لم يتم التحديث !!!",R.drawable.error1);
                                             }
                                         }
                                     });
@@ -588,11 +589,12 @@ public class GroupMainActivity extends AppCompatActivity {
                                         {
                                             if(task.isSuccessful())
                                             {
-                                                Toast.makeText(GroupMainActivity.this, "تم التحديث بنجاح", Toast.LENGTH_SHORT).show();
+                                                MakeToast("تحديث","تم التحديث بنجاح",R.drawable.ok);
                                             }
                                             else
                                             {
-                                                Toast.makeText(GroupMainActivity.this, "للاسف لم يتم التحديث !!!", Toast.LENGTH_SHORT).show();
+                                                MakeToast("تحديث","للاسف لم يتم التحديث !!!",R.drawable.error1);
+
                                             }
                                         }
                                     });
@@ -612,6 +614,28 @@ public class GroupMainActivity extends AppCompatActivity {
 
             }
         });
+
+    }
+
+    private void MakeToast(String headerText, String message,int image)
+    {
+        // MakeToast("hi","jhvgfxfhg",R.drawable.warning1);
+        // image=R.id.toast_image
+        Toast toast = new Toast(getApplicationContext());
+        toast.setDuration(Toast.LENGTH_SHORT);
+        toast.setGravity(Gravity.CENTER,0,0);
+
+        LayoutInflater ly=getLayoutInflater();
+        View v=ly.inflate(R.layout.toast,(ViewGroup)findViewById(R.id.line1));
+        TextView txt1=(TextView)v.findViewById(R.id.toast_text1);
+        TextView txt2=(TextView)v.findViewById(R.id.toast_text2);
+        ImageView img =(ImageView)v.findViewById(R.id.toast_image);
+        txt1.setText(headerText);
+        txt2.setText(message);
+        img.setImageResource(image);
+
+        toast.setView((v));
+        toast.show();
 
     }
 }

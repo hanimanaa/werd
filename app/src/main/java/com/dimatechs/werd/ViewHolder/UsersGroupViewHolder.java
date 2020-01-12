@@ -18,7 +18,7 @@ public class UsersGroupViewHolder extends RecyclerView.ViewHolder implements Vie
     {
         super(itemView);
 
-        txtGroupNum = (TextView) itemView.findViewById(R.id.groupNum_item);
+
         txtGroupName = (TextView) itemView.findViewById(R.id.groupName_item);
         txtPartNum = (TextView) itemView.findViewById(R.id.partNum_item);
         imageView = (ImageView) itemView.findViewById(R.id.done_item);

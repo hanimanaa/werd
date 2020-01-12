@@ -134,8 +134,8 @@ public class UsersGroupActivity extends AppCompatActivity {
                     @Override
                     protected void onBindViewHolder(@NonNull final UsersGroupViewHolder holder, int position, @NonNull final UsersGroups model)
                     {
-                            holder.txtGroupNum.setText("رقم المجموعه : " + model.getGroupNum());
-                            holder.txtGroupName.setText("اسم المجموعه : " + model.getGroupName());
+                            //holder.txtGroupNum.setText("رقم المجموعه : " + model.getGroupNum());
+                            holder.txtGroupName.setText("مجموعة" +"\n"+ model.getGroupName());
                             holder.txtPartNum.setText("جزء رقم : " + model.getPartNum());
 
                             if (model.getDone().equals("done")) {
