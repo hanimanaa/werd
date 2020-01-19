@@ -2,9 +2,9 @@ package com.dimatechs.werd;
 
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -16,8 +16,6 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.dimatechs.werd.Model.Users;
-import com.dimatechs.werd.Prevalent.Prevalent;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.database.DataSnapshot;
@@ -134,6 +132,7 @@ public class RegisterActivity extends AppCompatActivity {
                 {
                     //Toast.makeText(RegisterActivity.this, "المستخدم مسجل", Toast.LENGTH_SHORT).show();
                     MakeToast("خطا","للاسف المستخدم مسجل !!!",R.drawable.error1);
+                    Edphone.setFocusable(true);
 
                     loadingBar.dismiss();
                    // Intent intent=new Intent(RegisterActivity.this,LoginActivity.class);

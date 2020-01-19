@@ -15,6 +15,14 @@
       },
       "oauth_client": [
         {
+          "client_id": "3184533179-glpa2ab1mpgsqjc681enni4p1e5kjt3m.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.dimatechs.werd",
+            "certificate_hash": "73f3639dc7b4ff096f7b029c3ac4bd69c95ebd3c"
+          }
+        },
+        {
           "client_id": "3184533179-md800ebs3d4ekatqs5at0uj6r0u99ro6.apps.googleusercontent.com",
           "client_type": 3
         }

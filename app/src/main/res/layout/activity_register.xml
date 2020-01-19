@@ -42,21 +42,6 @@
                 android:layout_below="@+id/app_name"
                 android:src="@drawable/new_user"/>
 
-
-
-            <EditText
-                android:id="@+id/Edname"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="15dp"
-                android:layout_marginRight="15dp"
-                android:textDirection="rtl"
-                android:background="@drawable/input_design"
-                android:padding="20dp"
-                android:layout_marginTop="20dp"
-                android:layout_below="@id/logo"
-                android:hint="الاسم الشخصي"
-                />
             <EditText
                 android:id="@+id/Edphone"
                 android:layout_width="match_parent"
@@ -68,8 +53,22 @@
                 android:background="@drawable/input_design"
                 android:padding="20dp"
                 android:layout_marginTop="10dp"
-                android:layout_below="@id/Edname"
+                android:layout_below="@id/logo"
                 android:hint="رقم الهاتف"
+                />
+
+            <EditText
+                android:id="@+id/Edname"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="15dp"
+                android:layout_marginRight="15dp"
+                android:textDirection="rtl"
+                android:background="@drawable/input_design"
+                android:padding="20dp"
+                android:layout_marginTop="20dp"
+                android:layout_below="@id/Edphone"
+                android:hint="الاسم الشخصي"
                 />
             <EditText
                 android:id="@+id/Edpassword"
@@ -81,7 +80,7 @@
                 android:padding="20dp"
                 android:textDirection="rtl"
                 android:layout_marginTop="10dp"
-                android:layout_below="@id/Edphone"
+                android:layout_below="@id/Edname"
                 android:hint="الرقم السري"
                 />
 
