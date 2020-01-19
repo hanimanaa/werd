@@ -1,9 +1,10 @@
 package com.dimatechs.werd.ViewHolder;
 
-import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
+
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.dimatechs.werd.Interface.ItemClickListner;
 import com.dimatechs.werd.R;
