@@ -17,6 +17,7 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.dimatechs.werd.notifications.Token;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.database.DataSnapshot;
@@ -24,6 +25,7 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.iid.FirebaseInstanceId;
 
 import java.util.HashMap;
 
@@ -111,6 +113,10 @@ public class RegisterActivity extends AppCompatActivity {
                                 {
                                     if(task.isSuccessful())
                                     {
+                                        DatabaseReference ref =FirebaseDatabase.getInstance().getReference("Tokens");
+                                        Token mToken = new Token(FirebaseInstanceId.getInstance().getToken());
+                                        ref.child(phone).setValue(mToken);
+
                                         //Toast.makeText(RegisterActivity.this, "تمت الاضافه بنجاح", Toast.LENGTH_SHORT).show();
                                         MakeToast("اضافة مستخدم جديد","تمت الاضافه بنجاح",R.drawable.ok);
 

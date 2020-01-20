@@ -15,11 +15,13 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.dimatechs.werd.Model.Users;
 import com.dimatechs.werd.Prevalent.Prevalent;
+import com.dimatechs.werd.notifications.Token;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.iid.FirebaseInstanceId;
 import com.rey.material.widget.CheckBox;
 
 import io.paperdb.Paper;
@@ -141,6 +143,10 @@ public class LoginActivity extends AppCompatActivity {
                     {
                         if(usersData.getPassword().equals(password))
                         {
+                            DatabaseReference ref =FirebaseDatabase.getInstance().getReference("Tokens");
+                            Token mToken = new Token(FirebaseInstanceId.getInstance().getToken());
+                            ref.child(phone).setValue(mToken);
+
                             String fullName = usersData.getName() ;
                             Toast.makeText(LoginActivity.this, "السلام عليكم " + fullName, Toast.LENGTH_SHORT).show();
                             loadingBar.dismiss();

@@ -49,6 +49,10 @@
             android:enabled="false"
             android:checkable="false"
             />
+        <item
+            android:id="@+id/action_Notification"
+            android:title="ارسال اشعارات"
+            />
     <item
         android:id="@+id/action_Exit"
         android:title="الخروج من البرنامج"

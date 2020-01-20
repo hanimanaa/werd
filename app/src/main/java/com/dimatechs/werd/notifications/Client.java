@@ -6,7 +6,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
 public class Client {
 
     private static Retrofit retrofit =null;
-    private static Retrofit getRetrofit(String url){
+    public static Retrofit getRetrofit(String url){
         if(retrofit == null){
             retrofit=new Retrofit.Builder()
                     .baseUrl(url)
