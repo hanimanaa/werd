@@ -5,21 +5,22 @@ package com.dimatechs.werd.Model;
 public class Users
 {
     private String name, phone, password,group,num;
+    private boolean isSelected;
 
 
     public Users()
     {
     }
 
-    public Users(String name, String phone, String password, String group,String num) {
+    public Users(String name, String phone, String password, String group, String num, boolean isSelected) {
         this.name = name;
         this.phone = phone;
         this.password = password;
-        this.group=group;
-        this.num=num;
-
-
+        this.group = group;
+        this.num = num;
+        this.isSelected = isSelected;
     }
+
 
     public String getName() {
         return name;
@@ -59,6 +60,14 @@ public class Users
 
     public void setNum(String num) {
         this.num = num;
+    }
+
+    public boolean isSelected() {
+        return isSelected;
+    }
+
+    public void setSelected(boolean selected) {
+        isSelected = selected;
     }
 
 }

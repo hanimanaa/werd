@@ -4,18 +4,90 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    tools:context=".NotifcationActivity">
+    tools:context=".NotifcationActivity"
+    android:orientation="vertical">
+
 
     <EditText
-        android:id="@+id/messageEt"
+        android:id="@+id/mess_bar"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:hint="message"/>
-    <Button
-        android:id="@+id/sendBtn"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="send"/>
+        android:layout_height="60dp"
+        android:layout_marginLeft="45dp"
+        android:layout_marginRight="45dp"
+        android:layout_marginBottom="10dp"
+        android:textDirection="rtl"
+        android:padding="20dp"
+        android:layout_marginTop="10dp"
+        android:hint="ادخل نص الرسالة "
+        />
 
-</LinearLayout>
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="30dp"
+        android:layout_gravity="center_horizontal"
+        android:orientation="horizontal"
+        android:layoutDirection="rtl"
+        android:layout_marginBottom="10dp">
+
+        <RadioGroup xmlns:android="http://schemas.android.com/apk/res/android"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="horizontal">
+
+            <RadioButton
+                android:id="@+id/RB_NotSelect"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="not" />
+
+            <RadioButton
+                android:id="@+id/RB_selectAll"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Select All" />
+
+            <RadioButton
+                android:id="@+id/RB_read"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="read"
+                android:textColor="#64DD17"/>
+
+            <RadioButton
+                android:id="@+id/RB_notRead"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="not read"
+                android:textColor="#D50000"/>
+        </RadioGroup>
+    </LinearLayout>
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        >
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recycler_users"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:scrollbars="vertical">
+
+        </androidx.recyclerview.widget.RecyclerView>
+
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/send_btn"
+            android:textSize="40sp"
+            android:layout_gravity="bottom|end"
+            android:layout_margin="10dp"
+            android:src="@drawable/ic_send_black_24dp"
+
+            />
+
+
+
+    </FrameLayout>
+</LinearLayout >

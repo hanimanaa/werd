@@ -400,6 +400,9 @@ public class GroupMainActivity extends AppCompatActivity {
         }
         else if (id == R.id.action_Notification){
             Intent intent=new Intent(GroupMainActivity.this, NotifcationActivity.class);
+            intent.putExtra("groupNum",groupNum);
+            intent.putExtra("IsAdmin",IsAdmin);
+            intent.putExtra("groupName",groupname);
             startActivity(intent);
             return true;
         }

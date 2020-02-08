@@ -15,13 +15,15 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.dimatechs.werd.Model.Users;
 import com.dimatechs.werd.Prevalent.Prevalent;
-import com.dimatechs.werd.notifications.Token;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.iid.FirebaseInstanceId;
+import com.google.firebase.iid.InstanceIdResult;
 import com.rey.material.widget.CheckBox;
 
 import io.paperdb.Paper;
@@ -33,6 +35,7 @@ public class LoginActivity extends AppCompatActivity {
     private String parentDbName="Users";
     private CheckBox chkBoxRememberMe;
     String phone="",password="";
+    DatabaseReference UserRef;
 
 
     @Override
@@ -45,6 +48,8 @@ public class LoginActivity extends AppCompatActivity {
         InputNumber = (EditText) findViewById(R.id.login_phone_number_input);
         InputPassword = (EditText) findViewById(R.id.login_password_input);
         loadingBar = new ProgressDialog(this);
+
+        UserRef = FirebaseDatabase.getInstance().getReference().child("Users");
 
         chkBoxRememberMe = (CheckBox) findViewById(R.id.remember_me_chkb);
         Paper.init(this);
@@ -137,26 +142,48 @@ public class LoginActivity extends AppCompatActivity {
                 if(dataSnapshot.child(parentDbName).child(phone).exists())
                 {
 
-                    Users usersData =dataSnapshot.child(parentDbName).child(phone).getValue(Users.class);
+                   final Users usersData =dataSnapshot.child(parentDbName).child(phone).getValue(Users.class);
 
                     if(usersData.getPhone().equals(phone))
                     {
                         if(usersData.getPassword().equals(password))
                         {
-                            DatabaseReference ref =FirebaseDatabase.getInstance().getReference("Tokens");
-                            Token mToken = new Token(FirebaseInstanceId.getInstance().getToken());
-                            ref.child(phone).setValue(mToken);
 
-                            String fullName = usersData.getName() ;
+
+                            final String fullName = usersData.getName() ;
                             Toast.makeText(LoginActivity.this, "السلام عليكم " + fullName, Toast.LENGTH_SHORT).show();
                             loadingBar.dismiss();
 
-                            Intent intent=new Intent(LoginActivity.this,UsersGroupActivity.class);
-                            Paper.book().write("fullName",fullName);
-                            Prevalent.currentOnlineUser = usersData;
+                            FirebaseInstanceId.getInstance().getInstanceId()
+                                    .addOnCompleteListener(new OnCompleteListener<InstanceIdResult>() {
+                                        @Override
+                                        public void onComplete(@NonNull Task<InstanceIdResult> task) {
+                                            if (!task.isSuccessful()) {
+                                                return;
+                                            }
+                                            // Get new Instance ID token
+                                            String deviceToken = task.getResult().getToken();
 
-                            startActivity(intent);
-                            finish();
+                                            UserRef.child(phone).child("device_token")
+                                                    .setValue(deviceToken)
+                                                    .addOnCompleteListener(new OnCompleteListener<Void>() {
+                                                        @Override
+                                                        public void onComplete(@NonNull Task<Void> task)
+                                                        {
+                                                            if(task.isSuccessful())
+                                                            {
+                                                                Intent intent=new Intent(LoginActivity.this,UsersGroupActivity.class);
+                                                                intent.putExtra("phone",phone);
+                                                                Paper.book().write("fullName",fullName);
+                                                                Prevalent.currentOnlineUser = usersData;
+                                                                startActivity(intent);
+                                                                finish();
+                                                            }
+                                                        }
+                                                    });
+                                        }
+                                    });
+
                         }
                         else
                         {
