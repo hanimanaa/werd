@@ -24,6 +24,8 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.iid.FirebaseInstanceId;
+import com.google.firebase.iid.InstanceIdResult;
 
 import java.util.HashMap;
 
@@ -38,9 +40,10 @@ public class RegisterActivity extends AppCompatActivity {
         setContentView(R.layout.activity_register);
 
         CreateAccountBtn=(Button)findViewById(R.id.Add_btn);
-        Edname=(EditText)findViewById(R.id.Edname);
         Edphone=(EditText)findViewById(R.id.Edphone);
+        Edname=(EditText)findViewById(R.id.Edname);
         Edpassword=(EditText)findViewById(R.id.Edpassword);
+
 
 
         loadingBar=new ProgressDialog(this);
@@ -60,18 +63,21 @@ public class RegisterActivity extends AppCompatActivity {
         String password =Edpassword.getText().toString();
 
 
-
-        if(TextUtils.isEmpty(name))
-        {
-            Toast.makeText(this, "ادخل الاسم اذا سمحت . . .", Toast.LENGTH_SHORT).show();
-        }
-        else if(TextUtils.isEmpty(phone))
+        if(TextUtils.isEmpty(phone))
         {
             Toast.makeText(this, "ادخل رقم الهاتف اذا سمحت . . .", Toast.LENGTH_SHORT).show();
+            Edphone.setError("ادخل رقم الهاتف اذا سمحت");
+        }
+
+        else if(TextUtils.isEmpty(name))
+        {
+            Toast.makeText(this, "ادخل الاسم اذا سمحت . . .", Toast.LENGTH_SHORT).show();
+            Edname.setError("ادخل الاسم اذا سمحت");
         }
         else if(TextUtils.isEmpty(password))
         {
             Toast.makeText(this, "ادخل كلمة السر . . .", Toast.LENGTH_SHORT).show();
+            Edpassword.setError("ادخل كلمة السر اذا سمحت");
         }
         else
         {
@@ -115,12 +121,35 @@ public class RegisterActivity extends AppCompatActivity {
                                      //   Token mToken = new Token(FirebaseInstanceId.getInstance().getToken());
                                     //    ref.child(phone).setValue(mToken);
 
-                                        //Toast.makeText(RegisterActivity.this, "تمت الاضافه بنجاح", Toast.LENGTH_SHORT).show();
-                                        MakeToast("اضافة مستخدم جديد","تمت الاضافه بنجاح",R.drawable.ok);
+                                        FirebaseInstanceId.getInstance().getInstanceId()
+                                                .addOnCompleteListener(new OnCompleteListener<InstanceIdResult>() {
+                                                    @Override
+                                                    public void onComplete(@NonNull Task<InstanceIdResult> task) {
+                                                        if (!task.isSuccessful()) {
+                                                            return;
+                                                        }
+                                                        // Get new Instance ID token
+                                                        String deviceToken = task.getResult().getToken();
 
-                                        loadingBar.dismiss();
-                                        Intent intent=new Intent(RegisterActivity.this,LoginActivity.class);
-                                        startActivity(intent);
+                                                        RootRef.child("Users").child(phone).child("device_token")
+                                                                .setValue(deviceToken)
+                                                                .addOnCompleteListener(new OnCompleteListener<Void>() {
+                                                                    @Override
+                                                                    public void onComplete(@NonNull Task<Void> task)
+                                                                    {
+                                                                        if(task.isSuccessful())
+                                                                        {
+                                                                            MakeToast("اضافة مستخدم جديد","تمت الاضافه بنجاح",R.drawable.ok);
+
+                                                                            loadingBar.dismiss();
+                                                                            Intent intent=new Intent(RegisterActivity.this,LoginActivity.class);
+                                                                            startActivity(intent);
+                                                                        }
+                                                                    }
+                                                                });
+                                                    }
+                                                });
+
                                     }
                                     else
                                     {

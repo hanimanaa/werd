@@ -1,6 +1,7 @@
 package com.dimatechs.werd;
 
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -29,8 +30,12 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.HashMap;
+
+import io.paperdb.Paper;
 
 public class NotifcationActivity extends AppCompatActivity {
 
@@ -43,12 +48,17 @@ public class NotifcationActivity extends AppCompatActivity {
     private String senderUserID,groupNum,groupname,IsAdmin;
     private DatabaseReference MessagesRef;
     private RadioButton rbNotSelect, rbSelectAll, rbRead, rbNotRead;
+    private String fullName;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_notifcation);
+
+
+        Paper.init(this);
+        fullName = Paper.book().read("fullName");
 
         MessagesRef = FirebaseDatabase.getInstance().getReference().child("Messages");
         RootRef = FirebaseDatabase.getInstance().getReference().child("UsersGroups");
@@ -66,6 +76,9 @@ public class NotifcationActivity extends AppCompatActivity {
         layoutManager = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(layoutManager);
 
+        recyclerView.requestFocus();
+
+
         edmessage = (EditText) findViewById(R.id.mess_bar);
         senderUserID = Prevalent.currentOnlineUser.getPhone();
 
@@ -74,15 +87,30 @@ public class NotifcationActivity extends AppCompatActivity {
         btnSend.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                 int x = checkedUsers.size();
-                // Toast.makeText(NotifcationActivity.this, "you select: "+x+" users", Toast.LENGTH_SHORT).show();
 
                 String message = edmessage.getText().toString();
+                if(TextUtils.isEmpty(message))
+                {
+                    edmessage.setError("الرجاء كتابة الرسالة");
+                }
+
+                Calendar calendar=Calendar.getInstance();
+
+                SimpleDateFormat currentDate = new SimpleDateFormat("MMM dd, yyyy");
+                String CurrentDate=currentDate.format(calendar.getTime());
+
+                SimpleDateFormat currentTime = new SimpleDateFormat("HH:mm:ss a");
+                String CurrentTime=currentTime.format(calendar.getTime());
 
                 for (int i = 0; i < checkedUsers.size(); i++) {
+
                     HashMap<String, String> NotificationMap = new HashMap<>();
                     NotificationMap.put("from", senderUserID);
                     NotificationMap.put("body", message);
+                    NotificationMap.put("senderName", fullName);
+                    NotificationMap.put("time", CurrentTime);
+                    NotificationMap.put("date", CurrentDate);
+
 
                     String receiverUserID = checkedUsers.get(i).getUserPhone();
 

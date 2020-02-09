@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
 
-   <item
+    <item
         android:id="@+id/action_Settings"
         android:title="تعديل حساب المستخدم"
         android:checked="true"
@@ -9,6 +9,13 @@
         android:orderInCategory="100"
         />
 
+    <item
+        android:id="@+id/action_Messages"
+        android:title="بريد الرسائل"
+        android:checked="true"
+        android:icon="@drawable/ic_person_green"
+        android:orderInCategory="150"
+        />
 
 
     <item

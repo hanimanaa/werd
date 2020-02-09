@@ -2,14 +2,7 @@ package com.dimatechs.werd;
 
 import android.content.DialogInterface;
 import android.content.Intent;
-import androidx.annotation.NonNull;
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import androidx.appcompat.app.AlertDialog;
-import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -18,15 +11,21 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
 import com.dimatechs.werd.Model.UsersGroups;
 import com.dimatechs.werd.Prevalent.Prevalent;
 import com.dimatechs.werd.ViewHolder.UsersGroupViewHolder;
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.firebase.ui.database.FirebaseRecyclerOptions;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
-
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -195,6 +194,10 @@ public class UsersGroupActivity extends AppCompatActivity {
         int id = item.getItemId();
         if (id == R.id.action_Settings) {
             Intent intent = new Intent(getApplicationContext(),SettingsActivity.class);
+            startActivity(intent);
+            return true;
+        } else  if (id == R.id.action_Messages) {
+            Intent intent = new Intent(getApplicationContext(),MessagesActivity.class);
             startActivity(intent);
             return true;
         }
