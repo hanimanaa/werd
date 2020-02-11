@@ -37,7 +37,7 @@ public class UsersGroupActivity extends AppCompatActivity {
     private RecyclerView recyclerView;
     private RecyclerView.LayoutManager layoutManager;
     private TextView txtWell;
-    private FloatingActionButton addBtn;
+    private FloatingActionButton addBtn,messageBtn;
     private String groupN="",phone="",id;
     private String fullName;
     private String CurrentDate;
@@ -65,6 +65,8 @@ public class UsersGroupActivity extends AppCompatActivity {
 
         txtWell=(TextView)findViewById(R.id.TvWell);
         addBtn=(FloatingActionButton) findViewById(R.id.usersGroup_add_btn);
+        messageBtn=(FloatingActionButton) findViewById(R.id.usersGroup_messages_btn);
+
 
         addBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -96,6 +98,13 @@ public class UsersGroupActivity extends AppCompatActivity {
             }
         });
 
+        messageBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getApplicationContext(),MessagesActivity.class);
+                startActivity(intent);
+            }
+        });
 
     }
 

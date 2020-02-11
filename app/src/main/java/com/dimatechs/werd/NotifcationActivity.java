@@ -89,18 +89,19 @@ public class NotifcationActivity extends AppCompatActivity {
             public void onClick(View v) {
 
                 String message = edmessage.getText().toString();
-                if(TextUtils.isEmpty(message))
+                if (TextUtils.isEmpty(message))
                 {
                     edmessage.setError("الرجاء كتابة الرسالة");
                 }
-
-                Calendar calendar=Calendar.getInstance();
+                else
+                {
+                Calendar calendar = Calendar.getInstance();
 
                 SimpleDateFormat currentDate = new SimpleDateFormat("MMM dd, yyyy");
-                String CurrentDate=currentDate.format(calendar.getTime());
+                String CurrentDate = currentDate.format(calendar.getTime());
 
                 SimpleDateFormat currentTime = new SimpleDateFormat("HH:mm:ss a");
-                String CurrentTime=currentTime.format(calendar.getTime());
+                String CurrentTime = currentTime.format(calendar.getTime());
 
                 for (int i = 0; i < checkedUsers.size(); i++) {
 
@@ -121,12 +122,12 @@ public class NotifcationActivity extends AppCompatActivity {
                                 @Override
                                 public void onComplete(@NonNull Task<Void> task) {
                                     if (task.isSuccessful()) {
-                                        MakeToast("ارسال رسالة","تم ارسال الرسالة بنجاح",R.drawable.ok);
+                                        MakeToast("ارسال رسالة", "تم ارسال الرسالة بنجاح", R.drawable.ok);
                                     }
                                 }
                             });
                 }
-
+                }
             }
         });
 

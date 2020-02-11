@@ -53,6 +53,8 @@ public class MessagesActivity extends AppCompatActivity {
         recyclerView = findViewById(R.id.recycler_Messages);
         //recyclerView.setHasFixedSize(true);
         layoutManager = new LinearLayoutManager(this);
+       // ((LinearLayoutManager) layoutManager).setReverseLayout(true);
+       ((LinearLayoutManager) layoutManager).setStackFromEnd(true);
         recyclerView.setLayoutManager(layoutManager);
 
 

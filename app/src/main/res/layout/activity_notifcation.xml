@@ -35,30 +35,33 @@
             android:orientation="horizontal">
 
             <RadioButton
-                android:id="@+id/RB_NotSelect"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="not" />
-
-            <RadioButton
-                android:id="@+id/RB_selectAll"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Select All" />
-
-            <RadioButton
                 android:id="@+id/RB_read"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="read"
+                android:text="قرء الورد"
                 android:textColor="#64DD17"/>
 
             <RadioButton
                 android:id="@+id/RB_notRead"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="not read"
+                android:text="لم يقرا الورد"
                 android:textColor="#D50000"/>
+
+            <RadioButton
+                android:id="@+id/RB_NotSelect"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="لا احد" />
+
+
+
+            <RadioButton
+                android:id="@+id/RB_selectAll"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="الكل" />
+
         </RadioGroup>
     </LinearLayout>
 
