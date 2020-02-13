@@ -48,7 +48,9 @@ public class GroupMainActivity extends AppCompatActivity {
     private Dialog dialog;
     private ImageView dialogDone,dialogAdmin;
     private EditText etDialogPartNum;
+    private TextView etDeleteUser;
     private RecyclerView.LayoutManager layoutManager;
+    private UsersGroups ug;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -149,6 +151,27 @@ public class GroupMainActivity extends AppCompatActivity {
                                                     }
                                                 });
 
+                                                // Delete user
+                                                etDeleteUser = (TextView) dialog.findViewById(R.id.tvDeleteUser);
+
+                                                etDeleteUser.setOnClickListener(new View.OnClickListener() {
+                                                    @Override
+                                                    public void onClick(View v) {
+                                                        AlertDialog.Builder builder = new AlertDialog.Builder(GroupMainActivity.this);
+                                                        builder.setTitle("حذف");
+                                                        builder.setMessage("هل تريد حذف المشترك ؟");
+                                                        builder.setIcon(R.drawable.error1);
+
+                                                        ug=model;
+                                                        builder.setCancelable(true);
+                                                        builder.setPositiveButton("نعم", new GroupMainActivity.HandleAlertDialogListener());
+                                                        builder.setNegativeButton("لا", new GroupMainActivity.HandleAlertDialogListener());
+                                                        AlertDialog dialog2=builder.create();
+
+                                                        dialog2.show();
+                                                        dialog.dismiss();
+                                                    }
+                                                });
                                                 // admin
                                                 dialogAdmin = (ImageView) dialog.findViewById(R.id.dialogAdmin);
                                                 if (model.getAdmin().equals("yes")) {
@@ -637,6 +660,35 @@ public class GroupMainActivity extends AppCompatActivity {
         toast.setView((v));
         toast.show();
 
+    }
+
+
+
+    private final class  HandleAlertDialogListener implements DialogInterface.OnClickListener
+    {
+        @Override
+        public void onClick(DialogInterface dialog, int which) {
+            if(which==-1)
+            {
+                RootRef.child(ug.getId())
+                        .removeValue()
+                        .addOnCompleteListener(new OnCompleteListener<Void>() {
+                            @Override
+                            public void onComplete(@NonNull Task<Void> task) {
+                                if (task.isSuccessful()) {
+                                    Toast.makeText(GroupMainActivity.this, "המוצר הוסר בהצלחה", Toast.LENGTH_SHORT).show();
+                                }
+                            }
+                        });
+                dialog.dismiss();
+            }
+            else
+            {
+                Toast.makeText(GroupMainActivity.this, "لا", Toast.LENGTH_SHORT).show();
+                dialog.dismiss();
+
+            }
+        }
     }
 }
 

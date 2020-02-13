@@ -77,7 +77,18 @@
             />
     </LinearLayout>
 
-
+    <TextView
+        android:id="@+id/tvDeleteUser"
+        android:layout_width="150dp"
+        android:layout_height="30dp"
+        android:text="حذف المشترك !"
+        android:textColorHint="#FA0000"
+        android:textSize="20dp"
+        android:layout_marginLeft="25dp"
+        android:layout_marginTop="30dp"
+        android:gravity="center"
+        android:textColor="@color/colorPrimaryDark"
+        />
     <Button
         android:layout_width="150dp"
         android:layout_height="wrap_content"
