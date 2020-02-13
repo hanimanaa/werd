@@ -154,6 +154,19 @@ public class UsersGroupActivity extends AppCompatActivity {
                                 phone=Prevalent.currentOnlineUser.getPhone();
                                 id=model.getId();
 
+                                if(model.getDone().equals("done"))
+                                {
+                                    DatabaseReference ref = FirebaseDatabase.getInstance().getReference().child("UsersGroups");
+                                    ref.child(id).child("done").setValue("no");
+                                }
+                                else
+                                {
+                                    DatabaseReference ref = FirebaseDatabase.getInstance().getReference().child("UsersGroups");
+                                    ref.child(id).child("done").setValue("done");
+                                    Toast.makeText(UsersGroupActivity.this,"بارك الله فيك", Toast.LENGTH_SHORT).show();
+                                }
+
+                                /*
                                 AlertDialog.Builder builder = new AlertDialog.Builder(UsersGroupActivity.this);
                                 builder.setTitle("الورد اليومي");
                                 builder.setMessage("هل اتممت قراءة الجزء ؟");
@@ -162,6 +175,9 @@ public class UsersGroupActivity extends AppCompatActivity {
                                 builder.setNegativeButton("للاسف لا", new HandleAlertDialogListener());
                                 AlertDialog dialog=builder.create();
                                 dialog.show();
+                                */
+
+
                             }
                         });
 
@@ -190,14 +206,14 @@ public class UsersGroupActivity extends AppCompatActivity {
         recyclerView.setAdapter(adapter);
         adapter.startListening();
     }
-
+/*
     private void UpdateStatus(String id,String done)
     {
         DatabaseReference ref = FirebaseDatabase.getInstance().getReference().child("UsersGroups");
         ref.child(id).child("done").setValue(done);
     }
 
-
+*/
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
@@ -242,7 +258,7 @@ public class UsersGroupActivity extends AppCompatActivity {
         return true;
     }
 
-
+/*
     private final class  HandleAlertDialogListener implements DialogInterface.OnClickListener
     {
         @Override
@@ -259,6 +275,8 @@ public class UsersGroupActivity extends AppCompatActivity {
             }
         }
     }
+
+ */
 
 
 }
