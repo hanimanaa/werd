@@ -23,6 +23,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.dimatechs.werd.Model.UsersGroups;
+import com.dimatechs.werd.Prevalent.Prevalent;
 import com.dimatechs.werd.ViewHolder.WerdViewHolder;
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.firebase.ui.database.FirebaseRecyclerOptions;
@@ -35,15 +36,19 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
+
+import io.paperdb.Paper;
 
 public class GroupMainActivity extends AppCompatActivity {
 
     private Button SaveBtn;
     private RecyclerView recyclerView;
-    private DatabaseReference RootRef,GroupRef;
+    private DatabaseReference RootRef,GroupRef,MessagesRef;
     private String groupNum,groupname,IsAdmin,stDialogDone="no",stDialogAdmin="no";
     private Dialog dialog;
     private ImageView dialogDone,dialogAdmin;
@@ -59,6 +64,7 @@ public class GroupMainActivity extends AppCompatActivity {
 
         RootRef = FirebaseDatabase.getInstance().getReference().child("UsersGroups");
         GroupRef = FirebaseDatabase.getInstance().getReference().child("Groups");
+        MessagesRef = FirebaseDatabase.getInstance().getReference().child("Messages");
 
 
 
@@ -676,7 +682,38 @@ public class GroupMainActivity extends AppCompatActivity {
                             @Override
                             public void onComplete(@NonNull Task<Void> task) {
                                 if (task.isSuccessful()) {
-                                    Toast.makeText(GroupMainActivity.this, "המוצר הוסר בהצלחה", Toast.LENGTH_SHORT).show();
+                                    String senderUserID = Prevalent.currentOnlineUser.getPhone();
+                                    String fullName = Paper.book().read("fullName");
+                                    Calendar calendar = Calendar.getInstance();
+
+                                    SimpleDateFormat currentDate = new SimpleDateFormat("MMM dd, yyyy");
+                                    String CurrentDate = currentDate.format(calendar.getTime());
+
+                                    SimpleDateFormat currentTime = new SimpleDateFormat("HH:mm:ss a");
+                                    String CurrentTime = currentTime.format(calendar.getTime());
+
+                                    HashMap<String, String> NotificationMap = new HashMap<>();
+                                    NotificationMap.put("from", senderUserID);
+                                    NotificationMap.put("body","للاسف تم حذفك من مجموعه " + ug.getGroupName());
+                                    NotificationMap.put("senderName", fullName);
+                                    NotificationMap.put("time", CurrentTime);
+                                    NotificationMap.put("date", CurrentDate);
+
+                                    String receiverUserID = ug.getUserPhone();
+
+                                    MessagesRef.child(receiverUserID).push()
+                                            .setValue(NotificationMap)
+                                            .addOnCompleteListener(new OnCompleteListener<Void>() {
+                                                @Override
+                                                public void onComplete(@NonNull Task<Void> task) {
+                                                    if (task.isSuccessful()) {
+                                                        MakeToast("حذف", "تم حذف المشترك بنجاح", R.drawable.ok);
+                                                    }
+                                                }
+                                            });
+
+
+
                                 }
                             }
                         });
