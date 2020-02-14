@@ -57,7 +57,6 @@ public class UsersGroupActivity extends AppCompatActivity {
 
         Calendar calendar=Calendar.getInstance();
 
-
         Locale locale = new Locale( "ar" , "SA" ) ;
         SimpleDateFormat currentDate = (SimpleDateFormat) DateFormat.getDateInstance(DateFormat.FULL,locale);
        // SimpleDateFormat currentDate = new SimpleDateFormat("EEE, d/MMM/yyyy");
