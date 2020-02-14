@@ -27,8 +27,10 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 
+import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Locale;
 
 import io.paperdb.Paper;
 
@@ -55,7 +57,11 @@ public class UsersGroupActivity extends AppCompatActivity {
 
         Calendar calendar=Calendar.getInstance();
 
-        SimpleDateFormat currentDate = new SimpleDateFormat("EEE, d/MMM/yyyy");
+
+        Locale locale = new Locale( "ar" , "SA" ) ;
+        SimpleDateFormat currentDate = (SimpleDateFormat) DateFormat.getDateInstance(DateFormat.FULL,locale);
+       // SimpleDateFormat currentDate = new SimpleDateFormat("EEE, d/MMM/yyyy");
+
         CurrentDate=currentDate.format(calendar.getTime());
 
         recyclerView=(RecyclerView)findViewById(R.id.usersGroup_list);
