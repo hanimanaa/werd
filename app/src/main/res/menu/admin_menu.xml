@@ -16,6 +16,10 @@
         android:id="@+id/action_Desc"
         android:title="@string/descending_Order"
         />
+    <item
+        android:id="@+id/action_Auto"
+        android:checkable="true"
+        android:title="ترتيب اوتوماتيكي" />
     </group>
     <group
         android:id="@+id/group2"

@@ -172,7 +172,9 @@ public class LoginActivity extends AppCompatActivity {
                                                         {
                                                             if(task.isSuccessful())
                                                             {
-                                                                Intent intent=new Intent(LoginActivity.this,UsersGroupActivity.class);
+                                                              //  Intent intent=new Intent(LoginActivity.this,UsersGroupActivity.class);
+                                                               Intent intent=new Intent(LoginActivity.this,AlarmActivity.class);
+
                                                                 intent.putExtra("phone",phone);
                                                                 Paper.book().write("fullName",fullName);
                                                                 Prevalent.currentOnlineUser = usersData;

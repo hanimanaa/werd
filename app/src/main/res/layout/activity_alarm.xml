@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".AlarmActivity">
+
+
+    <TimePicker
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/timePicker"/>
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="turn on"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_below="@+id/timePicker"
+        android:id="@+id/alarm_on"
+        android:textSize="20dp"
+        />
+    <Button
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:text="turn off"
+    android:layout_alignParentRight="true"
+    android:layout_alignParentEnd="true"
+    android:layout_below="@+id/timePicker"
+    android:id="@+id/alarm_off"
+    android:textSize="20dp"
+    />
+
+    <EditText
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/AlarmGroupNum"
+        android:layout_below="@id/alarm_off"/>
+
+    <Button
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:id="@+id/AutoBtn"
+    android:layout_below="@+id/AlarmGroupNum"
+    android:text="Auto"/>
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/AutoDisBtn"
+        android:layout_below="@+id/AutoBtn"
+        android:text="Disable Auto"/>
+    </RelativeLayout >

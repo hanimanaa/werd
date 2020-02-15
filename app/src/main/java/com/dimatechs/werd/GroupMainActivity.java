@@ -1,6 +1,9 @@
 package com.dimatechs.werd;
 
+import android.app.AlarmManager;
 import android.app.Dialog;
+import android.app.PendingIntent;
+import android.app.TimePickerDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
@@ -14,6 +17,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.TimePicker;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -22,6 +26,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.dimatechs.werd.BroadcastReceiver.AutoUpdate;
 import com.dimatechs.werd.Model.UsersGroups;
 import com.dimatechs.werd.Prevalent.Prevalent;
 import com.dimatechs.werd.ViewHolder.WerdViewHolder;
@@ -56,6 +61,16 @@ public class GroupMainActivity extends AppCompatActivity {
     private TextView etDeleteUser;
     private RecyclerView.LayoutManager layoutManager;
     private UsersGroups ug;
+    private String fullName;
+    private String senderUserID;
+
+    private int h,m;
+
+    AlarmManager AutoAlarmManager;
+    PendingIntent pendingIntent;
+
+    private boolean isChecked = false;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -73,7 +88,9 @@ public class GroupMainActivity extends AppCompatActivity {
         groupname=getIntent().getStringExtra("groupName");
         IsAdmin=getIntent().getStringExtra("IsAdmin");
 
-
+        Paper.init(this);
+        fullName = Paper.book().read("fullName");
+        senderUserID = Prevalent.currentOnlineUser.getPhone();
 
 
         recyclerView=findViewById(R.id.recycler_menu);
@@ -281,7 +298,26 @@ public class GroupMainActivity extends AppCompatActivity {
             }
         });
 
+        GroupRef.orderByChild("groupNum").equalTo(groupNum).addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                for (DataSnapshot areaSnapshot : dataSnapshot.getChildren()) {
+                    String auto = areaSnapshot.child("auto").getValue(String.class);
+                    if (auto.equals("no")) {
+                        Fmenu.findItem(R.id.action_Auto).setChecked(false);
+                    } else {
+                        Fmenu.findItem(R.id.action_Auto).setChecked(true);
+                    }
+                }
+            }
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
 
+            }
+        });
+
+        MenuItem checkable = menu.findItem(R.id.action_Auto);
+        checkable.setChecked(isChecked);
         return true;
     }
 
@@ -341,6 +377,79 @@ public class GroupMainActivity extends AppCompatActivity {
             dialog.show();
 
             return true;
+        }
+        else if (id == R.id.action_Auto)
+        {
+            if(!item.isChecked()) {
+                item.setChecked(true);
+
+                final Calendar myCalender = Calendar.getInstance();
+                int hour = myCalender.get(Calendar.HOUR_OF_DAY);
+                int minute = myCalender.get(Calendar.MINUTE);
+                TimePickerDialog.OnTimeSetListener myTimeListener = new TimePickerDialog.OnTimeSetListener() {
+                    @Override
+                    public void onTimeSet(TimePicker view, final int hourOfDay, final int minute) {
+                       // if (view.isShown())
+                        myCalender.set(Calendar.HOUR_OF_DAY, hourOfDay);
+                        myCalender.set(Calendar.MINUTE, minute);
+
+                        HashMap<String, Object> productMap = new HashMap<>();
+                        productMap.put("auto", "yes");
+                        GroupRef.child(groupNum).updateChildren(productMap)
+                                .addOnCompleteListener(new OnCompleteListener<Void>() {
+                                    @Override
+                                    public void onComplete(@NonNull Task<Void> task) {
+                                        if (task.isSuccessful()) {
+
+                                            AutoAlarmManager=(AlarmManager)getSystemService(ALARM_SERVICE);
+                                            final Calendar calendar=Calendar.getInstance();
+
+                                            final Intent AutoIntent=new Intent(GroupMainActivity.this, AutoUpdate.class);
+                                            AutoIntent.putExtra("groupNum",groupNum);
+                                            AutoIntent.putExtra("senderUserID",senderUserID);
+                                            AutoIntent.putExtra("fullName",fullName);
+
+                                            calendar.set(Calendar.HOUR_OF_DAY,hourOfDay);
+                                            calendar.set(Calendar.MINUTE,minute);
+
+                                            pendingIntent = PendingIntent.getBroadcast(GroupMainActivity.this,0,AutoIntent,PendingIntent.FLAG_UPDATE_CURRENT);
+                                            AutoAlarmManager.set(AlarmManager.RTC_WAKEUP,calendar.getTimeInMillis(),pendingIntent);
+                                            MakeToast("الترتيب التلقائي","تم تفعيل الترتيب التلقائي",R.drawable.ok);
+
+                                        } else {
+                                            MakeToast("حفظ","لم يتم الحفظ",R.drawable.error1);
+                                        }
+                                    }
+                                });
+                    }
+                };
+                TimePickerDialog timePickerDialog = new TimePickerDialog(GroupMainActivity.this, android.R.style.Theme_Holo_Light_Dialog_NoActionBar, myTimeListener, hour, minute, true);
+                timePickerDialog.setTitle("اختر التوقيت :");
+                timePickerDialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
+                timePickerDialog.show();
+            }
+            else{
+                item.setChecked(false);
+                HashMap<String, Object> productMap = new HashMap<>();
+                productMap.put("auto", "no");
+
+                GroupRef.child(groupNum).updateChildren(productMap)
+                        .addOnCompleteListener(new OnCompleteListener<Void>() {
+                            @Override
+                            public void onComplete(@NonNull Task<Void> task) {
+                                if (task.isSuccessful()) {
+                                    if(AutoAlarmManager!=null) {
+                                        AutoAlarmManager.cancel(pendingIntent);
+                                    }
+                                    MakeToast("الترتيب التلقائي","تم ابطال الترتيب التلقائي",R.drawable.ok);
+                                } else {
+                                    MakeToast("حفظ","لم يتم الحفظ",R.drawable.error1);
+                                }
+                            }
+                        });
+
+            }
+
         }
         else if (id == R.id.action_Close) {
             if(item.getTitle().equals("اغلاق الانتساب للمجموعه")) {

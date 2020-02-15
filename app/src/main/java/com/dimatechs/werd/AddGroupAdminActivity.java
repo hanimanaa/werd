@@ -127,6 +127,7 @@ public class AddGroupAdminActivity extends AppCompatActivity {
                     if(oldGroupNum==null) {
                         userdataMap.put("locked", "no");
                     }
+                    userdataMap.put("auto","no");
 
                     RootRef.child(groupNum).updateChildren(userdataMap)
                             .addOnCompleteListener(new OnCompleteListener<Void>() {
