@@ -439,9 +439,17 @@ public class GroupMainActivity extends AppCompatActivity {
                             @Override
                             public void onComplete(@NonNull Task<Void> task) {
                                 if (task.isSuccessful()) {
+                                    /*
                                     if(AutoAlarmManager!=null) {
                                         AutoAlarmManager.cancel(pendingIntent);
                                     }
+                                    */
+
+                                    Intent in = new Intent(GroupMainActivity.this, AutoUpdate.class);
+                                    PendingIntent pi = PendingIntent.getBroadcast(GroupMainActivity.this, 0, in, 0);
+                                    AlarmManager am = (AlarmManager) getSystemService(ALARM_SERVICE);
+                                    am.cancel(pi);
+
                                     item.setTitle("ترتيب اوتوماتيكي");
                                     MakeToast("الترتيب التلقائي","تم ابطال الترتيب التلقائي",R.drawable.ok);
                                 } else {

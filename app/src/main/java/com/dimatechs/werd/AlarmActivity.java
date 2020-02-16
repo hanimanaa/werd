@@ -82,6 +82,7 @@ public class AlarmActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 AutoAlarmManager.cancel(pendingIntent);
+
             }
         });
     }
