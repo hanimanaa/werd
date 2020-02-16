@@ -322,7 +322,7 @@ public class GroupMainActivity extends AppCompatActivity {
     }
 
     @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
+    public boolean onOptionsItemSelected(final MenuItem item) {
         int id = item.getItemId();
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_Asc) {
@@ -414,6 +414,7 @@ public class GroupMainActivity extends AppCompatActivity {
 
                                             pendingIntent = PendingIntent.getBroadcast(GroupMainActivity.this,0,AutoIntent,PendingIntent.FLAG_UPDATE_CURRENT);
                                             AutoAlarmManager.set(AlarmManager.RTC_WAKEUP,calendar.getTimeInMillis(),pendingIntent);
+                                            item.setTitle("التحديث القادم : "+hourOfDay+":"+minute);
                                             MakeToast("الترتيب التلقائي","تم تفعيل الترتيب التلقائي",R.drawable.ok);
 
                                         } else {
@@ -441,6 +442,7 @@ public class GroupMainActivity extends AppCompatActivity {
                                     if(AutoAlarmManager!=null) {
                                         AutoAlarmManager.cancel(pendingIntent);
                                     }
+                                    item.setTitle("ترتيب اوتوماتيكي");
                                     MakeToast("الترتيب التلقائي","تم ابطال الترتيب التلقائي",R.drawable.ok);
                                 } else {
                                     MakeToast("حفظ","لم يتم الحفظ",R.drawable.error1);
