@@ -57,7 +57,11 @@
             android:id="@+id/action_Notification"
             android:title="ارسال اشعارات"
             />
-    <item
+        <item
+            android:id="@+id/action_Schedule_Notification"
+            android:title="اشعارات متزامنة"
+            />
+        <item
         android:id="@+id/action_Exit"
         android:title="الخروج من البرنامج"
         />

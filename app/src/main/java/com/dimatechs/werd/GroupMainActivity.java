@@ -554,6 +554,14 @@ public class GroupMainActivity extends AppCompatActivity {
             startActivity(intent);
             return true;
         }
+        else if (id == R.id.action_Schedule_Notification){
+            Intent intent=new Intent(GroupMainActivity.this, ScheduleMessagesActivity.class);
+            intent.putExtra("groupNum",groupNum);
+            //intent.putExtra("groupName",groupname);
+            startActivity(intent);
+            return true;
+        }
+
 
         else if (id == R.id.action_Exit) {
             AlertDialog.Builder builder = new AlertDialog.Builder(GroupMainActivity.this);

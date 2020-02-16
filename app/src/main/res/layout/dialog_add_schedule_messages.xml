@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <LinearLayout
+        android:layout_width="200dp"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+        <EditText
+            android:id="@+id/etDialogMessageS"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="نص الرسالة"
+            android:gravity="right"
+            android:textColor="@color/colorPrimaryDark"
+            />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="200dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="5dp"
+        android:orientation="vertical">
+
+        <RadioGroup xmlns:android="http://schemas.android.com/apk/res/android"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:orientation="horizontal">
+
+            <RadioButton
+                android:id="@+id/RB_readS"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="قرء"
+                android:textColor="#64DD17"/>
+
+            <RadioButton
+                android:id="@+id/RB_notReadS"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="لم يقرا"
+                android:textColor="#D50000"/>
+
+            <RadioButton
+                android:id="@+id/RB_selectAllS"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="الكل" />
+
+        </RadioGroup>
+
+
+    </LinearLayout>
+
+
+
+    <TextView
+        android:id="@+id/tvTimeS"
+        android:layout_width="150dp"
+        android:layout_height="30dp"
+        android:text="00:00"
+        android:textColorHint="#FA0000"
+        android:textSize="20dp"
+        android:layout_marginLeft="25dp"
+        android:layout_marginTop="15dp"
+        android:gravity="center"
+        android:textColor="@color/colorPrimaryDark"
+        />
+    <Button
+        android:layout_width="150dp"
+        android:layout_height="wrap_content"
+        android:id="@+id/btnDialogScheduleAdd"
+        android:text="حفظ"
+        android:layout_marginLeft="25dp"
+        android:background="@drawable/buttons"
+        android:layout_marginTop="30dp"
+        android:textColor="@android:color/white"
+
+        />
+</LinearLayout>
