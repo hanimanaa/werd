@@ -7,6 +7,7 @@ import android.util.Log;
 
 import androidx.annotation.NonNull;
 
+import com.dimatechs.werd.Model.UsersGroups;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.database.DataSnapshot;
@@ -16,55 +17,99 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
+import java.util.List;
 
 public class MyBroadcastReceiver extends BroadcastReceiver {
 
+    private DatabaseReference RootRef = FirebaseDatabase.getInstance().getReference().child("UsersGroups");
+    private DatabaseReference MessagesRef = FirebaseDatabase.getInstance().getReference().child("Messages");
+    private String groupNum, senderUserID, fullName, body, receiver,receiverUserID;
+
     public void onReceive(Context context, Intent intent) {
-        Log.d("h","we are in receiver");
+        Log.d("h", "we are in receiver");
 
-        Calendar calendar = Calendar.getInstance();
 
-        SimpleDateFormat currentDate = new SimpleDateFormat("MMM dd, yyyy");
-        final String CurrentDate = currentDate.format(calendar.getTime());
+        groupNum = intent.getStringExtra("groupNum");
+        senderUserID = intent.getStringExtra("senderUserID");
+        fullName = intent.getStringExtra("fullName");
+        body = intent.getStringExtra("body");
+        receiver = intent.getStringExtra("receiver");
 
-        SimpleDateFormat currentTime = new SimpleDateFormat("HH:mm:ss a");
-        final String CurrentTime = currentTime.format(calendar.getTime());
 
-        final DatabaseReference MessagesRef;
-        MessagesRef = FirebaseDatabase.getInstance().getReference().child("Messages");
-        MessagesRef.addListenerForSingleValueEvent(new ValueEventListener() {
+        RootRef.orderByChild("groupNum").equalTo(groupNum).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot)
-            {
-                HashMap<String, String> NotificationMap = new HashMap<>();
-                NotificationMap.put("from", "2017");
-                NotificationMap.put("body", "السلام عليكم");
-                NotificationMap.put("senderName", "واحد من هالناس");
-                NotificationMap.put("time", CurrentTime);
-                NotificationMap.put("date", CurrentDate);
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                final List<UsersGroups> usersGroups = new ArrayList<>();
+                for (DataSnapshot areaSnapshot : dataSnapshot.getChildren()) {
+                    UsersGroups ug = areaSnapshot.getValue(UsersGroups.class);
+                    usersGroups.add(ug);
+                }
 
-
-                MessagesRef.child("0523856567").push()
-                        .setValue(NotificationMap)
-                        .addOnCompleteListener(new OnCompleteListener<Void>() {
-                            @Override
-                            public void onComplete(@NonNull Task<Void> task) {
-                                if (task.isSuccessful()) {
-                                }
-                            }
-                        });
-
+                if (receiver.equals("all")) {
+                    for (int i = 0; i < usersGroups.size(); i++)
+                    {
+                        receiverUserID = usersGroups.get(i).getUserPhone();
+                        SendMessage(receiverUserID);
+                    }
+                }
+                else if(receiver.equals("read")){
+                    for (int i = 0; i < usersGroups.size(); i++)
+                    {
+                        if(usersGroups.get(i).getDone().equals("done")) {
+                            receiverUserID = usersGroups.get(i).getUserPhone();
+                            SendMessage(receiverUserID);
+                        }
+                    }
+                }
+                else {
+                    for (int i = 0; i < usersGroups.size(); i++)
+                    {
+                        if(usersGroups.get(i).getDone().equals("no")) {
+                            receiverUserID = usersGroups.get(i).getUserPhone();
+                            SendMessage(receiverUserID);
+                        }
+                    }
+                }
             }
 
             @Override
-            public void onCancelled(@NonNull DatabaseError databaseError)
-            {
+            public void onCancelled(DatabaseError databaseError) {
 
             }
         });
     }
 
+    private void SendMessage (String receiverUserID) {
+        Calendar calendar = Calendar.getInstance();
 
+        SimpleDateFormat currentDate = new SimpleDateFormat("MMM dd, yyyy");
+        String CurrentDate = currentDate.format(calendar.getTime());
+
+        SimpleDateFormat currentTime = new SimpleDateFormat("HH:mm:ss a");
+        String CurrentTime = currentTime.format(calendar.getTime());
+
+        HashMap<String, String> NotificationMap = new HashMap<>();
+        NotificationMap.put("from", senderUserID);
+        NotificationMap.put("body", body);
+        NotificationMap.put("senderName", fullName);
+        NotificationMap.put("time", CurrentTime);
+        NotificationMap.put("date", CurrentDate);
+
+        MessagesRef.child(receiverUserID).push()
+                .setValue(NotificationMap)
+                .addOnCompleteListener(new OnCompleteListener<Void>() {
+                    @Override
+                    public void onComplete(@NonNull Task<Void> task) {
+                        if (task.isSuccessful()) {
+                            Log.d("han", "sent notification Auto");
+                        }
+                    }
+                });
+
+    }
 }
+
+

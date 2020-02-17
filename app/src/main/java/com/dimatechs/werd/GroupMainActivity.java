@@ -414,6 +414,9 @@ public class GroupMainActivity extends AppCompatActivity {
 
                                             pendingIntent = PendingIntent.getBroadcast(GroupMainActivity.this,0,AutoIntent,PendingIntent.FLAG_UPDATE_CURRENT);
                                             AutoAlarmManager.set(AlarmManager.RTC_WAKEUP,calendar.getTimeInMillis(),pendingIntent);
+
+                                           // Format f =new SimpleDateFormat("mm");
+                                          //  String m = f.format(minute);
                                             item.setTitle("التحديث القادم : "+hourOfDay+":"+minute);
                                             MakeToast("الترتيب التلقائي","تم تفعيل الترتيب التلقائي",R.drawable.ok);
 

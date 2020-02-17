@@ -1,7 +1,11 @@
 package com.dimatechs.werd;
 
+import android.app.AlarmManager;
 import android.app.Dialog;
+import android.app.PendingIntent;
 import android.app.TimePickerDialog;
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -14,10 +18,12 @@ import android.widget.TimePicker;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.dimatechs.werd.BroadcastReceiver.MyBroadcastReceiver;
 import com.dimatechs.werd.Model.ScheduleMessages;
 import com.dimatechs.werd.Prevalent.Prevalent;
 import com.dimatechs.werd.ViewHolder.ScheduleMessageViewHolder;
@@ -50,6 +56,10 @@ public class ScheduleMessagesActivity extends AppCompatActivity {
     private Button SaveBtn;
     private EditText etMessage;
     private RadioButton rbSelectAll, rbRead, rbNotRead;
+    private AlarmManager AutoAlarmManager;
+    private PendingIntent pendingIntent;
+    private int h,m;
+    private int x;
     
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -80,9 +90,9 @@ public class ScheduleMessagesActivity extends AppCompatActivity {
                 dialog.setTitle("تحديث");
                 dialog.setCancelable(true);
 
-                rbSelectAll = (RadioButton) findViewById(R.id.RB_selectAllS);
-                rbRead = (RadioButton) findViewById(R.id.RB_readS);
-                rbNotRead = (RadioButton) findViewById(R.id.RB_notReadS);
+                rbSelectAll = (RadioButton) dialog.findViewById(R.id.RB_selectAllS);
+                rbRead = (RadioButton) dialog.findViewById(R.id.RB_readS);
+                rbNotRead = (RadioButton) dialog.findViewById(R.id.RB_notReadS);
 
                 rbSelectAll.setOnClickListener(new View.OnClickListener() {
                     @Override
@@ -106,8 +116,6 @@ public class ScheduleMessagesActivity extends AppCompatActivity {
                 });
 
 
-
-
                 etMessage = (EditText) dialog.findViewById(R.id.etDialogMessageS);
 
                 final Calendar myCalender = Calendar.getInstance();
@@ -129,6 +137,9 @@ public class ScheduleMessagesActivity extends AppCompatActivity {
                                 myCalender.set(Calendar.HOUR_OF_DAY, hourOfDay);
                                 myCalender.set(Calendar.MINUTE, minute);
 
+                                h=hourOfDay;
+                                m=minute;
+
                                 tvTime.setText(""+hourOfDay+":"+minute);
 
                             }
@@ -139,7 +150,7 @@ public class ScheduleMessagesActivity extends AppCompatActivity {
                         timePickerDialog.show();
                     }
                 });
-                //,tvTime.getText().toString()
+
                 SaveBtn = (Button) dialog.findViewById(R.id.btnDialogScheduleAdd);
                 SaveBtn.setOnClickListener(new View.OnClickListener() {
                     @Override
@@ -152,8 +163,9 @@ public class ScheduleMessagesActivity extends AppCompatActivity {
                                 if (dataSnapshot.exists()) {
                                     //new ScheduleMessagesCode
                                     requestCode = (dataSnapshot.getValue().toString());
-                                    int x = Integer.parseInt(requestCode) + 1;
+                                    x = Integer.parseInt(requestCode) + 1;
                                     messageCodeRef.setValue(x);
+                                    Toast.makeText(ScheduleMessagesActivity.this, "requestCode "+requestCode, Toast.LENGTH_SHORT).show();
                                 }
                             }
                             @Override
@@ -166,6 +178,7 @@ public class ScheduleMessagesActivity extends AppCompatActivity {
                         Map.put("body",etMessage.getText().toString());
                         Map.put("receiver",receiver);
                         Map.put("requestCode",requestCode);
+                        Map.put("groupNum",groupNum);
 
                         ScheduleMessagesRef.child(senderUserID).push()
                                 .setValue(Map)
@@ -174,19 +187,34 @@ public class ScheduleMessagesActivity extends AppCompatActivity {
                                     public void onComplete(@NonNull Task<Void> task) {
                                         if (task.isSuccessful()) {
                                             dialog.dismiss();
+
+                                            AutoAlarmManager=(AlarmManager)getSystemService(ALARM_SERVICE);
+                                            final Calendar calendar=Calendar.getInstance();
+
+                                            final Intent ScheduleIntent=new Intent(ScheduleMessagesActivity.this, MyBroadcastReceiver.class);
+                                            ScheduleIntent.putExtra("groupNum",groupNum);
+                                            ScheduleIntent.putExtra("senderUserID",senderUserID);
+                                            ScheduleIntent.putExtra("fullName",fullName);
+                                            ScheduleIntent.putExtra("body",etMessage.getText().toString());
+                                            ScheduleIntent.putExtra("receiver",receiver);
+
+                                            calendar.set(Calendar.HOUR_OF_DAY,h);
+                                            calendar.set(Calendar.MINUTE,m);
+
+                                            pendingIntent = PendingIntent.getBroadcast(ScheduleMessagesActivity.this,x,ScheduleIntent,PendingIntent.FLAG_UPDATE_CURRENT);
+                                            AutoAlarmManager.set(AlarmManager.RTC_WAKEUP,calendar.getTimeInMillis(),pendingIntent);
+
+                                            // Format f =new SimpleDateFormat("mm");
+                                            //  String m = f.format(minute);
+
                                             Toast.makeText(ScheduleMessagesActivity.this, "تم بنجاح", Toast.LENGTH_SHORT).show();
                                         }
                                     }
                                 });                      
                     }
                 });
-
-
                 dialog.show();
-
             }
-
-
         });
     }
 
@@ -194,7 +222,7 @@ public class ScheduleMessagesActivity extends AppCompatActivity {
     protected void onStart() {
         super.onStart();
 
-        Query query =ScheduleMessagesRef.child(senderUserID);
+        Query query =ScheduleMessagesRef.child(senderUserID).orderByChild("groupNum").equalTo(groupNum);
 
         FirebaseRecyclerOptions<ScheduleMessages> options =
                 new FirebaseRecyclerOptions.Builder<ScheduleMessages>()
@@ -205,10 +233,72 @@ public class ScheduleMessagesActivity extends AppCompatActivity {
                 new FirebaseRecyclerAdapter<ScheduleMessages, ScheduleMessageViewHolder>(options) {
 
                     @Override
-                    protected void onBindViewHolder(@NonNull final ScheduleMessageViewHolder holder, int position, @NonNull final ScheduleMessages model) {
+                    protected void onBindViewHolder(@NonNull final ScheduleMessageViewHolder holder, final int position, @NonNull final ScheduleMessages model) {
                         holder.txtTime.setText(model.getSendTime());
-                        holder.txtReceiver.setText(model.getReceiver());
                         holder.txtMessage.setText(model.getBody());
+                        if(model.getReceiver().equals("all"))
+                        {
+                            holder.txtReceiver.setText("لكل المجموعة");
+                        }
+                        else
+                        {
+                            if (model.getReceiver().equals("read"))
+                            {
+                                holder.txtReceiver.setText("قرا الورد");
+                            }
+                            else
+                            {
+                                holder.txtReceiver.setText("لم يقرا الورد");
+                            }
+                        }
+                        holder.itemView.setOnLongClickListener(new View.OnLongClickListener() {
+                            @Override
+                            public boolean onLongClick(View v) {
+                                AlertDialog.Builder builder = new AlertDialog.Builder(ScheduleMessagesActivity.this);
+                                builder.setTitle("تحذير");
+                                builder.setIcon(R.drawable.ic_red_forever_black_24dp);
+                                builder.setMessage("هل تريد حذف الاشعار ؟");
+                                builder.setCancelable(true);
+                                builder.setPositiveButton("نعم",
+                                        new DialogInterface.OnClickListener() {
+                                            @Override
+                                            public void onClick(DialogInterface dialogInterface, int i) {
+                                                ScheduleMessagesRef.child(senderUserID).child(getRef(position).getKey()).removeValue()
+                                                        .addOnCompleteListener(new OnCompleteListener<Void>() {
+                                                            @Override
+                                                            public void onComplete(@NonNull Task<Void> task) {
+                                                                if (task.isSuccessful())
+                                                                {
+                                                                    int req =Integer.parseInt(model.getRequestCode());
+                                                                    Intent in = new Intent(ScheduleMessagesActivity.this, MyBroadcastReceiver.class);
+                                                                    PendingIntent pi = PendingIntent.getBroadcast(ScheduleMessagesActivity.this, req, in, 0);
+                                                                    AlarmManager am = (AlarmManager) getSystemService(ALARM_SERVICE);
+                                                                    am.cancel(pi);
+
+
+
+                                                                  //  Toast.makeText(ScheduleMessagesActivity.this, "key : "+getRef(position).getKey()+" Delete : "+model.getRequestCode(), Toast.LENGTH_SHORT).show();
+
+                                                                }
+                                                            }
+                                                        });
+
+                                            }
+                                        }
+                                );
+                                builder.setNegativeButton("لا",
+                                        new DialogInterface.OnClickListener() {
+                                            @Override
+                                            public void onClick(DialogInterface dialogInterface, int i) {
+                                            }
+                                        }
+
+                                );
+                                AlertDialog alertDialog=builder.create();
+                                alertDialog.show();
+                                return false;
+                            }
+                        });                      
                     }
 
                     @NonNull
