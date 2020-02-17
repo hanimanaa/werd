@@ -7,6 +7,9 @@ public class ScheduleMessages {
     private String receiver;
     private String requestCode;
 
+    public ScheduleMessages() {
+    }
+
     public ScheduleMessages(String sendTime, String body, String receiver, String requestCode) {
         this.sendTime = sendTime;
         this.body = body;

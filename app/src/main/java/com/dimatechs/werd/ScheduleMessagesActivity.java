@@ -8,6 +8,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.RadioButton;
 import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.Toast;
@@ -25,9 +26,12 @@ import com.firebase.ui.database.FirebaseRecyclerOptions;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
+import com.google.firebase.database.ValueEventListener;
 
 import java.util.Calendar;
 import java.util.HashMap;
@@ -38,13 +42,14 @@ public class ScheduleMessagesActivity extends AppCompatActivity {
 
     private RecyclerView recyclerView;
     private RecyclerView.LayoutManager layoutManager;
-    private DatabaseReference ScheduleMessagesRef;
+    private DatabaseReference ScheduleMessagesRef,messageCodeRef;
     private FloatingActionButton btnAddSceduleMessage;
-    private String fullName,groupNum,senderUserID;
+    private String fullName,groupNum,senderUserID,requestCode,receiver="all";
     private Dialog dialog;
     private TextView tvTime;
     private Button SaveBtn;
     private EditText etMessage;
+    private RadioButton rbSelectAll, rbRead, rbNotRead;
     
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,6 +60,7 @@ public class ScheduleMessagesActivity extends AppCompatActivity {
         fullName = Paper.book().read("fullName");
 
         ScheduleMessagesRef = FirebaseDatabase.getInstance().getReference().child("ScheduleMessages");
+
         groupNum = getIntent().getStringExtra("groupNum");
 
         recyclerView = findViewById(R.id.recycler_ScheduleMessages);
@@ -73,6 +79,34 @@ public class ScheduleMessagesActivity extends AppCompatActivity {
                 dialog.setContentView(R.layout.dialog_add_schedule_messages);
                 dialog.setTitle("تحديث");
                 dialog.setCancelable(true);
+
+                rbSelectAll = (RadioButton) findViewById(R.id.RB_selectAllS);
+                rbRead = (RadioButton) findViewById(R.id.RB_readS);
+                rbNotRead = (RadioButton) findViewById(R.id.RB_notReadS);
+
+                rbSelectAll.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        receiver="all";
+                    }
+                });
+
+                rbRead.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        receiver="read";
+                    }
+                });
+
+                rbNotRead.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        receiver="notRead";
+                    }
+                });
+
+
+
 
                 etMessage = (EditText) dialog.findViewById(R.id.etDialogMessageS);
 
@@ -111,11 +145,27 @@ public class ScheduleMessagesActivity extends AppCompatActivity {
                     @Override
                     public void onClick(View v) {
 
+                        messageCodeRef = FirebaseDatabase.getInstance().getReference().child("ScheduleMessagesCode");
+                        messageCodeRef.addListenerForSingleValueEvent(new ValueEventListener() {
+                            @Override
+                            public void onDataChange(DataSnapshot dataSnapshot) {
+                                if (dataSnapshot.exists()) {
+                                    //new ScheduleMessagesCode
+                                    requestCode = (dataSnapshot.getValue().toString());
+                                    int x = Integer.parseInt(requestCode) + 1;
+                                    messageCodeRef.setValue(x);
+                                }
+                            }
+                            @Override
+                            public void onCancelled(DatabaseError databaseError) {
+                            }
+                        });
+
                         HashMap<String,Object> Map =  new HashMap<>();
-                        Map.put("sendTime","00:22");
-                        Map.put("body"," ");
-                        Map.put("receiver","للجميع");
-                        Map.put("requestCode","0");
+                        Map.put("sendTime", tvTime.getText().toString());
+                        Map.put("body",etMessage.getText().toString());
+                        Map.put("receiver",receiver);
+                        Map.put("requestCode",requestCode);
 
                         ScheduleMessagesRef.child(senderUserID).push()
                                 .setValue(Map)
@@ -123,6 +173,7 @@ public class ScheduleMessagesActivity extends AppCompatActivity {
                                     @Override
                                     public void onComplete(@NonNull Task<Void> task) {
                                         if (task.isSuccessful()) {
+                                            dialog.dismiss();
                                             Toast.makeText(ScheduleMessagesActivity.this, "تم بنجاح", Toast.LENGTH_SHORT).show();
                                         }
                                     }
