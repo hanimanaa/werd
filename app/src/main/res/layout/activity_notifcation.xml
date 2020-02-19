@@ -38,7 +38,7 @@
                 android:id="@+id/RB_read"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="قرء الورد"
+                android:text="قرأ الورد"
                 android:textColor="#64DD17"/>
 
             <RadioButton

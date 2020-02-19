@@ -276,6 +276,7 @@ public class GroupMainActivity extends AppCompatActivity {
                 }
 
 
+
     @Override
     public boolean onPrepareOptionsMenu(Menu menu) {
         super.onPrepareOptionsMenu(menu);
@@ -303,10 +304,12 @@ public class GroupMainActivity extends AppCompatActivity {
             public void onDataChange(DataSnapshot dataSnapshot) {
                 for (DataSnapshot areaSnapshot : dataSnapshot.getChildren()) {
                     String auto = areaSnapshot.child("auto").getValue(String.class);
+                    String autoTime = areaSnapshot.child("autoTime").getValue(String.class);
                     if (auto.equals("no")) {
                         Fmenu.findItem(R.id.action_Auto).setChecked(false);
                     } else {
                         Fmenu.findItem(R.id.action_Auto).setChecked(true);
+                        Fmenu.findItem(R.id.action_Auto).setTitle(autoTime);
                     }
                 }
             }
@@ -393,8 +396,12 @@ public class GroupMainActivity extends AppCompatActivity {
                         myCalender.set(Calendar.HOUR_OF_DAY, hourOfDay);
                         myCalender.set(Calendar.MINUTE, minute);
 
+                        SimpleDateFormat sdf = new SimpleDateFormat("HH:mm");
+                        String s=sdf.format(myCalender.getTime());
+
                         HashMap<String, Object> productMap = new HashMap<>();
                         productMap.put("auto", "yes");
+                        productMap.put("autoTime","التحديث القادم : "+s);
                         GroupRef.child(groupNum).updateChildren(productMap)
                                 .addOnCompleteListener(new OnCompleteListener<Void>() {
                                     @Override
@@ -412,12 +419,14 @@ public class GroupMainActivity extends AppCompatActivity {
                                             calendar.set(Calendar.HOUR_OF_DAY,hourOfDay);
                                             calendar.set(Calendar.MINUTE,minute);
 
+                                            SimpleDateFormat sdf = new SimpleDateFormat("HH:mm");
+                                            String s=sdf.format(myCalender.getTime());
+
                                             pendingIntent = PendingIntent.getBroadcast(GroupMainActivity.this,0,AutoIntent,PendingIntent.FLAG_UPDATE_CURRENT);
                                             AutoAlarmManager.set(AlarmManager.RTC_WAKEUP,calendar.getTimeInMillis(),pendingIntent);
 
-                                           // Format f =new SimpleDateFormat("mm");
-                                          //  String m = f.format(minute);
-                                            item.setTitle("التحديث القادم : "+hourOfDay+":"+minute);
+
+                                            item.setTitle("التحديث القادم : "+s);
                                             MakeToast("الترتيب التلقائي","تم تفعيل الترتيب التلقائي",R.drawable.ok);
 
                                         } else {
@@ -453,7 +462,7 @@ public class GroupMainActivity extends AppCompatActivity {
                                     AlarmManager am = (AlarmManager) getSystemService(ALARM_SERVICE);
                                     am.cancel(pi);
 
-                                    item.setTitle("ترتيب اوتوماتيكي");
+                                    item.setTitle("ترتيب تلقائي");
                                     MakeToast("الترتيب التلقائي","تم ابطال الترتيب التلقائي",R.drawable.ok);
                                 } else {
                                     MakeToast("حفظ","لم يتم الحفظ",R.drawable.error1);

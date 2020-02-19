@@ -7,11 +7,14 @@ import android.app.TimePickerDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.TextUtils;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.RadioButton;
 import android.widget.TextView;
 import android.widget.TimePicker;
@@ -39,6 +42,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.HashMap;
 
@@ -118,12 +122,19 @@ public class ScheduleMessagesActivity extends AppCompatActivity {
 
                 etMessage = (EditText) dialog.findViewById(R.id.etDialogMessageS);
 
+
                 final Calendar myCalender = Calendar.getInstance();
-                int hour = myCalender.get(Calendar.HOUR_OF_DAY);
-                int minute = myCalender.get(Calendar.MINUTE);
+              //  int hour = myCalender.get(Calendar.HOUR_OF_DAY);
+              //  int minute = myCalender.get(Calendar.MINUTE);
 
                 tvTime = (TextView) dialog.findViewById(R.id.tvTimeS);
-                tvTime.setText(""+hour+":"+minute);
+               // tvTime.setText(""+hour+":"+minute);
+
+                SimpleDateFormat sdf = new SimpleDateFormat("HH:mm");
+                tvTime.setText(sdf.format(myCalender.getTime()));
+
+
+
                 tvTime.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v)
@@ -140,8 +151,8 @@ public class ScheduleMessagesActivity extends AppCompatActivity {
                                 h=hourOfDay;
                                 m=minute;
 
-                                tvTime.setText(""+hourOfDay+":"+minute);
-
+                                SimpleDateFormat sdf = new SimpleDateFormat("HH:mm");
+                                tvTime.setText(sdf.format(myCalender.getTime()));
                             }
                         };
                         TimePickerDialog timePickerDialog = new TimePickerDialog(ScheduleMessagesActivity.this, android.R.style.Theme_Holo_Light_Dialog_NoActionBar, myTimeListener, hour, minute, true);
@@ -156,61 +167,65 @@ public class ScheduleMessagesActivity extends AppCompatActivity {
                     @Override
                     public void onClick(View v) {
 
-                        messageCodeRef = FirebaseDatabase.getInstance().getReference().child("ScheduleMessagesCode");
-                        messageCodeRef.addListenerForSingleValueEvent(new ValueEventListener() {
-                            @Override
-                            public void onDataChange(DataSnapshot dataSnapshot) {
-                                if (dataSnapshot.exists()) {
-                                    //new ScheduleMessagesCode
-                                    requestCode = (dataSnapshot.getValue().toString());
-                                    x = Integer.parseInt(requestCode) + 1;
-                                    messageCodeRef.setValue(x);
-                                    Toast.makeText(ScheduleMessagesActivity.this, "requestCode "+requestCode, Toast.LENGTH_SHORT).show();
-                                }
-                            }
-                            @Override
-                            public void onCancelled(DatabaseError databaseError) {
-                            }
-                        });
+                        if (TextUtils.isEmpty(etMessage.getText().toString())) {
+                            etMessage.setError("ادخل الاسم اذا سمحت");
+                        }
+                        else
+                            {
+                            messageCodeRef = FirebaseDatabase.getInstance().getReference().child("ScheduleMessagesCode");
+                            messageCodeRef.addListenerForSingleValueEvent(new ValueEventListener() {
+                                @Override
+                                public void onDataChange(DataSnapshot dataSnapshot) {
+                                    if (dataSnapshot.exists()) {
+                                        //new ScheduleMessagesCode
+                                        requestCode = (dataSnapshot.getValue().toString());
+                                        x = Integer.parseInt(requestCode) + 1;
+                                        messageCodeRef.setValue(x);
 
-                        HashMap<String,Object> Map =  new HashMap<>();
-                        Map.put("sendTime", tvTime.getText().toString());
-                        Map.put("body",etMessage.getText().toString());
-                        Map.put("receiver",receiver);
-                        Map.put("requestCode",requestCode);
-                        Map.put("groupNum",groupNum);
+                                        HashMap<String, Object> Map = new HashMap<>();
+                                        Map.put("sendTime", tvTime.getText().toString());
+                                        Map.put("body", etMessage.getText().toString());
+                                        Map.put("receiver", receiver);
+                                        Map.put("requestCode", requestCode);
+                                        Map.put("groupNum", groupNum);
 
-                        ScheduleMessagesRef.child(senderUserID).push()
-                                .setValue(Map)
-                                .addOnCompleteListener(new OnCompleteListener<Void>() {
-                                    @Override
-                                    public void onComplete(@NonNull Task<Void> task) {
-                                        if (task.isSuccessful()) {
-                                            dialog.dismiss();
+                                        ScheduleMessagesRef.child(senderUserID).push()
+                                                .setValue(Map)
+                                                .addOnCompleteListener(new OnCompleteListener<Void>() {
+                                                    @Override
+                                                    public void onComplete(@NonNull Task<Void> task) {
+                                                        if (task.isSuccessful()) {
 
-                                            AutoAlarmManager=(AlarmManager)getSystemService(ALARM_SERVICE);
-                                            final Calendar calendar=Calendar.getInstance();
+                                                            AutoAlarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
+                                                            final Calendar calendar = Calendar.getInstance();
 
-                                            final Intent ScheduleIntent=new Intent(ScheduleMessagesActivity.this, MyBroadcastReceiver.class);
-                                            ScheduleIntent.putExtra("groupNum",groupNum);
-                                            ScheduleIntent.putExtra("senderUserID",senderUserID);
-                                            ScheduleIntent.putExtra("fullName",fullName);
-                                            ScheduleIntent.putExtra("body",etMessage.getText().toString());
-                                            ScheduleIntent.putExtra("receiver",receiver);
+                                                            final Intent ScheduleIntent = new Intent(ScheduleMessagesActivity.this, MyBroadcastReceiver.class);
+                                                            ScheduleIntent.putExtra("groupNum", groupNum);
+                                                            ScheduleIntent.putExtra("senderUserID", senderUserID);
+                                                            ScheduleIntent.putExtra("fullName", fullName);
+                                                            ScheduleIntent.putExtra("body", etMessage.getText().toString());
+                                                            ScheduleIntent.putExtra("receiver", receiver);
 
-                                            calendar.set(Calendar.HOUR_OF_DAY,h);
-                                            calendar.set(Calendar.MINUTE,m);
+                                                            calendar.set(Calendar.HOUR_OF_DAY, h);
+                                                            calendar.set(Calendar.MINUTE, m);
 
-                                            pendingIntent = PendingIntent.getBroadcast(ScheduleMessagesActivity.this,x,ScheduleIntent,PendingIntent.FLAG_UPDATE_CURRENT);
-                                            AutoAlarmManager.set(AlarmManager.RTC_WAKEUP,calendar.getTimeInMillis(),pendingIntent);
+                                                            pendingIntent = PendingIntent.getBroadcast(ScheduleMessagesActivity.this, x, ScheduleIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+                                                            AutoAlarmManager.set(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), pendingIntent);
 
-                                            // Format f =new SimpleDateFormat("mm");
-                                            //  String m = f.format(minute);
 
-                                            Toast.makeText(ScheduleMessagesActivity.this, "تم بنجاح", Toast.LENGTH_SHORT).show();
-                                        }
+                                                            dialog.dismiss();
+                                                            MakeToast("اضافة","تم اضافة الاشعار بنجاح",R.drawable.ok);
+                                                        }
+                                                    }
+                                                });
                                     }
-                                });                      
+                                }
+
+                                @Override
+                                public void onCancelled(DatabaseError databaseError) {
+                                }
+                            });
+                        }
                     }
                 });
                 dialog.show();
@@ -271,11 +286,11 @@ public class ScheduleMessagesActivity extends AppCompatActivity {
                                                                 {
                                                                     int req =Integer.parseInt(model.getRequestCode());
                                                                     Intent in = new Intent(ScheduleMessagesActivity.this, MyBroadcastReceiver.class);
-                                                                    PendingIntent pi = PendingIntent.getBroadcast(ScheduleMessagesActivity.this, req, in, 0);
+                                                                    PendingIntent pi = PendingIntent.getBroadcast(ScheduleMessagesActivity.this, req, in, PendingIntent.FLAG_UPDATE_CURRENT);
                                                                     AlarmManager am = (AlarmManager) getSystemService(ALARM_SERVICE);
                                                                     am.cancel(pi);
 
-
+                                                                    MakeToast("حذف", req+"تم حذف الاشعار !!!  ",R.drawable.error1);
 
                                                                   //  Toast.makeText(ScheduleMessagesActivity.this, "key : "+getRef(position).getKey()+" Delete : "+model.getRequestCode(), Toast.LENGTH_SHORT).show();
 
@@ -313,4 +328,27 @@ public class ScheduleMessagesActivity extends AppCompatActivity {
         adapter.startListening();
 
     }
+
+    private void MakeToast(String headerText, String message,int image)
+    {
+        // MakeToast("hi","jhvgfxfhg",R.drawable.warning1);
+        // image=R.id.toast_image
+        Toast toast = new Toast(getApplicationContext());
+        toast.setDuration(Toast.LENGTH_SHORT);
+        toast.setGravity(Gravity.CENTER,0,0);
+
+        LayoutInflater ly=getLayoutInflater();
+        View v=ly.inflate(R.layout.toast,(ViewGroup)findViewById(R.id.line1));
+        TextView txt1=(TextView)v.findViewById(R.id.toast_text1);
+        TextView txt2=(TextView)v.findViewById(R.id.toast_text2);
+        ImageView img =(ImageView)v.findViewById(R.id.toast_image);
+        txt1.setText(headerText);
+        txt2.setText(message);
+        img.setImageResource(image);
+
+        toast.setView((v));
+        toast.show();
+
+    }
+
 }

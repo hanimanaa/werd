@@ -1,5 +1,6 @@
 package com.dimatechs.werd;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.Gravity;
@@ -123,6 +124,12 @@ public class NotifcationActivity extends AppCompatActivity {
                                 public void onComplete(@NonNull Task<Void> task) {
                                     if (task.isSuccessful()) {
                                         MakeToast("ارسال رسالة", "تم ارسال الرسالة بنجاح", R.drawable.ok);
+                                        Intent intent=new Intent(NotifcationActivity.this,GroupMainActivity.class);
+                                        intent.putExtra("groupNum",groupname);
+                                        intent.putExtra("IsAdmin",IsAdmin);
+                                        intent.putExtra("groupName",groupname);
+                                        startActivity(intent);
+                                        finish();
                                     }
                                 }
                             });

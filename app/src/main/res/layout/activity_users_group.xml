@@ -38,28 +38,33 @@
                  android:layout_below="@+id/re1" >
               </androidx.recyclerview.widget.RecyclerView>
 
-            <com.google.android.material.floatingactionbutton.FloatingActionButton
-                 android:layout_width="wrap_content"
-                 android:layout_height="wrap_content"
-                 android:id="@+id/usersGroup_add_btn"
-                 android:textSize="40sp"
-                 android:layout_gravity="bottom|end"
-                 android:layout_margin="10dp"
-                 android:src="@drawable/ic_add">
-
-            </com.google.android.material.floatingactionbutton.FloatingActionButton>
-
-            <com.google.android.material.floatingactionbutton.FloatingActionButton
-                android:id="@+id/usersGroup_messages_btn"
+            <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_gravity="top|end"
-                android:layout_marginTop="390dp"
-                android:layout_marginEnd="10dp"
-                android:src="@drawable/ic_message"
-                android:textSize="40sp">
+                android:orientation="vertical"
+                android:layout_gravity="bottom|end">
 
-            </com.google.android.material.floatingactionbutton.FloatingActionButton>
+                <com.google.android.material.floatingactionbutton.FloatingActionButton
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/usersGroup_add_btn"
+                    android:textSize="40sp"
+                    android:layout_margin="10dp"
+                    android:src="@drawable/ic_add">
+
+                </com.google.android.material.floatingactionbutton.FloatingActionButton>
+
+                <com.google.android.material.floatingactionbutton.FloatingActionButton
+                    android:id="@+id/usersGroup_messages_btn"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/ic_message"
+                    android:layout_margin="10dp"
+                    android:textSize="40sp">
+
+                </com.google.android.material.floatingactionbutton.FloatingActionButton>
+            </LinearLayout>
+
 
         </FrameLayout>
 

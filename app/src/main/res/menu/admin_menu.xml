@@ -41,7 +41,7 @@
         />
     <item
         android:id="@+id/action_Delete"
-        android:title="حذف للمجموعه"
+        android:title="حذف المجموعه"
         android:icon="@drawable/ic_red_forever_black_24dp"
         />
     </group>
@@ -59,7 +59,7 @@
             />
         <item
             android:id="@+id/action_Schedule_Notification"
-            android:title="اشعارات متزامنة"
+            android:title="اشعارات موقوتة"
             />
         <item
         android:id="@+id/action_Exit"

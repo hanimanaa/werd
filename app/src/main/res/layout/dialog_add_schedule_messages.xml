@@ -34,7 +34,7 @@
                 android:id="@+id/RB_readS"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="قرء"
+                android:text="قرأ"
                 android:textColor="#64DD17"/>
 
             <RadioButton
@@ -48,6 +48,7 @@
                 android:id="@+id/RB_selectAllS"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:checked="true"
                 android:text="الكل" />
 
         </RadioGroup>

@@ -26,7 +26,7 @@ public class MyBroadcastReceiver extends BroadcastReceiver {
 
     private DatabaseReference RootRef = FirebaseDatabase.getInstance().getReference().child("UsersGroups");
     private DatabaseReference MessagesRef = FirebaseDatabase.getInstance().getReference().child("Messages");
-    private String groupNum, senderUserID, fullName, body, receiver,receiverUserID;
+    private String groupNum, senderUserID, fullName, body, receiver,receiverUserID,requestCode;
 
     public void onReceive(Context context, Intent intent) {
         Log.d("h", "we are in receiver");
