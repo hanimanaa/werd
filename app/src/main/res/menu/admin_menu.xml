@@ -25,31 +25,7 @@
         android:id="@+id/group2"
         >
         <item
-            android:title="تعديل المجموعه"
-            android:enabled="false"
-            android:checkable="false"
-            />
-    <item
-        android:id="@+id/action_Close"
-        android:title="اغلاق الانتساب للمجموعه"
-        />
-
-    <item
-        android:id="@+id/action_Update_Group"
-        android:title="تغيير اسم المجموعه"
-        android:icon="@drawable/ic_red_forever_black_24dp"
-        />
-    <item
-        android:id="@+id/action_Delete"
-        android:title="حذف المجموعه"
-        android:icon="@drawable/ic_red_forever_black_24dp"
-        />
-    </group>
-    <group
-        android:id="@+id/group3"
-        >
-        <item
-            android:title="اخر"
+            android:title="اشعارات"
             android:enabled="false"
             android:checkable="false"
             />
@@ -61,7 +37,30 @@
             android:id="@+id/action_Schedule_Notification"
             android:title="اشعارات موقوتة"
             />
+    </group>
+    <group
+        android:id="@+id/group3"
+        >
         <item
+            android:title="اعدادات"
+            android:enabled="false"
+            android:checkable="false"
+            />
+
+    <item
+        android:id="@+id/action_Close"
+        android:title="اغلاق الانتساب للمجموعه"
+        />
+
+    <item
+        android:id="@+id/action_Update_Group"
+        android:title="تغيير اسم المجموعه"
+        />
+    <item
+        android:id="@+id/action_Delete"
+        android:title="حذف المجموعه"
+        />
+    <item
         android:id="@+id/action_Exit"
         android:title="الخروج من البرنامج"
         />

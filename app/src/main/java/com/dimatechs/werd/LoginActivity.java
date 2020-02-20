@@ -4,10 +4,15 @@ import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.view.Gravity;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.EditText;
+import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -105,10 +110,11 @@ public class LoginActivity extends AppCompatActivity {
 
         if(TextUtils.isEmpty(phone))
         {
-            Toast.makeText(this, "ادخل رقم الهاتف اذا سمحت . . .", Toast.LENGTH_SHORT).show();
+            InputNumber.setError("ادخل رقم الهاتف اذا سمحت");
         }
         else if(TextUtils.isEmpty(password))
         {
+            InputPassword.setError("ادخل كلمه السر اذا سمحت");
             Toast.makeText(this, "ادخل الكلمه السريه اذا سمحت . . .", Toast.LENGTH_SHORT).show();
         }
         else
@@ -190,13 +196,13 @@ public class LoginActivity extends AppCompatActivity {
                         else
                         {
                             loadingBar.dismiss();
-                            Toast.makeText(LoginActivity.this, "الكلمه السريه غير صحيحه", Toast.LENGTH_SHORT).show();
+                            MakeToast("خطأ", "كلمه السر غير صحيحه !!!  ", R.drawable.error1);
                         }
                     }
                 }
                 else
                 {
-                    Toast.makeText(LoginActivity.this, "المستخدم غير مسجل", Toast.LENGTH_SHORT).show();
+                    MakeToast("خطأ", "المستخدم غير مسجل !!!  ", R.drawable.error1);
                     loadingBar.dismiss();
 
                 }
@@ -208,5 +214,26 @@ public class LoginActivity extends AppCompatActivity {
 
             }
         });
+    }
+    private void MakeToast(String headerText, String message,int image)
+    {
+        // MakeToast("hi","jhvgfxfhg",R.drawable.warning1);
+        // image=R.id.toast_image
+        Toast toast = new Toast(getApplicationContext());
+        toast.setDuration(Toast.LENGTH_SHORT);
+        toast.setGravity(Gravity.CENTER,0,0);
+
+        LayoutInflater ly=getLayoutInflater();
+        View v=ly.inflate(R.layout.toast,(ViewGroup)findViewById(R.id.line1));
+        TextView txt1=(TextView)v.findViewById(R.id.toast_text1);
+        TextView txt2=(TextView)v.findViewById(R.id.toast_text2);
+        ImageView img =(ImageView)v.findViewById(R.id.toast_image);
+        txt1.setText(headerText);
+        txt2.setText(message);
+        img.setImageResource(image);
+
+        toast.setView((v));
+        toast.show();
+
     }
 }

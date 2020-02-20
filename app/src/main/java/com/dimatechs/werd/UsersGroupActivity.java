@@ -57,11 +57,12 @@ public class UsersGroupActivity extends AppCompatActivity {
 
         Calendar calendar=Calendar.getInstance();
 
-        Locale locale = new Locale( "ar" , "SA" ) ;
+        Locale locale = new Locale( "ar" , "JO" ) ;
         SimpleDateFormat currentDate = (SimpleDateFormat) DateFormat.getDateInstance(DateFormat.FULL,locale);
-       // SimpleDateFormat currentDate = new SimpleDateFormat("EEE, d/MMM/yyyy");
-
         CurrentDate=currentDate.format(calendar.getTime());
+
+       // SimpleDateFormat currentDate = new SimpleDateFormat("d/MMM/yyyy");
+      //  CurrentDate=currentDate.format(calendar.getTime());
 
         recyclerView=(RecyclerView)findViewById(R.id.usersGroup_list);
         recyclerView.setHasFixedSize(true);
@@ -127,7 +128,7 @@ public class UsersGroupActivity extends AppCompatActivity {
     {
         super.onStart();
 
-        txtWell.setText(""+CurrentDate+ "\n \n" + " السلام عليكم "+fullName +"");
+        txtWell.setText(CurrentDate+ "\n \n" + " السلام عليكم "+fullName +"");
 
         final DatabaseReference ListRef= FirebaseDatabase.getInstance().getReference().child("UsersGroups");
 

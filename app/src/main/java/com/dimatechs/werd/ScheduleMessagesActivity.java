@@ -57,12 +57,13 @@ public class ScheduleMessagesActivity extends AppCompatActivity {
     private FloatingActionButton btnAddSceduleMessage;
     private String fullName,groupNum,senderUserID,requestCode,receiver="all";
     private Dialog dialog;
-    private TextView tvTime;
+    private TextView tvTime,no_notification_text;
     private Button SaveBtn;
     private EditText etMessage;
     private RadioButton rbSelectAll, rbRead, rbNotRead;
     private AlarmManager AutoAlarmManager;
     private PendingIntent pendingIntent;
+    private ImageView no_notification_image;
     private int h,m;
     private int x;
     
@@ -77,6 +78,9 @@ public class ScheduleMessagesActivity extends AppCompatActivity {
         ScheduleMessagesRef = FirebaseDatabase.getInstance().getReference().child("ScheduleMessages");
 
         groupNum =Paper.book().read(Prevalent.GroupNum);
+
+        no_notification_text = findViewById(R.id.no_notification_text);
+        no_notification_image = findViewById(R.id.no_notification_image);
 
 
         recyclerView = findViewById(R.id.recycler_ScheduleMessages);
@@ -215,7 +219,7 @@ public class ScheduleMessagesActivity extends AppCompatActivity {
                                                             AutoAlarmManager.set(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), pendingIntent);
                                                             Log.d("sc",String.valueOf(x-1));
 
-
+                                                            loadNotification();
                                                             dialog.dismiss();
                                                             MakeToast("اضافة","تم اضافة الاشعار بنجاح",R.drawable.ok);
                                                         }
@@ -239,6 +243,39 @@ public class ScheduleMessagesActivity extends AppCompatActivity {
     @Override
     protected void onStart() {
         super.onStart();
+
+        loadNotification();
+
+
+        /*
+        Query query =ScheduleMessagesRef.child(senderUserID).orderByChild("groupNum").equalTo(groupNum);
+
+        query.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot)
+            {
+                if(!dataSnapshot.exists())
+                {
+                    recyclerView.setVisibility(View.GONE);
+                    no_notification_text.setVisibility(View.VISIBLE);
+                    no_notification_image.setVisibility(View.VISIBLE);
+                }
+                else
+                    loadNotification();
+
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+
+*/
+
+    }
+
+    private void loadNotification() {
 
         Query query =ScheduleMessagesRef.child(senderUserID).orderByChild("groupNum").equalTo(groupNum);
 
@@ -304,9 +341,9 @@ public class ScheduleMessagesActivity extends AppCompatActivity {
                                                                 }
                                                             });
                                                 }else
-                                                    {
-                                                       Toast.makeText(ScheduleMessagesActivity.this, "null : "+req, Toast.LENGTH_SHORT).show();
-                                                    }
+                                                {
+                                                    Toast.makeText(ScheduleMessagesActivity.this, "null : "+req, Toast.LENGTH_SHORT).show();
+                                                }
                                             }
                                         }
                                 );
@@ -322,7 +359,7 @@ public class ScheduleMessagesActivity extends AppCompatActivity {
                                 alertDialog.show();
                                 return false;
                             }
-                        });                      
+                        });
                     }
 
                     @NonNull

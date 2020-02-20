@@ -8,6 +8,8 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
@@ -73,7 +75,30 @@ public class MessagesActivity extends AppCompatActivity {
 
     }
 
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {       
+            getMenuInflater().inflate(R.menu.message_menu, menu);
+            return true;
+    }
 
+    @Override
+    public boolean onOptionsItemSelected(final MenuItem item) {
+        int id = item.getItemId();
+        //noinspection SimplifiableIfStatement
+        if (id == R.id.action_delete_all_message) {
+            MessagesRef.child(phone).removeValue()
+                    .addOnCompleteListener(new OnCompleteListener<Void>() {
+                        @Override
+                        public void onComplete(@NonNull Task<Void> task) {
+                            if (task.isSuccessful()) {
+                                MakeToast("حذف", "تم حذف كافة الرسالة !!!  ", R.drawable.error1);
+                            }
+                        }
+                    });
+            return true;
+        }
+        return true;
+    }
     @Override
     protected void onStart() {
         super.onStart();
@@ -90,7 +115,7 @@ public class MessagesActivity extends AppCompatActivity {
 
                     @Override
                     protected void onBindViewHolder(@NonNull final MessageViewHolder holder,final int position, @NonNull final Messages model) {
-                        holder.txtName.setText(model.getSenderName());
+                        holder.txtName.setText("المرسل : "+model.getSenderName());
                         holder.txtTime.setText(model.getDate() + "\n"+model.getTime());
                         holder.txtMessage.setText(model.getBody());
 

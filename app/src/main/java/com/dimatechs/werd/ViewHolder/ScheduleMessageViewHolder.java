@@ -37,4 +37,6 @@ public class ScheduleMessageViewHolder extends RecyclerView.ViewHolder implement
     {
         listner.onClick(view,getAdapterPosition(),false);
     }
+
+
 }
