@@ -1,23 +1,36 @@
 package com.dimatechs.werd;
 
+import android.app.AlarmManager;
+import android.app.PendingIntent;
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.RadioButton;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.dimatechs.werd.BroadcastReceiver.MyBroadcastReceiver;
 import com.dimatechs.werd.Model.Messages;
 import com.dimatechs.werd.Model.UsersGroups;
 import com.dimatechs.werd.Prevalent.Prevalent;
 import com.dimatechs.werd.ViewHolder.MessageViewHolder;
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.firebase.ui.database.FirebaseRecyclerOptions;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
@@ -76,10 +89,50 @@ public class MessagesActivity extends AppCompatActivity {
                 new FirebaseRecyclerAdapter<Messages, MessageViewHolder>(options) {
 
                     @Override
-                    protected void onBindViewHolder(@NonNull final MessageViewHolder holder, int position, @NonNull final Messages model) {
+                    protected void onBindViewHolder(@NonNull final MessageViewHolder holder,final int position, @NonNull final Messages model) {
                         holder.txtName.setText(model.getSenderName());
                         holder.txtTime.setText(model.getDate() + "\n"+model.getTime());
                         holder.txtMessage.setText(model.getBody());
+
+                        holder.itemView.setOnLongClickListener(new View.OnLongClickListener() {
+                            @Override
+                            public boolean onLongClick(View v) {
+                                AlertDialog.Builder builder = new AlertDialog.Builder(MessagesActivity.this);
+                                builder.setTitle("تحذير");
+                                builder.setIcon(R.drawable.ic_red_forever_black_24dp);
+                                builder.setMessage("هل تريد حذف الرسالة ؟");
+                                builder.setCancelable(true);
+                                builder.setPositiveButton("نعم",
+                                        new DialogInterface.OnClickListener() {
+                                            @Override
+                                            public void onClick(DialogInterface dialogInterface, int i) {
+
+                                                MessagesRef.child(phone).child(getRef(position).getKey()).removeValue()
+                                                            .addOnCompleteListener(new OnCompleteListener<Void>() {
+                                                                @Override
+                                                                public void onComplete(@NonNull Task<Void> task) {
+                                                                    if (task.isSuccessful()) {
+                                                                        MakeToast("حذف", "تم حذف الرسالة !!!  ", R.drawable.error1);
+                                                                    }
+                                                                }
+                                                            });
+
+                                            }
+                                        }
+                                );
+                                builder.setNegativeButton("لا",
+                                        new DialogInterface.OnClickListener() {
+                                            @Override
+                                            public void onClick(DialogInterface dialogInterface, int i) {
+                                            }
+                                        }
+
+                                );
+                                AlertDialog alertDialog=builder.create();
+                                alertDialog.show();
+                                    return false;
+                            }
+                        });
                     }
 
                     @NonNull
@@ -92,6 +145,27 @@ public class MessagesActivity extends AppCompatActivity {
                 };
         recyclerView.setAdapter(adapter);
         adapter.startListening();
+
+    }
+    private void MakeToast(String headerText, String message,int image)
+    {
+        // MakeToast("hi","jhvgfxfhg",R.drawable.warning1);
+        // image=R.id.toast_image
+        Toast toast = new Toast(getApplicationContext());
+        toast.setDuration(Toast.LENGTH_SHORT);
+        toast.setGravity(Gravity.CENTER,0,0);
+
+        LayoutInflater ly=getLayoutInflater();
+        View v=ly.inflate(R.layout.toast,(ViewGroup)findViewById(R.id.line1));
+        TextView txt1=(TextView)v.findViewById(R.id.toast_text1);
+        TextView txt2=(TextView)v.findViewById(R.id.toast_text2);
+        ImageView img =(ImageView)v.findViewById(R.id.toast_image);
+        txt1.setText(headerText);
+        txt2.setText(message);
+        img.setImageResource(image);
+
+        toast.setView((v));
+        toast.show();
 
     }
 }

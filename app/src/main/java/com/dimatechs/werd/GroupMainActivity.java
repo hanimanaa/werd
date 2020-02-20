@@ -182,7 +182,7 @@ public class GroupMainActivity extends AppCompatActivity {
                                                     public void onClick(View v) {
                                                         AlertDialog.Builder builder = new AlertDialog.Builder(GroupMainActivity.this);
                                                         builder.setTitle("حذف");
-                                                        builder.setMessage("هل تريد حذف المشترك ؟");
+                                                        builder.setMessage("هل تريد حذف المشترك ؟ احذر. لن يكون هنالك امكانية لاستعادة البيانات !!!");
                                                         builder.setIcon(R.drawable.error1);
 
                                                         ug=model;
@@ -815,48 +815,52 @@ public class GroupMainActivity extends AppCompatActivity {
         public void onClick(DialogInterface dialog, int which) {
             if(which==-1)
             {
-                RootRef.child(ug.getId())
-                        .removeValue()
-                        .addOnCompleteListener(new OnCompleteListener<Void>() {
-                            @Override
-                            public void onComplete(@NonNull Task<Void> task) {
-                                if (task.isSuccessful()) {
-                                    String senderUserID = Prevalent.currentOnlineUser.getPhone();
-                                    String fullName = Paper.book().read("fullName");
-                                    Calendar calendar = Calendar.getInstance();
+                if(ug.getUserPhone().equals(Prevalent.currentOnlineUser.getPhone()))
+                {
+                    MakeToast("تحذير","لا يمكنك حذف نفسك من المجموعة , الرجاء التوجه الى مدير المجموعة  !!!",R.drawable.error1);
+                }else {
+                    RootRef.child(ug.getId())
+                            .removeValue()
+                            .addOnCompleteListener(new OnCompleteListener<Void>() {
+                                @Override
+                                public void onComplete(@NonNull Task<Void> task) {
+                                    if (task.isSuccessful()) {
+                                        String senderUserID = Prevalent.currentOnlineUser.getPhone();
+                                        String fullName = Paper.book().read("fullName");
+                                        Calendar calendar = Calendar.getInstance();
 
-                                    SimpleDateFormat currentDate = new SimpleDateFormat("MMM dd, yyyy");
-                                    String CurrentDate = currentDate.format(calendar.getTime());
+                                        SimpleDateFormat currentDate = new SimpleDateFormat("MMM dd, yyyy");
+                                        String CurrentDate = currentDate.format(calendar.getTime());
 
-                                    SimpleDateFormat currentTime = new SimpleDateFormat("HH:mm:ss a");
-                                    String CurrentTime = currentTime.format(calendar.getTime());
+                                        SimpleDateFormat currentTime = new SimpleDateFormat("HH:mm:ss a");
+                                        String CurrentTime = currentTime.format(calendar.getTime());
 
-                                    HashMap<String, String> NotificationMap = new HashMap<>();
-                                    NotificationMap.put("from", senderUserID);
-                                    NotificationMap.put("body","للاسف تم حذفك من مجموعه " + ug.getGroupName());
-                                    NotificationMap.put("senderName", fullName);
-                                    NotificationMap.put("time", CurrentTime);
-                                    NotificationMap.put("date", CurrentDate);
+                                        HashMap<String, String> NotificationMap = new HashMap<>();
+                                        NotificationMap.put("from", senderUserID);
+                                        NotificationMap.put("body", "للاسف تم حذفك من مجموعه " + ug.getGroupName());
+                                        NotificationMap.put("senderName", fullName);
+                                        NotificationMap.put("time", CurrentTime);
+                                        NotificationMap.put("date", CurrentDate);
 
-                                    String receiverUserID = ug.getUserPhone();
+                                        String receiverUserID = ug.getUserPhone();
 
-                                    MessagesRef.child(receiverUserID).push()
-                                            .setValue(NotificationMap)
-                                            .addOnCompleteListener(new OnCompleteListener<Void>() {
-                                                @Override
-                                                public void onComplete(@NonNull Task<Void> task) {
-                                                    if (task.isSuccessful()) {
-                                                        MakeToast("حذف", "تم حذف المشترك بنجاح", R.drawable.ok);
+                                        MessagesRef.child(receiverUserID).push()
+                                                .setValue(NotificationMap)
+                                                .addOnCompleteListener(new OnCompleteListener<Void>() {
+                                                    @Override
+                                                    public void onComplete(@NonNull Task<Void> task) {
+                                                        if (task.isSuccessful()) {
+                                                            MakeToast("حذف", "تم حذف المشترك بنجاح", R.drawable.ok);
+                                                        }
                                                     }
-                                                }
-                                            });
+                                                });
 
 
-
+                                    }
                                 }
-                            }
-                        });
-                dialog.dismiss();
+                            });
+                    dialog.dismiss();
+                }
             }
             else
             {
