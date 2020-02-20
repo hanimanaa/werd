@@ -84,7 +84,7 @@ public class GroupMainActivity extends AppCompatActivity {
 
 
         //Paper.init(this);
-        groupNum=getIntent().getStringExtra("groupNum");
+        groupNum=Paper.book().read(Prevalent.GroupNum);
         groupname=getIntent().getStringExtra("groupName");
         IsAdmin=getIntent().getStringExtra("IsAdmin");
 
@@ -568,7 +568,7 @@ public class GroupMainActivity extends AppCompatActivity {
         }
         else if (id == R.id.action_Schedule_Notification){
             Intent intent=new Intent(GroupMainActivity.this, ScheduleMessagesActivity.class);
-            intent.putExtra("groupNum",groupNum);
+           // intent.putExtra("groupNum",groupNum);
             //intent.putExtra("groupName",groupname);
             startActivity(intent);
             return true;

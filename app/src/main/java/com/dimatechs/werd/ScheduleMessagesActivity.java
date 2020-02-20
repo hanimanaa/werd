@@ -76,7 +76,8 @@ public class ScheduleMessagesActivity extends AppCompatActivity {
 
         ScheduleMessagesRef = FirebaseDatabase.getInstance().getReference().child("ScheduleMessages");
 
-        groupNum = getIntent().getStringExtra("groupNum");
+        groupNum =Paper.book().read(Prevalent.GroupNum);
+
 
         recyclerView = findViewById(R.id.recycler_ScheduleMessages);
         recyclerView.setHasFixedSize(true);

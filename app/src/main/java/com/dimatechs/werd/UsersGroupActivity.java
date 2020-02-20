@@ -190,9 +190,11 @@ public class UsersGroupActivity extends AppCompatActivity {
                             @Override
                             public void onClick(View v) {
                                 Intent intent=new Intent(UsersGroupActivity.this, GroupMainActivity.class);
-                                intent.putExtra("groupNum",model.getGroupNum());
+                               // intent.putExtra("groupNum",model.getGroupNum());
                                 intent.putExtra("IsAdmin",model.getAdmin());
                                 intent.putExtra("groupName",model.getGroupName());
+                                Paper.book().write(Prevalent.GroupNum, model.getGroupNum());
+
                                 startActivity(intent);
                             }
                         });

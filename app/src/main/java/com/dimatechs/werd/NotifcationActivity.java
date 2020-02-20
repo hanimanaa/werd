@@ -67,7 +67,7 @@ public class NotifcationActivity extends AppCompatActivity {
 
 
         //Paper.init(this);
-        groupNum=getIntent().getStringExtra("groupNum");
+        groupNum=Paper.book().read(Prevalent.GroupNum);
         groupname=getIntent().getStringExtra("groupName");
         IsAdmin=getIntent().getStringExtra("IsAdmin");
 
