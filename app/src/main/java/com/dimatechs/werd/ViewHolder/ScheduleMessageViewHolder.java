@@ -10,7 +10,7 @@ import com.dimatechs.werd.R;
 
 public class ScheduleMessageViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener
 {
-    public TextView txtTime,txtReceiver,txtMessage;
+    public TextView txtTime,txtReceiver,txtMessage,txtRequestCode;
     public ItemClickListner listner;
 
     public ScheduleMessageViewHolder(View itemView)
@@ -20,8 +20,11 @@ public class ScheduleMessageViewHolder extends RecyclerView.ViewHolder implement
         txtTime = (TextView) itemView.findViewById(R.id.tv_time_schedule);
         txtReceiver = (TextView) itemView.findViewById(R.id.tv_receiver_schedule);
         txtMessage= (TextView) itemView.findViewById(R.id.tv_message_schedule);
+        txtRequestCode= (TextView) itemView.findViewById(R.id.tv_message_RequestCode);
 
     }
+
+
 
     public void setItemClickListner(ItemClickListner listner )
     {

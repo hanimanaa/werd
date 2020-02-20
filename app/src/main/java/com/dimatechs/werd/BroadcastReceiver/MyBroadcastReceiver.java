@@ -29,7 +29,7 @@ public class MyBroadcastReceiver extends BroadcastReceiver {
     private String groupNum, senderUserID, fullName, body, receiver,receiverUserID,requestCode;
 
     public void onReceive(Context context, Intent intent) {
-        Log.d("h", "we are in receiver");
+        Log.d("sc", "we are in receiver");
 
 
         groupNum = intent.getStringExtra("groupNum");

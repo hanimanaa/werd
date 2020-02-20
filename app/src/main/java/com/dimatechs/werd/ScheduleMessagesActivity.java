@@ -8,6 +8,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -209,8 +210,9 @@ public class ScheduleMessagesActivity extends AppCompatActivity {
                                                             calendar.set(Calendar.HOUR_OF_DAY, h);
                                                             calendar.set(Calendar.MINUTE, m);
 
-                                                            pendingIntent = PendingIntent.getBroadcast(ScheduleMessagesActivity.this, x, ScheduleIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+                                                            pendingIntent = PendingIntent.getBroadcast(ScheduleMessagesActivity.this, Integer.parseInt(requestCode), ScheduleIntent, PendingIntent.FLAG_UPDATE_CURRENT);
                                                             AutoAlarmManager.set(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), pendingIntent);
+                                                            Log.d("sc",String.valueOf(x-1));
 
 
                                                             dialog.dismiss();
@@ -251,6 +253,7 @@ public class ScheduleMessagesActivity extends AppCompatActivity {
                     protected void onBindViewHolder(@NonNull final ScheduleMessageViewHolder holder, final int position, @NonNull final ScheduleMessages model) {
                         holder.txtTime.setText(model.getSendTime());
                         holder.txtMessage.setText(model.getBody());
+                        holder.txtRequestCode.setText(model.getRequestCode());
                         if(model.getReceiver().equals("all"))
                         {
                             holder.txtReceiver.setText("لكل المجموعة");
@@ -278,26 +281,29 @@ public class ScheduleMessagesActivity extends AppCompatActivity {
                                         new DialogInterface.OnClickListener() {
                                             @Override
                                             public void onClick(DialogInterface dialogInterface, int i) {
-                                                ScheduleMessagesRef.child(senderUserID).child(getRef(position).getKey()).removeValue()
-                                                        .addOnCompleteListener(new OnCompleteListener<Void>() {
-                                                            @Override
-                                                            public void onComplete(@NonNull Task<Void> task) {
-                                                                if (task.isSuccessful())
-                                                                {
-                                                                    int req =Integer.parseInt(model.getRequestCode());
-                                                                    Intent in = new Intent(ScheduleMessagesActivity.this, MyBroadcastReceiver.class);
-                                                                    PendingIntent pi = PendingIntent.getBroadcast(ScheduleMessagesActivity.this, req, in, PendingIntent.FLAG_UPDATE_CURRENT);
-                                                                    AlarmManager am = (AlarmManager) getSystemService(ALARM_SERVICE);
-                                                                    am.cancel(pi);
 
-                                                                    MakeToast("حذف", req+"تم حذف الاشعار !!!  ",R.drawable.error1);
 
-                                                                  //  Toast.makeText(ScheduleMessagesActivity.this, "key : "+getRef(position).getKey()+" Delete : "+model.getRequestCode(), Toast.LENGTH_SHORT).show();
+                                                int req =Integer.parseInt(holder.txtRequestCode.getText().toString());
+                                                Log.d("sc",String.valueOf(req));
+                                                Intent in = new Intent(ScheduleMessagesActivity.this, MyBroadcastReceiver.class);
+                                                PendingIntent pi = PendingIntent.getBroadcast(ScheduleMessagesActivity.this, req, in, PendingIntent.FLAG_CANCEL_CURRENT);
+                                                AlarmManager am = (AlarmManager) getSystemService(ALARM_SERVICE);
 
+                                                if (pi != null) {
+                                                    am.cancel(pi);
+                                                    ScheduleMessagesRef.child(senderUserID).child(getRef(position).getKey()).removeValue()
+                                                            .addOnCompleteListener(new OnCompleteListener<Void>() {
+                                                                @Override
+                                                                public void onComplete(@NonNull Task<Void> task) {
+                                                                    if (task.isSuccessful()) {
+                                                                        MakeToast("حذف", "تم حذف الاشعار !!!  ", R.drawable.error1);
+                                                                    }
                                                                 }
-                                                            }
-                                                        });
-
+                                                            });
+                                                }else
+                                                    {
+                                                       Toast.makeText(ScheduleMessagesActivity.this, "null : "+req, Toast.LENGTH_SHORT).show();
+                                                    }
                                             }
                                         }
                                 );
