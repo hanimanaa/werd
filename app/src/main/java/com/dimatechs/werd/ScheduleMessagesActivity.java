@@ -285,6 +285,8 @@ public class ScheduleMessagesActivity extends AppCompatActivity {
 
                                                 int req =Integer.parseInt(holder.txtRequestCode.getText().toString());
                                                 Log.d("sc",String.valueOf(req));
+
+
                                                 Intent in = new Intent(ScheduleMessagesActivity.this, MyBroadcastReceiver.class);
                                                 PendingIntent pi = PendingIntent.getBroadcast(ScheduleMessagesActivity.this, req, in, PendingIntent.FLAG_CANCEL_CURRENT);
                                                 AlarmManager am = (AlarmManager) getSystemService(ALARM_SERVICE);
