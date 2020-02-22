@@ -115,7 +115,6 @@ public class LoginActivity extends AppCompatActivity {
         else if(TextUtils.isEmpty(password))
         {
             InputPassword.setError("ادخل كلمه السر اذا سمحت");
-            Toast.makeText(this, "ادخل الكلمه السريه اذا سمحت . . .", Toast.LENGTH_SHORT).show();
         }
         else
         {

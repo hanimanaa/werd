@@ -1,42 +1,34 @@
 {
   "project_info": {
-    "project_number": "3184533179",
-    "firebase_url": "https://werd-f6d5b.firebaseio.com",
-    "project_id": "werd-f6d5b",
-    "storage_bucket": "werd-f6d5b.appspot.com"
+    "project_number": "758666126263",
+    "firebase_url": "https://werd-9c901.firebaseio.com",
+    "project_id": "werd-9c901",
+    "storage_bucket": "werd-9c901.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:3184533179:android:d6ac71b126110093",
+        "mobilesdk_app_id": "1:758666126263:android:9cc65f2192d68061203e32",
         "android_client_info": {
           "package_name": "com.dimatechs.werd"
         }
       },
       "oauth_client": [
         {
-          "client_id": "3184533179-glpa2ab1mpgsqjc681enni4p1e5kjt3m.apps.googleusercontent.com",
-          "client_type": 1,
-          "android_info": {
-            "package_name": "com.dimatechs.werd",
-            "certificate_hash": "73f3639dc7b4ff096f7b029c3ac4bd69c95ebd3c"
-          }
-        },
-        {
-          "client_id": "3184533179-md800ebs3d4ekatqs5at0uj6r0u99ro6.apps.googleusercontent.com",
+          "client_id": "758666126263-kbq3lkao42qn9hehiglq8m101b40pmjb.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyDXyJn8JeThGLnDBWQDUbjaDGmiHixKaw4"
+          "current_key": "AIzaSyC3dsG3bnp3gt2alEy9Lh9WUWeL6G7saNM"
         }
       ],
       "services": {
         "appinvite_service": {
           "other_platform_oauth_client": [
             {
-              "client_id": "3184533179-md800ebs3d4ekatqs5at0uj6r0u99ro6.apps.googleusercontent.com",
+              "client_id": "758666126263-kbq3lkao42qn9hehiglq8m101b40pmjb.apps.googleusercontent.com",
               "client_type": 3
             }
           ]

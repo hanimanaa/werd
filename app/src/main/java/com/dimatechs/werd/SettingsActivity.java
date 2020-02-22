@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.View;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -35,7 +36,7 @@ import io.paperdb.Paper;
 public class SettingsActivity extends AppCompatActivity
 {
     private EditText nameEditText, passswordEditText;
-    private TextView closeTextBtn, saveTextButton;
+    private Button saveTextButton;
     private ProgressDialog loadingBar;
     DatabaseReference ugRef,UsersRef;
     String userPhone,name="",password;
@@ -46,20 +47,12 @@ public class SettingsActivity extends AppCompatActivity
 
         nameEditText = (EditText) findViewById(R.id.settings_name);
         passswordEditText = (EditText) findViewById(R.id.settings_password);
-        closeTextBtn = (TextView) findViewById(R.id.close_settings_btn);
-        saveTextButton = (TextView) findViewById(R.id.update_account_settings_btn);
+        saveTextButton = (Button) findViewById(R.id.update_account_settings_btn);
         loadingBar=new ProgressDialog(this);
 
         ugRef = FirebaseDatabase.getInstance().getReference().child("UsersGroups");
         userPhone=Prevalent.currentOnlineUser.getPhone();
 
-
-        closeTextBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                finish();
-            }
-        });
 
 
         saveTextButton.setOnClickListener(new View.OnClickListener() {

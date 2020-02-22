@@ -55,7 +55,6 @@ public class AddGroupAdminActivity extends AppCompatActivity {
         oldGroupNum=getIntent().getStringExtra("groupNum");
         oldgroupName=getIntent().getStringExtra("groupName");
         EdgroupName.setText(oldgroupName);
-        Toast.makeText(this, ""+oldGroupNum, Toast.LENGTH_SHORT).show();
 
         loadingBar=new ProgressDialog(this);
 
@@ -97,7 +96,7 @@ public class AddGroupAdminActivity extends AppCompatActivity {
 
         if(TextUtils.isEmpty(groupName))
         {
-            Toast.makeText(this, getResources().getString(R.string.enter_group_name), Toast.LENGTH_SHORT).show();
+            EdgroupName.setError("ادخل اسم المجموعه اذا سمحت");
         }
         else
         {

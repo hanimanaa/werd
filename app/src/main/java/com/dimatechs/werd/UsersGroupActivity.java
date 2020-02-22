@@ -109,6 +109,7 @@ public class UsersGroupActivity extends AppCompatActivity {
                         if (i == 0) {
                              Intent intent = new Intent(getApplicationContext(),AddGroupAdminActivity.class);
                              startActivity(intent);
+                             finish();
                         }
                         if (i == 1) {
                             Intent intent = new Intent(getApplicationContext(),GroupsActivity.class);

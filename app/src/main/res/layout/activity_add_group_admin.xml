@@ -48,7 +48,6 @@
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="15dp"
                 android:layout_marginRight="15dp"
-                android:background="@drawable/input_design"
                 android:padding="20dp"
                 android:layout_marginTop="10dp"
                 android:layout_below="@id/add_group_admin_logo"
