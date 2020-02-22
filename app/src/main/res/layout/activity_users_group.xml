@@ -31,6 +31,20 @@
             android:layout_height="match_parent"
             android:layout_below="@+id/re1">
 
+            <TextView
+                android:id="@+id/no_notification_text"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textColor="@color/colorPrimaryDark"
+                android:paddingTop="150dp"
+                android:textAlignment="center"
+                android:text="لا يوجد مجموعات \n الرجاء الضغط على  \n لكي تستطيع الانتساب الى مجموعه \n  او \n انشاء مجموعه جديدة"
+                android:gravity="center"
+                android:textSize="20dp"
+                android:visibility="visible"
+                />
+
+
             <androidx.recyclerview.widget.RecyclerView
                  android:id="@+id/usersGroup_list"
                  android:layout_width="match_parent"

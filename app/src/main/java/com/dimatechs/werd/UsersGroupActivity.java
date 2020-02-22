@@ -3,6 +3,8 @@ package com.dimatechs.werd;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.SpannableString;
+import android.text.style.ImageSpan;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -23,9 +25,12 @@ import com.dimatechs.werd.ViewHolder.UsersGroupViewHolder;
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.firebase.ui.database.FirebaseRecyclerOptions;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
+import com.google.firebase.database.ValueEventListener;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -43,6 +48,8 @@ public class UsersGroupActivity extends AppCompatActivity {
     private String groupN="",phone="",id;
     private String fullName;
     private String CurrentDate;
+    private TextView no_notification_text;
+    private DatabaseReference ListRef;
 
 
 
@@ -51,6 +58,7 @@ public class UsersGroupActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_users_group);
 
+        ListRef= FirebaseDatabase.getInstance().getReference().child("UsersGroups");
 
         Paper.init(this);
         fullName = Paper.book().read("fullName");
@@ -64,6 +72,15 @@ public class UsersGroupActivity extends AppCompatActivity {
        // SimpleDateFormat currentDate = new SimpleDateFormat("d/MMM/yyyy");
       //  CurrentDate=currentDate.format(calendar.getTime());
 
+        no_notification_text = findViewById(R.id.no_notification_text);
+        ImageSpan imageSpan = new ImageSpan(this, R.drawable.ic_add_circle);
+        SpannableString spannableString = new SpannableString(no_notification_text.getText());
+        int start = 35;
+        int end = 36;
+        int flag = 0;
+        spannableString.setSpan(imageSpan, start, end, flag);
+
+        no_notification_text.setText(spannableString);
         recyclerView=(RecyclerView)findViewById(R.id.usersGroup_list);
         recyclerView.setHasFixedSize(true);
         layoutManager = new LinearLayoutManager(this);
@@ -130,89 +147,10 @@ public class UsersGroupActivity extends AppCompatActivity {
 
         txtWell.setText(CurrentDate+ "\n \n" + " السلام عليكم "+fullName +"");
 
-        final DatabaseReference ListRef= FirebaseDatabase.getInstance().getReference().child("UsersGroups");
-
-        Query query =ListRef.orderByChild("userPhone").equalTo(Prevalent.currentOnlineUser.getPhone());
-        FirebaseRecyclerOptions<UsersGroups> options=
-                new FirebaseRecyclerOptions.Builder<UsersGroups>()
-                        .setQuery(query,UsersGroups.class)
-                        .build();
-
-        FirebaseRecyclerAdapter<UsersGroups, UsersGroupViewHolder> adapter=
-                new FirebaseRecyclerAdapter<UsersGroups, UsersGroupViewHolder>(options) {
-
-                    @Override
-                    protected void onBindViewHolder(@NonNull final UsersGroupViewHolder holder, int position, @NonNull final UsersGroups model)
-                    {
-                            //holder.txtGroupNum.setText("رقم المجموعه : " + model.getGroupNum());
-                            holder.txtGroupName.setText("مجموعة" +"\n"+ model.getGroupName());
-                            holder.txtPartNum.setText("جزء رقم : " + model.getPartNum());
-
-                            if (model.getDone().equals("done")) {
-                                holder.imageView.setImageResource(R.drawable.ic_person_green);
-                            }
+        //check if recycler view is empty
+        IsEmptyRecyclerView();
 
 
-                        holder.imageView.setOnClickListener(new View.OnClickListener() {
-                            @Override
-                            public void onClick(View v) {
-                                groupN=model.getGroupNum();
-                                phone=Prevalent.currentOnlineUser.getPhone();
-                                id=model.getId();
-
-                                if(model.getDone().equals("done"))
-                                {
-                                    DatabaseReference ref = FirebaseDatabase.getInstance().getReference().child("UsersGroups");
-                                    ref.child(id).child("done").setValue("no");
-                                }
-                                else
-                                {
-                                    DatabaseReference ref = FirebaseDatabase.getInstance().getReference().child("UsersGroups");
-                                    ref.child(id).child("done").setValue("done");
-                                    Toast.makeText(UsersGroupActivity.this,"بارك الله فيك", Toast.LENGTH_SHORT).show();
-                                }
-
-                                /*
-                                AlertDialog.Builder builder = new AlertDialog.Builder(UsersGroupActivity.this);
-                                builder.setTitle("الورد اليومي");
-                                builder.setMessage("هل اتممت قراءة الجزء ؟");
-                                builder.setCancelable(true);
-                                builder.setPositiveButton("نعم بحمد الله", new HandleAlertDialogListener());
-                                builder.setNegativeButton("للاسف لا", new HandleAlertDialogListener());
-                                AlertDialog dialog=builder.create();
-                                dialog.show();
-                                */
-
-
-                            }
-                        });
-
-                        holder.txtmore.setOnClickListener(new View.OnClickListener() {
-                            @Override
-                            public void onClick(View v) {
-                                Intent intent=new Intent(UsersGroupActivity.this, GroupMainActivity.class);
-                               // intent.putExtra("groupNum",model.getGroupNum());
-                                intent.putExtra("IsAdmin",model.getAdmin());
-                                intent.putExtra("groupName",model.getGroupName());
-                                Paper.book().write(Prevalent.GroupNum, model.getGroupNum());
-
-                                startActivity(intent);
-                            }
-                        });
-
-                    }
-
-                    @NonNull
-                    @Override
-                    public UsersGroupViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType)
-                    {
-                        View view= LayoutInflater.from(parent.getContext()).inflate(R.layout.users_group_items_layout,parent,false);
-                        UsersGroupViewHolder holder = new UsersGroupViewHolder(view);
-                        return holder;
-                    }
-                };
-        recyclerView.setAdapter(adapter);
-        adapter.startListening();
     }
 /*
     private void UpdateStatus(String id,String done)
@@ -285,7 +223,116 @@ public class UsersGroupActivity extends AppCompatActivity {
     }
 
  */
+private void IsEmptyRecyclerView()
+{
+    ListRef.orderByChild("userPhone").equalTo(Prevalent.currentOnlineUser.getPhone()).
+            addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(DataSnapshot dataSnapshot) {
+                    if (dataSnapshot.exists()) {
+                        no_notification_text.setVisibility(View.GONE);
+                        recyclerView.setVisibility(View.VISIBLE);
+                        loadRecyclerView();
+                    }
+                    else
+                    {
+                        no_notification_text.setVisibility(View.VISIBLE);
+                        recyclerView.setVisibility(View.GONE);
+                    }
+                }
+                @Override
+                public void onCancelled(DatabaseError databaseError) {
+                }
+            });
 
+}
+    private void loadRecyclerView() {
+
+
+        Query query =ListRef.orderByChild("userPhone").equalTo(Prevalent.currentOnlineUser.getPhone());
+        FirebaseRecyclerOptions<UsersGroups> options=
+                new FirebaseRecyclerOptions.Builder<UsersGroups>()
+                        .setQuery(query,UsersGroups.class)
+                        .build();
+
+        FirebaseRecyclerAdapter<UsersGroups, UsersGroupViewHolder> adapter=
+                new FirebaseRecyclerAdapter<UsersGroups, UsersGroupViewHolder>(options) {
+
+                    @Override
+                    protected void onBindViewHolder(@NonNull final UsersGroupViewHolder holder, int position, @NonNull final UsersGroups model)
+                    {
+                        //holder.txtGroupNum.setText("رقم المجموعه : " + model.getGroupNum());
+                        holder.txtGroupName.setText("مجموعة" +"\n"+ model.getGroupName());
+                        holder.txtPartNum.setText("جزء رقم : " + model.getPartNum());
+
+                        if (model.getDone().equals("done")) {
+                            holder.imageView.setImageResource(R.drawable.ic_person_green);
+                        }
+
+
+                        holder.imageView.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                groupN=model.getGroupNum();
+                                phone=Prevalent.currentOnlineUser.getPhone();
+                                id=model.getId();
+
+                                if(model.getDone().equals("done"))
+                                {
+                                    DatabaseReference ref = FirebaseDatabase.getInstance().getReference().child("UsersGroups");
+                                    ref.child(id).child("done").setValue("no");
+                                }
+                                else
+                                {
+                                    DatabaseReference ref = FirebaseDatabase.getInstance().getReference().child("UsersGroups");
+                                    ref.child(id).child("done").setValue("done");
+                                    Toast.makeText(UsersGroupActivity.this,"بارك الله فيك", Toast.LENGTH_SHORT).show();
+                                }
+
+                                /*
+                                AlertDialog.Builder builder = new AlertDialog.Builder(UsersGroupActivity.this);
+                                builder.setTitle("الورد اليومي");
+                                builder.setMessage("هل اتممت قراءة الجزء ؟");
+                                builder.setCancelable(true);
+                                builder.setPositiveButton("نعم بحمد الله", new HandleAlertDialogListener());
+                                builder.setNegativeButton("للاسف لا", new HandleAlertDialogListener());
+                                AlertDialog dialog=builder.create();
+                                dialog.show();
+                                */
+
+
+                            }
+                        });
+
+                        holder.txtmore.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                Intent intent=new Intent(UsersGroupActivity.this, GroupMainActivity.class);
+                                // intent.putExtra("groupNum",model.getGroupNum());
+                                intent.putExtra("IsAdmin",model.getAdmin());
+                                intent.putExtra("groupName",model.getGroupName());
+                                Paper.book().write(Prevalent.GroupNum, model.getGroupNum());
+
+                                startActivity(intent);
+                            }
+                        });
+
+                    }
+
+                    @NonNull
+                    @Override
+                    public UsersGroupViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType)
+                    {
+                        View view= LayoutInflater.from(parent.getContext()).inflate(R.layout.users_group_items_layout,parent,false);
+                        UsersGroupViewHolder holder = new UsersGroupViewHolder(view);
+                        return holder;
+                    }
+                };
+        recyclerView.setAdapter(adapter);
+        adapter.startListening();
+
+
+    }
 
 }
 

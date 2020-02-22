@@ -29,40 +29,20 @@
         android:layout_height="match_parent"
         android:orientation="vertical"
         >
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical">
                 <TextView
                     android:id="@+id/no_notification_text"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:textColor="@color/colorPrimaryDark"
-                    android:layout_marginStart="10dp"
-                    android:layout_marginEnd="10dp"
-                    android:layout_marginBottom="20dp"
+                    android:paddingTop="150dp"
                     android:textAlignment="center"
-                    android:layout_centerVertical="true"
-                    android:text="لا يوجد اشعارات"
+                    android:text="لا يوجد اشعارات \n الرجاء الضغط على  \n لكي تستطيع اضافة اشعارات "
                     android:gravity="center"
                     android:textSize="20dp"
-                    android:visibility="gone"
-                    />
+                    android:visibility="visible"
+                 />
 
-                <ImageView
-                    android:id="@+id/no_notification_image"
-                    android:layout_width="match_parent"
-                    android:layout_height="70dp"
-                    android:layout_marginStart="10dp"
-                    android:layout_marginEnd="10dp"
-                    android:textAlignment="center"
-                    android:layout_centerVertical="true"
-                    android:layout_below="@+id/no_notification_text"
-                    android:src="@drawable/ic_message_green_24dp"
-                    android:visibility="gone"
-                    />
 
-        </LinearLayout>
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/recycler_ScheduleMessages"
             android:layout_width="match_parent"

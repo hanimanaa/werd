@@ -7,7 +7,9 @@ import android.app.TimePickerDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.SpannableString;
 import android.text.TextUtils;
+import android.text.style.ImageSpan;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -63,7 +65,6 @@ public class ScheduleMessagesActivity extends AppCompatActivity {
     private RadioButton rbSelectAll, rbRead, rbNotRead;
     private AlarmManager AutoAlarmManager;
     private PendingIntent pendingIntent;
-    private ImageView no_notification_image;
     private int h,m;
     private int x;
     
@@ -80,13 +81,20 @@ public class ScheduleMessagesActivity extends AppCompatActivity {
         groupNum =Paper.book().read(Prevalent.GroupNum);
 
         no_notification_text = findViewById(R.id.no_notification_text);
-        no_notification_image = findViewById(R.id.no_notification_image);
+        ImageSpan imageSpan = new ImageSpan(this, R.drawable.ic_add_circle);
+        SpannableString spannableString = new SpannableString(no_notification_text.getText());
+        int start = 35;
+        int end = 36;
+        int flag = 0;
+        spannableString.setSpan(imageSpan, start, end, flag);
 
+        no_notification_text.setText(spannableString);
 
         recyclerView = findViewById(R.id.recycler_ScheduleMessages);
         recyclerView.setHasFixedSize(true);
         layoutManager = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(layoutManager);
+
 
         senderUserID = Prevalent.currentOnlineUser.getPhone();
 
@@ -221,6 +229,8 @@ public class ScheduleMessagesActivity extends AppCompatActivity {
 
                                                             loadNotification();
                                                             dialog.dismiss();
+
+                                                            IsEmptyRecyclerView();
                                                             MakeToast("اضافة","تم اضافة الاشعار بنجاح",R.drawable.ok);
                                                         }
                                                     }
@@ -244,40 +254,15 @@ public class ScheduleMessagesActivity extends AppCompatActivity {
     protected void onStart() {
         super.onStart();
 
-        loadNotification();
-
-
-        /*
-        Query query =ScheduleMessagesRef.child(senderUserID).orderByChild("groupNum").equalTo(groupNum);
-
-        query.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot)
-            {
-                if(!dataSnapshot.exists())
-                {
-                    recyclerView.setVisibility(View.GONE);
-                    no_notification_text.setVisibility(View.VISIBLE);
-                    no_notification_image.setVisibility(View.VISIBLE);
-                }
-                else
-                    loadNotification();
-
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-
-            }
-        });
-
-*/
+        //check if recycler view is empty
+        IsEmptyRecyclerView();
 
     }
 
     private void loadNotification() {
 
         Query query =ScheduleMessagesRef.child(senderUserID).orderByChild("groupNum").equalTo(groupNum);
+
 
         FirebaseRecyclerOptions<ScheduleMessages> options =
                 new FirebaseRecyclerOptions.Builder<ScheduleMessages>()
@@ -336,6 +321,7 @@ public class ScheduleMessagesActivity extends AppCompatActivity {
                                                                 @Override
                                                                 public void onComplete(@NonNull Task<Void> task) {
                                                                     if (task.isSuccessful()) {
+                                                                        IsEmptyRecyclerView();
                                                                         MakeToast("حذف", "تم حذف الاشعار !!!  ", R.drawable.error1);
                                                                     }
                                                                 }
@@ -394,6 +380,30 @@ public class ScheduleMessagesActivity extends AppCompatActivity {
 
         toast.setView((v));
         toast.show();
+
+    }
+
+    private void IsEmptyRecyclerView()
+    {
+        ScheduleMessagesRef.child(senderUserID).orderByChild("groupNum").equalTo(groupNum).
+                addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        if (dataSnapshot.exists()) {
+                            no_notification_text.setVisibility(View.GONE);
+                            recyclerView.setVisibility(View.VISIBLE);
+                            loadNotification();
+                        }
+                        else
+                        {
+                            no_notification_text.setVisibility(View.VISIBLE);
+                            recyclerView.setVisibility(View.GONE);
+                        }
+                    }
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+                    }
+                });
 
     }
 
