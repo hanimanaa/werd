@@ -50,11 +50,12 @@
                 android:layout_marginRight="15dp"
                 android:inputType="number"
                 android:textDirection="rtl"
-                android:background="@drawable/input_design"
                 android:padding="20dp"
                 android:layout_marginTop="10dp"
                 android:layout_below="@id/logo"
                 android:hint="رقم الهاتف"
+                android:drawableEnd="@drawable/ic_phone"
+                android:drawablePadding="5dp"
                 />
 
             <EditText
@@ -64,11 +65,12 @@
                 android:layout_marginLeft="15dp"
                 android:layout_marginRight="15dp"
                 android:textDirection="rtl"
-                android:background="@drawable/input_design"
                 android:padding="20dp"
                 android:layout_marginTop="20dp"
                 android:layout_below="@id/Edphone"
                 android:hint="الاسم الشخصي"
+                android:drawableEnd="@drawable/ic_person"
+                android:drawablePadding="5dp"
                 />
             <EditText
                 android:id="@+id/Edpassword"
@@ -76,12 +78,13 @@
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="15dp"
                 android:layout_marginRight="15dp"
-                android:background="@drawable/input_design"
                 android:padding="20dp"
                 android:textDirection="rtl"
                 android:layout_marginTop="10dp"
                 android:layout_below="@id/Edname"
                 android:hint="الرقم السري"
+                android:drawableEnd="@drawable/ic_lock_black"
+                android:drawablePadding="5dp"
                 />
 
 
