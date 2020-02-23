@@ -28,6 +28,7 @@ public class AutoUpdate extends BroadcastReceiver {
     private DatabaseReference MessagesRef = FirebaseDatabase.getInstance().getReference().child("Messages");
     private String  groupNum,senderUserID,fullName;
 
+
     public void onReceive(Context context, Intent intent) {
 
         Log.d("han","we here Auto ");
@@ -99,6 +100,7 @@ public class AutoUpdate extends BroadcastReceiver {
                                                 String CurrentTime = currentTime.format(calendar.getTime());
 
                                                     HashMap<String, String> NotificationMap = new HashMap<>();
+                                                    NotificationMap.put("groupNum", usersGroups.get(finalI).getGroupNum());
                                                     NotificationMap.put("from", senderUserID);
                                                     NotificationMap.put("body", "تم تحديث الاجزاء");
                                                     NotificationMap.put("senderName", fullName);

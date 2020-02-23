@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.text.SpannableString;
 import android.text.style.ImageSpan;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -90,7 +91,6 @@ public class UsersGroupActivity extends AppCompatActivity {
         addBtn=(FloatingActionButton) findViewById(R.id.usersGroup_add_btn);
         messageBtn=(FloatingActionButton) findViewById(R.id.usersGroup_messages_btn);
 
-
         addBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -109,7 +109,6 @@ public class UsersGroupActivity extends AppCompatActivity {
                         if (i == 0) {
                              Intent intent = new Intent(getApplicationContext(),AddGroupAdminActivity.class);
                              startActivity(intent);
-                             finish();
                         }
                         if (i == 1) {
                             Intent intent = new Intent(getApplicationContext(),GroupsActivity.class);
@@ -147,12 +146,14 @@ public class UsersGroupActivity extends AppCompatActivity {
         super.onStart();
 
         txtWell.setText(CurrentDate+ "\n \n" + " السلام عليكم "+fullName +"");
-
+        Log.d("yzan","start");
         //check if recycler view is empty
         IsEmptyRecyclerView();
 
 
     }
+
+
 /*
     private void UpdateStatus(String id,String done)
     {
@@ -233,12 +234,16 @@ private void IsEmptyRecyclerView()
                     if (dataSnapshot.exists()) {
                         no_notification_text.setVisibility(View.GONE);
                         recyclerView.setVisibility(View.VISIBLE);
+                        Log.d("yzan","exists");
+
                         loadRecyclerView();
                     }
                     else
                     {
                         no_notification_text.setVisibility(View.VISIBLE);
-                        recyclerView.setVisibility(View.GONE);
+
+                        Log.d("yzan","not exists");
+
                     }
                 }
                 @Override
@@ -249,6 +254,7 @@ private void IsEmptyRecyclerView()
 }
     private void loadRecyclerView() {
 
+        Log.d("yzan","load");
 
         Query query =ListRef.orderByChild("userPhone").equalTo(Prevalent.currentOnlineUser.getPhone());
         FirebaseRecyclerOptions<UsersGroups> options=

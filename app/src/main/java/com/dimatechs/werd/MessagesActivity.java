@@ -1,9 +1,6 @@
 package com.dimatechs.werd;
 
-import android.app.AlarmManager;
-import android.app.PendingIntent;
 import android.content.DialogInterface;
-import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Gravity;
@@ -24,7 +21,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.dimatechs.werd.BroadcastReceiver.MyBroadcastReceiver;
+import com.dimatechs.werd.Model.Groups;
 import com.dimatechs.werd.Model.Messages;
 import com.dimatechs.werd.Model.UsersGroups;
 import com.dimatechs.werd.Prevalent.Prevalent;
@@ -34,9 +31,12 @@ import com.firebase.ui.database.FirebaseRecyclerOptions;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
+import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 
@@ -51,7 +51,7 @@ public class MessagesActivity extends AppCompatActivity {
     private ArrayList<UsersGroups> checkedUsers;
     private EditText edmessage;
     private String senderUserID,groupNum,groupname,IsAdmin;
-    private DatabaseReference MessagesRef;
+    private DatabaseReference MessagesRef,GroupsRef;
     private RadioButton rbNotSelect, rbSelectAll, rbRead, rbNotRead;
     private String phone;
 
@@ -62,6 +62,8 @@ public class MessagesActivity extends AppCompatActivity {
         setContentView(R.layout.activity_messages);
 
         MessagesRef = FirebaseDatabase.getInstance().getReference().child("Messages");
+        GroupsRef = FirebaseDatabase.getInstance().getReference().child("Groups");
+
         Paper.init(this);
         phone = Prevalent.currentOnlineUser.getPhone();
 
@@ -115,10 +117,32 @@ public class MessagesActivity extends AppCompatActivity {
 
                     @Override
                     protected void onBindViewHolder(@NonNull final MessageViewHolder holder,final int position, @NonNull final Messages model) {
-                        holder.txtName.setText("المرسل : "+model.getSenderName());
+                        holder.txtName.setText(model.getSenderName());
                         holder.txtTime.setText(model.getDate() + "\n"+model.getTime());
                         holder.txtMessage.setText(model.getBody());
+                        holder.txtGroupName.setText(model.getGroupNum());
+/*
+                        GroupsRef.orderByChild("groupNum").equalTo(model.getGroupNum()).
+                                addValueEventListener(new ValueEventListener() {
+                                    @Override
+                                    public void onDataChange(DataSnapshot dataSnapshot) {
+                                        if (dataSnapshot.exists()) {
+                                          //  Groups g = dataSnapshot.getValue(Groups.class);
+                                          //  holder.txtGroupName.setText(g.getGroupName());
 
+                                            //holder.txtGroupName.setText(dataSnapshot.child("groupName").getValue().toString());
+                                            Toast.makeText(MessagesActivity.this, "ok "+dataSnapshot.getChildrenCount(), Toast.LENGTH_SHORT).show();
+                                        }
+                                        else
+                                            Toast.makeText(MessagesActivity.this, "null", Toast.LENGTH_SHORT).show();
+
+                                    }
+                                    @Override
+                                    public void onCancelled(DatabaseError databaseError) {
+                                    }
+                                });
+
+*/
                         holder.itemView.setOnLongClickListener(new View.OnLongClickListener() {
                             @Override
                             public boolean onLongClick(View v) {
@@ -133,14 +157,14 @@ public class MessagesActivity extends AppCompatActivity {
                                             public void onClick(DialogInterface dialogInterface, int i) {
 
                                                 MessagesRef.child(phone).child(getRef(position).getKey()).removeValue()
-                                                            .addOnCompleteListener(new OnCompleteListener<Void>() {
-                                                                @Override
-                                                                public void onComplete(@NonNull Task<Void> task) {
-                                                                    if (task.isSuccessful()) {
-                                                                        MakeToast("حذف", "تم حذف الرسالة !!!  ", R.drawable.error1);
-                                                                    }
+                                                        .addOnCompleteListener(new OnCompleteListener<Void>() {
+                                                            @Override
+                                                            public void onComplete(@NonNull Task<Void> task) {
+                                                                if (task.isSuccessful()) {
+                                                                    MakeToast("حذف", "تم حذف الرسالة !!!  ", R.drawable.error1);
                                                                 }
-                                                            });
+                                                            }
+                                                        });
 
                                             }
                                         }
@@ -155,9 +179,12 @@ public class MessagesActivity extends AppCompatActivity {
                                 );
                                 AlertDialog alertDialog=builder.create();
                                 alertDialog.show();
-                                    return false;
+                                return false;
                             }
                         });
+
+
+
                     }
 
                     @NonNull

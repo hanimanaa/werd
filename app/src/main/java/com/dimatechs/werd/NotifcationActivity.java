@@ -94,46 +94,51 @@ public class NotifcationActivity extends AppCompatActivity {
                 {
                     edmessage.setError("الرجاء كتابة الرسالة");
                 }
-                else
-                {
-                Calendar calendar = Calendar.getInstance();
+                else {
+                    Calendar calendar = Calendar.getInstance();
 
-                SimpleDateFormat currentDate = new SimpleDateFormat("MMM dd, yyyy");
-                String CurrentDate = currentDate.format(calendar.getTime());
+                    SimpleDateFormat currentDate = new SimpleDateFormat("MMM dd, yyyy");
+                    String CurrentDate = currentDate.format(calendar.getTime());
 
-                SimpleDateFormat currentTime = new SimpleDateFormat("HH:mm:ss a");
-                String CurrentTime = currentTime.format(calendar.getTime());
+                    SimpleDateFormat currentTime = new SimpleDateFormat("HH:mm:ss a");
+                    String CurrentTime = currentTime.format(calendar.getTime());
 
-                for (int i = 0; i < checkedUsers.size(); i++) {
+                    if (checkedUsers.size() == 0) {
+                        MakeToast("","يجب اختيار المرسل لهم  !!!",R.drawable.error1);
+                    } else {
+                        for (int i = 0; i < checkedUsers.size(); i++) {
 
-                    HashMap<String, String> NotificationMap = new HashMap<>();
-                    NotificationMap.put("from", senderUserID);
-                    NotificationMap.put("body", message);
-                    NotificationMap.put("senderName", fullName);
-                    NotificationMap.put("time", CurrentTime);
-                    NotificationMap.put("date", CurrentDate);
+                            HashMap<String, String> NotificationMap = new HashMap<>();
+                            NotificationMap.put("groupNum", groupNum);
+                            NotificationMap.put("groupname", groupname);
+                            NotificationMap.put("from", senderUserID);
+                            NotificationMap.put("body", message);
+                            NotificationMap.put("senderName", fullName);
+                            NotificationMap.put("time", CurrentTime);
+                            NotificationMap.put("date", CurrentDate);
 
 
-                    String receiverUserID = checkedUsers.get(i).getUserPhone();
+                            String receiverUserID = checkedUsers.get(i).getUserPhone();
 
 
-                    MessagesRef.child(receiverUserID).push()
-                            .setValue(NotificationMap)
-                            .addOnCompleteListener(new OnCompleteListener<Void>() {
-                                @Override
-                                public void onComplete(@NonNull Task<Void> task) {
-                                    if (task.isSuccessful()) {
-                                        MakeToast("ارسال رسالة", "تم ارسال الرسالة بنجاح", R.drawable.ok);
-                                        Intent intent=new Intent(NotifcationActivity.this,GroupMainActivity.class);
-                                        intent.putExtra("groupNum",groupname);
-                                        intent.putExtra("IsAdmin",IsAdmin);
-                                        intent.putExtra("groupName",groupname);
-                                        startActivity(intent);
-                                        finish();
-                                    }
-                                }
-                            });
-                   }
+                            MessagesRef.child(receiverUserID).push()
+                                    .setValue(NotificationMap)
+                                    .addOnCompleteListener(new OnCompleteListener<Void>() {
+                                        @Override
+                                        public void onComplete(@NonNull Task<Void> task) {
+                                            if (task.isSuccessful()) {
+                                                MakeToast("ارسال رسالة", "تم ارسال الرسالة بنجاح", R.drawable.ok);
+                                                Intent intent = new Intent(NotifcationActivity.this, GroupMainActivity.class);
+                                                intent.putExtra("groupNum", groupname);
+                                                intent.putExtra("IsAdmin", IsAdmin);
+                                                intent.putExtra("groupName", groupname);
+                                                startActivity(intent);
+                                                finish();
+                                            }
+                                        }
+                                    });
+                        }
+                    }
                 }
             }
         });

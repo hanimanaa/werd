@@ -6,6 +6,7 @@ public class ScheduleMessages {
     private String body;
     private String receiver;
     private String requestCode;
+    private String groupNum;
 
 
 
@@ -13,11 +14,12 @@ public class ScheduleMessages {
     public ScheduleMessages() {
     }
 
-    public ScheduleMessages(String sendTime, String body, String receiver, String requestCode) {
+    public ScheduleMessages(String sendTime, String body, String receiver, String requestCode, String groupNum) {
         this.sendTime = sendTime;
         this.body = body;
         this.receiver = receiver;
         this.requestCode = requestCode;
+        this.groupNum = groupNum;
     }
 
     public String getSendTime() {
@@ -51,4 +53,14 @@ public class ScheduleMessages {
     public void setRequestCode(String requestCode) {
         this.requestCode = requestCode;
     }
+
+
+    public String getGroupNum() {
+        return groupNum;
+    }
+
+    public void setGroupNum(String groupNum) {
+        this.groupNum = groupNum;
+    }
+
 }

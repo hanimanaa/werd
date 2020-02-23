@@ -4,9 +4,14 @@ import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.view.Gravity;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -143,15 +148,10 @@ public class AddGroupAdminActivity extends AppCompatActivity {
                                             UpdateGroupName(groupNum,groupName);
                                         }
 
-                                        Toast.makeText(AddGroupAdminActivity.this, "تمت اضافة المجموعه بنجاح", Toast.LENGTH_SHORT).show();
-                                        loadingBar.dismiss();
-                                        Intent intent=new Intent(AddGroupAdminActivity.this,UsersGroupActivity.class);
-                                        startActivity(intent);
-                                        finish();
                                     }
                                     else
                                     {
-                                        Toast.makeText(AddGroupAdminActivity.this, "خطا في الشبكة !!", Toast.LENGTH_SHORT).show();
+                                        MakeToast("تحديث","للاسف لم يتم التحديث !!!",R.drawable.error1);
                                         loadingBar.dismiss();
 
                                     }
@@ -161,7 +161,7 @@ public class AddGroupAdminActivity extends AppCompatActivity {
                 }
                 else
                 {
-                    Toast.makeText(AddGroupAdminActivity.this, "اسم المجموعه مسجل. اختر اسم اخر اذا سمحت !!", Toast.LENGTH_SHORT).show();
+                    MakeToast("تحديث","اسم المجموعه مسجل. اختر اسم اخر اذا سمحت !!",R.drawable.error1);
                     loadingBar.dismiss();
                 }
             }
@@ -215,11 +215,14 @@ public class AddGroupAdminActivity extends AppCompatActivity {
                                 {
                                     if(task.isSuccessful())
                                     {
+                                        MakeToast("اضافة","تمت اضافة المجموعه بنجاح",R.drawable.ok);
                                         loadingBar.dismiss();
+                                        Intent intent=new Intent(AddGroupAdminActivity.this,UsersGroupActivity.class);
+                                        startActivity(intent);
                                     }
                                     else
                                     {
-                                        Toast.makeText(AddGroupAdminActivity.this, "שגיאת רשת", Toast.LENGTH_SHORT).show();
+                                        MakeToast("تحديث","للاسف لم يتم التحديث !!!",R.drawable.error1);
                                         loadingBar.dismiss();
                                     }
                                 }
@@ -281,11 +284,14 @@ public class AddGroupAdminActivity extends AppCompatActivity {
                                         {
                                             if(task.isSuccessful())
                                             {
-                                                Toast.makeText(AddGroupAdminActivity.this, "تم التحديث بنجاح", Toast.LENGTH_SHORT).show();
+                                                MakeToast("تحديث","تم التحديث بنجاح",R.drawable.ok);
+                                                loadingBar.dismiss();
+                                                Intent intent=new Intent(AddGroupAdminActivity.this,UsersGroupActivity.class);
+                                                startActivity(intent);
                                             }
                                             else
                                             {
-                                                Toast.makeText(AddGroupAdminActivity.this, "للاسف لم يتم التحديث !!!", Toast.LENGTH_SHORT).show();
+                                                MakeToast("تحديث","للاسف لم يتم التحديث !!!",R.drawable.error1);
                                             }
                                         }
                                     });
@@ -307,4 +313,27 @@ public class AddGroupAdminActivity extends AppCompatActivity {
         });
 
     }
+
+    private void MakeToast(String headerText, String message,int image)
+    {
+        // MakeToast("hi","jhvgfxfhg",R.drawable.warning1);
+        // image=R.id.toast_image
+        Toast toast = new Toast(getApplicationContext());
+        toast.setDuration(Toast.LENGTH_SHORT);
+        toast.setGravity(Gravity.CENTER,0,0);
+
+        LayoutInflater ly=getLayoutInflater();
+        View v=ly.inflate(R.layout.toast,(ViewGroup)findViewById(R.id.line1));
+        TextView txt1=(TextView)v.findViewById(R.id.toast_text1);
+        TextView txt2=(TextView)v.findViewById(R.id.toast_text2);
+        ImageView img =(ImageView)v.findViewById(R.id.toast_image);
+        txt1.setText(headerText);
+        txt2.setText(message);
+        img.setImageResource(image);
+
+        toast.setView((v));
+        toast.show();
+
+    }
+
 }

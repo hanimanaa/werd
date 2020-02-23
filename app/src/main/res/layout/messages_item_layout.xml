@@ -22,24 +22,45 @@
                 <TextView
                     android:id="@+id/tv_time"
                     android:layout_width="wrap_content"
-                    android:layout_height="40dp"
-                    android:layout_weight="4"
+                    android:layout_height="60dp"
+                    android:layout_weight="3"
                     android:text="10/5/2020 \n 10:30"
-                    android:gravity="center_horizontal"
+                    android:gravity="center"
                     android:textSize="15sp"
                     android:textStyle="bold"
                     android:textColor="@color/colorPrimary"
                     />
-                <TextView
-                    android:id="@+id/tv_sender_name"
+                <LinearLayout
                     android:layout_width="wrap_content"
-                    android:layout_height="40dp"
-                    android:layout_weight="6"
-                    android:text="هاني مناع"
-                    android:gravity="center_horizontal"
-                    android:textSize="20sp"
-                    android:textColor="@color/colorPrimaryDark"
-                    />
+                    android:layout_height="wrap_content"
+                    android:layout_weight="4"
+                    android:gravity="right"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/tv_group_name"
+                        android:layout_width="match_parent"
+                        android:layout_height="40dp"
+                        android:layout_weight="6"
+                        android:text="مجد الكروم"
+                        android:gravity="right"
+                        android:textSize="25sp"
+                        android:textColor="@color/colorPrimaryDark"
+                        />
+
+                    <TextView
+                        android:id="@+id/tv_sender_name"
+                        android:layout_width="match_parent"
+                        android:layout_height="40dp"
+                        android:layout_weight="6"
+                        android:text="هاني مناع"
+                        android:gravity="right"
+                        android:textSize="20sp"
+                        android:textColor="@color/colorPrimaryDark"
+                        />
+
+
+                </LinearLayout>
 
             </LinearLayout>
             <LinearLayout

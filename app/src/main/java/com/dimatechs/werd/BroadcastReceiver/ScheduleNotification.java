@@ -22,7 +22,7 @@ import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
 
-public class MyBroadcastReceiver extends BroadcastReceiver {
+public class ScheduleNotification extends BroadcastReceiver {
 
     private DatabaseReference RootRef = FirebaseDatabase.getInstance().getReference().child("UsersGroups");
     private DatabaseReference MessagesRef = FirebaseDatabase.getInstance().getReference().child("Messages");
@@ -92,6 +92,7 @@ public class MyBroadcastReceiver extends BroadcastReceiver {
         String CurrentTime = currentTime.format(calendar.getTime());
 
         HashMap<String, String> NotificationMap = new HashMap<>();
+        NotificationMap.put("groupNum", groupNum);
         NotificationMap.put("from", senderUserID);
         NotificationMap.put("body", body);
         NotificationMap.put("senderName", fullName);

@@ -29,7 +29,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.dimatechs.werd.BroadcastReceiver.MyBroadcastReceiver;
+import com.dimatechs.werd.BroadcastReceiver.ScheduleNotification;
 import com.dimatechs.werd.Model.ScheduleMessages;
 import com.dimatechs.werd.Prevalent.Prevalent;
 import com.dimatechs.werd.ViewHolder.ScheduleMessageViewHolder;
@@ -213,7 +213,7 @@ public class ScheduleMessagesActivity extends AppCompatActivity {
                                                             AutoAlarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
                                                             final Calendar calendar = Calendar.getInstance();
 
-                                                            final Intent ScheduleIntent = new Intent(ScheduleMessagesActivity.this, MyBroadcastReceiver.class);
+                                                            final Intent ScheduleIntent = new Intent(ScheduleMessagesActivity.this, ScheduleNotification.class);
                                                             ScheduleIntent.putExtra("groupNum", groupNum);
                                                             ScheduleIntent.putExtra("senderUserID", senderUserID);
                                                             ScheduleIntent.putExtra("fullName", fullName);
@@ -310,7 +310,7 @@ public class ScheduleMessagesActivity extends AppCompatActivity {
                                                 Log.d("sc",String.valueOf(req));
 
 
-                                                Intent in = new Intent(ScheduleMessagesActivity.this, MyBroadcastReceiver.class);
+                                                Intent in = new Intent(ScheduleMessagesActivity.this, ScheduleNotification.class);
                                                 PendingIntent pi = PendingIntent.getBroadcast(ScheduleMessagesActivity.this, req, in, PendingIntent.FLAG_CANCEL_CURRENT);
                                                 AlarmManager am = (AlarmManager) getSystemService(ALARM_SERVICE);
 

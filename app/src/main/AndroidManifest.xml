@@ -33,7 +33,7 @@
             </intent-filter>
         </activity>
 
-        <receiver android:name=".BroadcastReceiver.MyBroadcastReceiver">
+        <receiver android:name=".BroadcastReceiver.ScheduleNotification">
             <intent-filter>
                 <action android:name="android.intent.action.TIME_SET" />
             </intent-filter>
