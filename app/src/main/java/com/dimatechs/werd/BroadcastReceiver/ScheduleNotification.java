@@ -26,12 +26,12 @@ public class ScheduleNotification extends BroadcastReceiver {
 
     private DatabaseReference RootRef = FirebaseDatabase.getInstance().getReference().child("UsersGroups");
     private DatabaseReference MessagesRef = FirebaseDatabase.getInstance().getReference().child("Messages");
-    private String groupNum, senderUserID, fullName, body, receiver,receiverUserID,requestCode;
+    private String groupNum,groupName, senderUserID, fullName, body, receiver,receiverUserID,requestCode;
 
     public void onReceive(Context context, Intent intent) {
         Log.d("sc", "we are in receiver");
 
-
+        groupName = intent.getStringExtra("groupName");
         groupNum = intent.getStringExtra("groupNum");
         senderUserID = intent.getStringExtra("senderUserID");
         fullName = intent.getStringExtra("fullName");
@@ -93,6 +93,7 @@ public class ScheduleNotification extends BroadcastReceiver {
 
         HashMap<String, String> NotificationMap = new HashMap<>();
         NotificationMap.put("groupNum", groupNum);
+        NotificationMap.put("groupName", groupName);
         NotificationMap.put("from", senderUserID);
         NotificationMap.put("body", body);
         NotificationMap.put("senderName", fullName);

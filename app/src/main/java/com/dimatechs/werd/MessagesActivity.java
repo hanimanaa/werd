@@ -120,7 +120,7 @@ public class MessagesActivity extends AppCompatActivity {
                         holder.txtName.setText(model.getSenderName());
                         holder.txtTime.setText(model.getDate() + "\n"+model.getTime());
                         holder.txtMessage.setText(model.getBody());
-                        holder.txtGroupName.setText(model.getGroupNum());
+                        holder.txtGroupName.setText(model.getGroupName());
 /*
                         GroupsRef.orderByChild("groupNum").equalTo(model.getGroupNum()).
                                 addValueEventListener(new ValueEventListener() {

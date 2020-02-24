@@ -12,4 +12,5 @@ public class Prevalent
     public static final String UserPasswordKey = "UserPassword";
 
     public static final String GroupNum = "groupNum";
+    public static final String GroupName = "groupName";
 }

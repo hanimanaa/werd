@@ -57,7 +57,7 @@ public class ScheduleMessagesActivity extends AppCompatActivity {
     private RecyclerView.LayoutManager layoutManager;
     private DatabaseReference ScheduleMessagesRef,messageCodeRef;
     private FloatingActionButton btnAddSceduleMessage;
-    private String fullName,groupNum,senderUserID,requestCode,receiver="all";
+    private String fullName,groupNum,groupname,senderUserID,requestCode,receiver="all";
     private Dialog dialog;
     private TextView tvTime,no_notification_text;
     private Button SaveBtn;
@@ -78,7 +78,8 @@ public class ScheduleMessagesActivity extends AppCompatActivity {
 
         ScheduleMessagesRef = FirebaseDatabase.getInstance().getReference().child("ScheduleMessages");
 
-        groupNum =Paper.book().read(Prevalent.GroupNum);
+        groupNum=Paper.book().read(Prevalent.GroupNum);
+        groupname=Paper.book().read(Prevalent.GroupName);
 
         no_notification_text = findViewById(R.id.no_notification_text);
         ImageSpan imageSpan = new ImageSpan(this, R.drawable.ic_add_circle);
@@ -203,6 +204,7 @@ public class ScheduleMessagesActivity extends AppCompatActivity {
                                         Map.put("requestCode", requestCode);
                                         Map.put("groupNum", groupNum);
 
+
                                         ScheduleMessagesRef.child(senderUserID).push()
                                                 .setValue(Map)
                                                 .addOnCompleteListener(new OnCompleteListener<Void>() {
@@ -215,6 +217,7 @@ public class ScheduleMessagesActivity extends AppCompatActivity {
 
                                                             final Intent ScheduleIntent = new Intent(ScheduleMessagesActivity.this, ScheduleNotification.class);
                                                             ScheduleIntent.putExtra("groupNum", groupNum);
+                                                            ScheduleIntent.putExtra("groupName", groupname);
                                                             ScheduleIntent.putExtra("senderUserID", senderUserID);
                                                             ScheduleIntent.putExtra("fullName", fullName);
                                                             ScheduleIntent.putExtra("body", etMessage.getText().toString());

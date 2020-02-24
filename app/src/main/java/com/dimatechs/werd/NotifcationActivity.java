@@ -68,7 +68,8 @@ public class NotifcationActivity extends AppCompatActivity {
 
         //Paper.init(this);
         groupNum=Paper.book().read(Prevalent.GroupNum);
-        groupname=getIntent().getStringExtra("groupName");
+        groupname=Paper.book().read(Prevalent.GroupName);
+
         IsAdmin=getIntent().getStringExtra("IsAdmin");
 
 
@@ -110,7 +111,7 @@ public class NotifcationActivity extends AppCompatActivity {
 
                             HashMap<String, String> NotificationMap = new HashMap<>();
                             NotificationMap.put("groupNum", groupNum);
-                            NotificationMap.put("groupname", groupname);
+                            NotificationMap.put("groupName", groupname);
                             NotificationMap.put("from", senderUserID);
                             NotificationMap.put("body", message);
                             NotificationMap.put("senderName", fullName);
@@ -129,9 +130,7 @@ public class NotifcationActivity extends AppCompatActivity {
                                             if (task.isSuccessful()) {
                                                 MakeToast("ارسال رسالة", "تم ارسال الرسالة بنجاح", R.drawable.ok);
                                                 Intent intent = new Intent(NotifcationActivity.this, GroupMainActivity.class);
-                                                intent.putExtra("groupNum", groupname);
                                                 intent.putExtra("IsAdmin", IsAdmin);
-                                                intent.putExtra("groupName", groupname);
                                                 startActivity(intent);
                                                 finish();
                                             }

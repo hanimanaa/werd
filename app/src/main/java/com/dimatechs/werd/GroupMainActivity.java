@@ -85,7 +85,8 @@ public class GroupMainActivity extends AppCompatActivity {
 
         //Paper.init(this);
         groupNum=Paper.book().read(Prevalent.GroupNum);
-        groupname=getIntent().getStringExtra("groupName");
+        groupname=Paper.book().read(Prevalent.GroupName);
+
         IsAdmin=getIntent().getStringExtra("IsAdmin");
 
         Paper.init(this);
@@ -413,6 +414,7 @@ public class GroupMainActivity extends AppCompatActivity {
 
                                             final Intent AutoIntent=new Intent(GroupMainActivity.this, AutoUpdate.class);
                                             AutoIntent.putExtra("groupNum",groupNum);
+                                            AutoIntent.putExtra("groupName",groupname);
                                             AutoIntent.putExtra("senderUserID",senderUserID);
                                             AutoIntent.putExtra("fullName",fullName);
 
@@ -553,16 +555,12 @@ public class GroupMainActivity extends AppCompatActivity {
         }
         else if (id == R.id.action_Update_Group){
             Intent intent=new Intent(GroupMainActivity.this,AddGroupAdminActivity.class);
-            intent.putExtra("groupNum",groupNum);
-            intent.putExtra("groupName",groupname);
             startActivity(intent);
             return true;
         }
         else if (id == R.id.action_Notification){
             Intent intent=new Intent(GroupMainActivity.this, NotifcationActivity.class);
-            intent.putExtra("groupNum",groupNum);
             intent.putExtra("IsAdmin",IsAdmin);
-            intent.putExtra("groupName",groupname);
             startActivity(intent);
             return true;
         }
@@ -836,6 +834,8 @@ public class GroupMainActivity extends AppCompatActivity {
                                         String CurrentTime = currentTime.format(calendar.getTime());
 
                                         HashMap<String, String> NotificationMap = new HashMap<>();
+                                        NotificationMap.put("groupNum", groupNum);
+                                        NotificationMap.put("groupName", groupname);
                                         NotificationMap.put("from", senderUserID);
                                         NotificationMap.put("body", "للاسف تم حذفك من مجموعه " + ug.getGroupName());
                                         NotificationMap.put("senderName", fullName);

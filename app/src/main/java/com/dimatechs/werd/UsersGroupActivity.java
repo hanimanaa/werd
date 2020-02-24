@@ -317,9 +317,8 @@ private void IsEmptyRecyclerView()
                                 Intent intent=new Intent(UsersGroupActivity.this, GroupMainActivity.class);
                                 // intent.putExtra("groupNum",model.getGroupNum());
                                 intent.putExtra("IsAdmin",model.getAdmin());
-                                intent.putExtra("groupName",model.getGroupName());
                                 Paper.book().write(Prevalent.GroupNum, model.getGroupNum());
-
+                                Paper.book().write(Prevalent.GroupName, model.getGroupName());
                                 startActivity(intent);
                             }
                         });

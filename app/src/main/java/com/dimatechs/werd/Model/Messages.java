@@ -2,13 +2,14 @@ package com.dimatechs.werd.Model;
 
 public class Messages {
 
-    private String senderName, from, body,date,time,groupNum;
+    private String senderName,groupName, from, body,date,time,groupNum;
 
     public Messages() {
     }
 
-    public Messages(String senderName, String from, String body, String date, String time, String groupNum) {
+    public Messages(String senderName, String groupName, String from, String body, String date, String time, String groupNum) {
         this.senderName = senderName;
+        this.groupName = groupName;
         this.from = from;
         this.body = body;
         this.date = date;
@@ -62,5 +63,13 @@ public class Messages {
 
     public void setGroupNum(String groupNum) {
         this.groupNum = groupNum;
+    }
+
+    public String getGroupName() {
+        return groupName;
+    }
+
+    public void setGroupName(String groupName) {
+        this.groupName = groupName;
     }
 }
