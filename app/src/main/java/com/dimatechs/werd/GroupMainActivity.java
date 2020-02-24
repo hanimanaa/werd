@@ -447,7 +447,7 @@ public class GroupMainActivity extends AppCompatActivity {
                 item.setChecked(false);
                 HashMap<String, Object> productMap = new HashMap<>();
                 productMap.put("auto", "no");
-
+                productMap.put("autoTime","---");
                 GroupRef.child(groupNum).updateChildren(productMap)
                         .addOnCompleteListener(new OnCompleteListener<Void>() {
                             @Override
