@@ -146,7 +146,6 @@ public class UsersGroupActivity extends AppCompatActivity {
         super.onStart();
 
         txtWell.setText(CurrentDate+ "\n \n" + " السلام عليكم "+fullName +"");
-        Log.d("yzan","start");
         //check if recycler view is empty
         IsEmptyRecyclerView();
 
@@ -234,16 +233,11 @@ private void IsEmptyRecyclerView()
                     if (dataSnapshot.exists()) {
                         no_notification_text.setVisibility(View.GONE);
                         recyclerView.setVisibility(View.VISIBLE);
-                        Log.d("yzan","exists");
-
                         loadRecyclerView();
                     }
                     else
                     {
                         no_notification_text.setVisibility(View.VISIBLE);
-
-                        Log.d("yzan","not exists");
-
                     }
                 }
                 @Override
@@ -253,9 +247,6 @@ private void IsEmptyRecyclerView()
 
 }
     private void loadRecyclerView() {
-
-        Log.d("yzan","load");
-
         Query query =ListRef.orderByChild("userPhone").equalTo(Prevalent.currentOnlineUser.getPhone());
         FirebaseRecyclerOptions<UsersGroups> options=
                 new FirebaseRecyclerOptions.Builder<UsersGroups>()

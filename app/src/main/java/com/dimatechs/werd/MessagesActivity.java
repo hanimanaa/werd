@@ -121,28 +121,6 @@ public class MessagesActivity extends AppCompatActivity {
                         holder.txtTime.setText(model.getDate() + "\n"+model.getTime());
                         holder.txtMessage.setText(model.getBody());
                         holder.txtGroupName.setText(model.getGroupName());
-/*
-                        GroupsRef.orderByChild("groupNum").equalTo(model.getGroupNum()).
-                                addValueEventListener(new ValueEventListener() {
-                                    @Override
-                                    public void onDataChange(DataSnapshot dataSnapshot) {
-                                        if (dataSnapshot.exists()) {
-                                          //  Groups g = dataSnapshot.getValue(Groups.class);
-                                          //  holder.txtGroupName.setText(g.getGroupName());
-
-                                            //holder.txtGroupName.setText(dataSnapshot.child("groupName").getValue().toString());
-                                            Toast.makeText(MessagesActivity.this, "ok "+dataSnapshot.getChildrenCount(), Toast.LENGTH_SHORT).show();
-                                        }
-                                        else
-                                            Toast.makeText(MessagesActivity.this, "null", Toast.LENGTH_SHORT).show();
-
-                                    }
-                                    @Override
-                                    public void onCancelled(DatabaseError databaseError) {
-                                    }
-                                });
-
-*/
                         holder.itemView.setOnLongClickListener(new View.OnLongClickListener() {
                             @Override
                             public boolean onLongClick(View v) {
