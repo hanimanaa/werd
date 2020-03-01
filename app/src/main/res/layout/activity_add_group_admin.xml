@@ -52,6 +52,7 @@
                 android:layout_marginTop="10dp"
                 android:layout_below="@id/add_group_admin_logo"
                 android:textDirection="rtl"
+                android:singleLine="true"
                 android:hint="اسم المجموعه"
                 />
 

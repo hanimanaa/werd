@@ -143,6 +143,8 @@ public class RegisterActivity extends AppCompatActivity {
 
                                                                             loadingBar.dismiss();
                                                                             Intent intent=new Intent(RegisterActivity.this,LoginActivity.class);
+                                                                            intent.putExtra("regPhone",phone);
+                                                                            intent.putExtra("regPassword",password);
                                                                             startActivity(intent);
                                                                         }
                                                                     }

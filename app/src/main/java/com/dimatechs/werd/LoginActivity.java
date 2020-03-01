@@ -41,6 +41,7 @@ public class LoginActivity extends AppCompatActivity {
     private CheckBox chkBoxRememberMe;
     String phone="",password="";
     DatabaseReference UserRef;
+    String regPhone,regPassword;
 
 
     @Override
@@ -54,16 +55,25 @@ public class LoginActivity extends AppCompatActivity {
         InputPassword = (EditText) findViewById(R.id.login_password_input);
         loadingBar = new ProgressDialog(this);
 
+        regPhone=getIntent().getStringExtra("regPhone");
+        regPassword=getIntent().getStringExtra("regPassword");
+
         UserRef = FirebaseDatabase.getInstance().getReference().child("Users");
 
         chkBoxRememberMe = (CheckBox) findViewById(R.id.remember_me_chkb);
         Paper.init(this);
 
-        // check if user saved
+
         String UserPhoneKey = Paper.book().read(Prevalent.UserPhoneKey);
         String UserPasswordKey = Paper.book().read(Prevalent.UserPasswordKey);
-
-        if (UserPhoneKey != "" && UserPasswordKey != "")
+        // check if user Register
+        if(regPhone != null && regPassword != null)
+        {
+            InputNumber.setText(regPhone);
+            InputPassword.setText(regPassword);
+            chkBoxRememberMe.setChecked(true);
+        } // check if user saved
+        else if (UserPhoneKey != "" && UserPasswordKey != "")
         {
             if (!TextUtils.isEmpty(UserPhoneKey) && !TextUtils.isEmpty(UserPasswordKey))
             {
@@ -71,8 +81,9 @@ public class LoginActivity extends AppCompatActivity {
                 InputPassword.setText(UserPasswordKey);
                 chkBoxRememberMe.setChecked(true);
             }
-
         }
+
+
         chkBoxRememberMe.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
