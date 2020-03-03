@@ -30,6 +30,10 @@
             android:checkable="false"
             />
         <item
+            android:id="@+id/action_ReadKhetem"
+            android:title="تذكير قراءة الختم"
+            />
+        <item
             android:id="@+id/action_Notification"
             android:title="ارسال اشعارات"
             />

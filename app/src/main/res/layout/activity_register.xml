@@ -56,6 +56,7 @@
                 android:drawableEnd="@drawable/ic_phone"
                 android:drawablePadding="5dp"
                 android:singleLine="true"
+                android:digits="0123456789"
                 />
 
             <EditText
@@ -87,6 +88,7 @@
                 android:drawableEnd="@drawable/ic_lock_black"
                 android:drawablePadding="5dp"
                 android:singleLine="true"
+                android:digits="abcdefghijklmnopqrstuvwxyz ABCDEFGHIJKLMNOPQRSTUVWXYZ !@#$%^*? 0123456789"
                 />
 
 

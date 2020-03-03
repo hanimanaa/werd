@@ -78,7 +78,6 @@ public class MessagesActivity extends AppCompatActivity {
        ((LinearLayoutManager) layoutManager).setStackFromEnd(true);
         recyclerView.setLayoutManager(layoutManager);
 
-        new ItemTouchHelper(itemTouchHelper).attachToRecyclerView(recyclerView);
 
     }
 
@@ -136,48 +135,6 @@ public class MessagesActivity extends AppCompatActivity {
                                 startActivity(intent);
                             } 
                         });
-/*
-                        holder.itemView.setOnLongClickListener(new View.OnLongClickListener() {
-                            @Override
-                            public boolean onLongClick(View v) {
-                                AlertDialog.Builder builder = new AlertDialog.Builder(MessagesActivity.this);
-                                builder.setTitle("تحذير");
-                                builder.setIcon(R.drawable.ic_red_forever_black_24dp);
-                                builder.setMessage("هل تريد حذف الرسالة ؟");
-                                builder.setCancelable(true);
-                                builder.setPositiveButton("نعم",
-                                        new DialogInterface.OnClickListener() {
-                                            @Override
-                                            public void onClick(DialogInterface dialogInterface, int i) {
-
-                                                MessagesRef.child(phone).child(getRef(position).getKey()).removeValue()
-                                                        .addOnCompleteListener(new OnCompleteListener<Void>() {
-                                                            @Override
-                                                            public void onComplete(@NonNull Task<Void> task) {
-                                                                if (task.isSuccessful()) {
-                                                                    MakeToast("حذف", "تم حذف الرسالة !!!  ", R.drawable.error1);
-                                                                }
-                                                            }
-                                                        });
-
-                                            }
-                                        }
-                                );
-                                builder.setNegativeButton("لا",
-                                        new DialogInterface.OnClickListener() {
-                                            @Override
-                                            public void onClick(DialogInterface dialogInterface, int i) {
-                                            }
-                                        }
-
-                                );
-                                AlertDialog alertDialog=builder.create();
-                                alertDialog.show();
-                                return false;
-                            }
-                        });*/
-
-
 
                     }
 
@@ -215,27 +172,4 @@ public class MessagesActivity extends AppCompatActivity {
         //getRef(direction).getKey();
     }
     
-    ItemTouchHelper.SimpleCallback itemTouchHelper=new ItemTouchHelper.SimpleCallback(0,ItemTouchHelper.RIGHT | ItemTouchHelper.LEFT) {
-        @Override
-        public boolean onMove(@NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder, @NonNull RecyclerView.ViewHolder target) {
-            return false;
-        }
-
-        @Override
-        public void onSwiped(@NonNull final RecyclerView.ViewHolder viewHolder, int direction) {
-            String messageKey = String.valueOf(viewHolder.itemView.getId());
-            Toast.makeText(MessagesActivity.this, ""+messageKey, Toast.LENGTH_SHORT).show();
-            /*
-            MessagesRef.child(phone).child(messageKey).removeValue()
-                    .addOnCompleteListener(new OnCompleteListener<Void>() {
-                        @Override
-                        public void onComplete(@NonNull Task<Void> task) {
-                            if (task.isSuccessful()) {
-                                MakeToast("حذف", "تم حذف الرسالة !!!  ", R.drawable.error1);
-                            }
-                        }
-                    });
-*/
-        }
-    };
 }

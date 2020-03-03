@@ -31,7 +31,7 @@
         android:textStyle="bold"
         android:drawableEnd="@drawable/ic_phone"
         android:drawablePadding="5dp"
-        />
+        android:digits="0123456789"/>
 
     <EditText
         android:id="@+id/login_password_input"
@@ -49,7 +49,9 @@
         android:hint="الرقم السري"
         android:textStyle="bold"
         android:drawableEnd="@drawable/ic_lock_black"
-        android:drawablePadding="5dp"/>
+        android:drawablePadding="5dp"
+        android:digits="abcdefghijklmnopqrstuvwxyz ABCDEFGHIJKLMNOPQRSTUVWXYZ !@#$%^*? 0123456789"
+        />
 
     <LinearLayout
         android:id="@+id/linear_layout_1"

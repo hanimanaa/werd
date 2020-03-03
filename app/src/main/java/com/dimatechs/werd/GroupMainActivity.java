@@ -7,6 +7,7 @@ import android.app.TimePickerDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -560,6 +561,59 @@ public class GroupMainActivity extends AppCompatActivity {
             startActivity(intent);
             return true;
         }
+        else if (id == R.id.action_ReadKhetem){
+            RootRef.orderByChild("groupNum").equalTo(groupNum).addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(DataSnapshot dataSnapshot) {
+                    boolean send=false;
+                    for (DataSnapshot areaSnapshot : dataSnapshot.getChildren()) {
+                        if(areaSnapshot.getValue(UsersGroups.class).getPartNum().equals("30"))
+                        {
+                            send=true;
+                            String receiverUserID = areaSnapshot.getValue(UsersGroups.class).getUserPhone();
+
+                            String senderUserID = Prevalent.currentOnlineUser.getPhone();
+                            String fullName = Paper.book().read("fullName");
+                            Calendar calendar = Calendar.getInstance();
+
+                            SimpleDateFormat currentDate = new SimpleDateFormat("MMM dd, yyyy");
+                            String CurrentDate = currentDate.format(calendar.getTime());
+
+                            SimpleDateFormat currentTime = new SimpleDateFormat("HH:mm:ss a");
+                            String CurrentTime = currentTime.format(calendar.getTime());
+
+                            HashMap<String, String> NotificationMap = new HashMap<>();
+                            NotificationMap.put("groupNum", groupNum);
+                            NotificationMap.put("groupName", groupName);
+                            NotificationMap.put("from", senderUserID);
+                            NotificationMap.put("body", "الرجاء قراءة ختم القران الكريم لمجموعة");
+                            NotificationMap.put("senderName", fullName);
+                            NotificationMap.put("time", CurrentTime);
+                            NotificationMap.put("date", CurrentDate);
+                            MessagesRef.child(receiverUserID).push()
+                                    .setValue(NotificationMap)
+                                    .addOnCompleteListener(new OnCompleteListener<Void>() {
+                                        @Override
+                                        public void onComplete(@NonNull Task<Void> task) {
+                                            if (task.isSuccessful()) {
+                                                MakeToast("تذكير", "تم ارسال رسالة لقارى الجزء ال 30", R.drawable.ok);
+                                            }
+                                        }
+                                    });
+                        }
+                    }
+                    if(!send){
+                        MakeToast("خطا", "لا يوجد قارى للجزء ال 30", R.drawable.error1);
+                    }
+
+                }
+                @Override
+                public void onCancelled(DatabaseError databaseError) {
+                }
+            });
+            return true;
+        }
+
         else if (id == R.id.action_Notification){
             Intent intent=new Intent(GroupMainActivity.this, NotifcationActivity.class);
             intent.putExtra("IsAdmin",IsAdmin);
@@ -681,7 +735,35 @@ public class GroupMainActivity extends AppCompatActivity {
                                         {
                                             if(task.isSuccessful())
                                             {
-                                                MakeToast("تحديث","تم التحديث بنجاح",R.drawable.ok);
+                                                Calendar calendar = Calendar.getInstance();
+
+                                                SimpleDateFormat currentDate = new SimpleDateFormat("MMM dd, yyyy");
+                                                String CurrentDate = currentDate.format(calendar.getTime());
+
+                                                SimpleDateFormat currentTime = new SimpleDateFormat("HH:mm:ss a");
+                                                String CurrentTime = currentTime.format(calendar.getTime());
+
+                                                HashMap<String, String> NotificationMap = new HashMap<>();
+                                                NotificationMap.put("groupNum", usersGroups.get(finalI).getGroupNum());
+                                                NotificationMap.put("groupName", groupName);
+                                                NotificationMap.put("from", senderUserID);
+                                                NotificationMap.put("body", "تم تحديث الاجزاء");
+                                                NotificationMap.put("senderName", fullName);
+                                                NotificationMap.put("time", CurrentTime);
+                                                NotificationMap.put("date", CurrentDate);
+
+                                                String receiverUserID = usersGroups.get(finalI).getUserPhone();
+
+                                                MessagesRef.child(receiverUserID).push()
+                                                        .setValue(NotificationMap)
+                                                        .addOnCompleteListener(new OnCompleteListener<Void>() {
+                                                            @Override
+                                                            public void onComplete(@NonNull Task<Void> task) {
+                                                                if (task.isSuccessful()) {
+                                                                    MakeToast("تحديث","تم التحديث بنجاح",R.drawable.ok);
+                                                                }
+                                                            }
+                                                        });
                                             }
                                             else
                                             {
@@ -757,7 +839,35 @@ public class GroupMainActivity extends AppCompatActivity {
                                         {
                                             if(task.isSuccessful())
                                             {
-                                                MakeToast("تحديث","تم التحديث بنجاح",R.drawable.ok);
+                                                Calendar calendar = Calendar.getInstance();
+
+                                                SimpleDateFormat currentDate = new SimpleDateFormat("MMM dd, yyyy");
+                                                String CurrentDate = currentDate.format(calendar.getTime());
+
+                                                SimpleDateFormat currentTime = new SimpleDateFormat("HH:mm:ss a");
+                                                String CurrentTime = currentTime.format(calendar.getTime());
+
+                                                HashMap<String, String> NotificationMap = new HashMap<>();
+                                                NotificationMap.put("groupNum", usersGroups.get(finalI).getGroupNum());
+                                                NotificationMap.put("groupName", groupName);
+                                                NotificationMap.put("from", senderUserID);
+                                                NotificationMap.put("body", "تم تحديث الاجزاء");
+                                                NotificationMap.put("senderName", fullName);
+                                                NotificationMap.put("time", CurrentTime);
+                                                NotificationMap.put("date", CurrentDate);
+
+                                                String receiverUserID = usersGroups.get(finalI).getUserPhone();
+
+                                                MessagesRef.child(receiverUserID).push()
+                                                        .setValue(NotificationMap)
+                                                        .addOnCompleteListener(new OnCompleteListener<Void>() {
+                                                            @Override
+                                                            public void onComplete(@NonNull Task<Void> task) {
+                                                                if (task.isSuccessful()) {
+                                                                    MakeToast("تحديث","تم التحديث بنجاح",R.drawable.ok);
+                                                                }
+                                                            }
+                                                        });
                                             }
                                             else
                                             {
