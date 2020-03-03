@@ -1,6 +1,7 @@
 package com.dimatechs.werd;
 
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Gravity;
@@ -18,6 +19,7 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -55,6 +57,8 @@ public class MessagesActivity extends AppCompatActivity {
     private RadioButton rbNotSelect, rbSelectAll, rbRead, rbNotRead;
     private String phone;
 
+    FirebaseRecyclerAdapter<Messages, MessageViewHolder> adapter ;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -74,6 +78,7 @@ public class MessagesActivity extends AppCompatActivity {
        ((LinearLayoutManager) layoutManager).setStackFromEnd(true);
         recyclerView.setLayoutManager(layoutManager);
 
+        new ItemTouchHelper(itemTouchHelper).attachToRecyclerView(recyclerView);
 
     }
 
@@ -112,8 +117,7 @@ public class MessagesActivity extends AppCompatActivity {
                         .setQuery(query, Messages.class)
                         .build();
 
-        FirebaseRecyclerAdapter<Messages, MessageViewHolder> adapter =
-                new FirebaseRecyclerAdapter<Messages, MessageViewHolder>(options) {
+        adapter = new FirebaseRecyclerAdapter<Messages, MessageViewHolder>(options) {
 
                     @Override
                     protected void onBindViewHolder(@NonNull final MessageViewHolder holder,final int position, @NonNull final Messages model) {
@@ -121,6 +125,18 @@ public class MessagesActivity extends AppCompatActivity {
                         holder.txtTime.setText(model.getDate() + "\n"+model.getTime());
                         holder.txtMessage.setText(model.getBody());
                         holder.txtGroupName.setText(model.getGroupName());
+                        holder.itemView.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                Intent intent=new Intent(MessagesActivity.this,messageDetailsActivity.class);
+                                intent.putExtra("SenderName",model.getSenderName());
+                                intent.putExtra("Date",model.getDate() + "\n"+model.getTime());
+                                intent.putExtra("Message",model.getBody());
+                                intent.putExtra("GroupName",model.getGroupName());
+                                startActivity(intent);
+                            } 
+                        });
+/*
                         holder.itemView.setOnLongClickListener(new View.OnLongClickListener() {
                             @Override
                             public boolean onLongClick(View v) {
@@ -159,7 +175,7 @@ public class MessagesActivity extends AppCompatActivity {
                                 alertDialog.show();
                                 return false;
                             }
-                        });
+                        });*/
 
 
 
@@ -196,6 +212,30 @@ public class MessagesActivity extends AppCompatActivity {
 
         toast.setView((v));
         toast.show();
-
+        //getRef(direction).getKey();
     }
+    
+    ItemTouchHelper.SimpleCallback itemTouchHelper=new ItemTouchHelper.SimpleCallback(0,ItemTouchHelper.RIGHT | ItemTouchHelper.LEFT) {
+        @Override
+        public boolean onMove(@NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder, @NonNull RecyclerView.ViewHolder target) {
+            return false;
+        }
+
+        @Override
+        public void onSwiped(@NonNull final RecyclerView.ViewHolder viewHolder, int direction) {
+            String messageKey = String.valueOf(viewHolder.itemView.getId());
+            Toast.makeText(MessagesActivity.this, ""+messageKey, Toast.LENGTH_SHORT).show();
+            /*
+            MessagesRef.child(phone).child(messageKey).removeValue()
+                    .addOnCompleteListener(new OnCompleteListener<Void>() {
+                        @Override
+                        public void onComplete(@NonNull Task<Void> task) {
+                            if (task.isSuccessful()) {
+                                MakeToast("حذف", "تم حذف الرسالة !!!  ", R.drawable.error1);
+                            }
+                        }
+                    });
+*/
+        }
+    };
 }

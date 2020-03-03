@@ -22,7 +22,7 @@
                 android:id="@+id/add_group_admin_app_name"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="المجموعات"
+                android:text="انشاء مجموعه جديدة"
                 android:textStyle="italic"
                 android:layout_alignParentTop="true"
                 android:layout_marginTop="40dp"

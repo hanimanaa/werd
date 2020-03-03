@@ -40,6 +40,7 @@ public class AddGroupAdminActivity extends AppCompatActivity {
     private EditText EdgroupName;
     private ProgressDialog loadingBar;
     DatabaseReference groupListRef,ugRef;
+    private TextView title;
 
     private String saveCurrentDate,saveCurrentTime;
     private String RandomKey;
@@ -56,6 +57,7 @@ public class AddGroupAdminActivity extends AppCompatActivity {
 
         AddGroupBtn=(Button)findViewById(R.id.add_group_admin_btn);
         EdgroupName=(EditText)findViewById(R.id.add_groupName_admin);
+        title=(TextView) findViewById(R.id.add_group_admin_app_name);
 
         oldGroupNum=getIntent().getStringExtra("groupNum");
         oldgroupName=getIntent().getStringExtra("groupName");
@@ -72,6 +74,8 @@ public class AddGroupAdminActivity extends AppCompatActivity {
 
         if(oldGroupNum!=null) {
             groupNum = oldGroupNum;
+            title.setText("تحديث اسم المجموعة");
+
         }else {
             // Get Group Auto Num
             groupListRef = FirebaseDatabase.getInstance().getReference().child("GroupAutoNum");
@@ -105,7 +109,7 @@ public class AddGroupAdminActivity extends AppCompatActivity {
         }
         else
         {
-            loadingBar.setTitle("انشاء مجموعه");
+            loadingBar.setTitle("");
             loadingBar.setMessage("انتظر");
             loadingBar.setCanceledOnTouchOutside(false);
             loadingBar.show();
@@ -218,7 +222,9 @@ public class AddGroupAdminActivity extends AppCompatActivity {
                                         MakeToast("اضافة","تمت اضافة المجموعه بنجاح",R.drawable.ok);
                                         loadingBar.dismiss();
                                         Intent intent=new Intent(AddGroupAdminActivity.this,UsersGroupActivity.class);
+                                        finish();
                                         startActivity(intent);
+
                                     }
                                     else
                                     {
@@ -287,7 +293,9 @@ public class AddGroupAdminActivity extends AppCompatActivity {
                                                 MakeToast("تحديث","تم التحديث بنجاح",R.drawable.ok);
                                                 loadingBar.dismiss();
                                                 Intent intent=new Intent(AddGroupAdminActivity.this,UsersGroupActivity.class);
+                                                finish();
                                                 startActivity(intent);
+
                                             }
                                             else
                                             {
