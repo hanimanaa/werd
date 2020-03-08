@@ -54,6 +54,7 @@ public class ScheduleNotification extends BroadcastReceiver {
                         receiverUserID = usersGroups.get(i).getUserPhone();
                         SendMessage(receiverUserID);
                     }
+                    SendCopyMessageToAdmin("كل المجموعة");
                 }
                 else if(receiver.equals("read")){
                     for (int i = 0; i < usersGroups.size(); i++)
@@ -63,6 +64,7 @@ public class ScheduleNotification extends BroadcastReceiver {
                             SendMessage(receiverUserID);
                         }
                     }
+                    SendCopyMessageToAdmin("من قرا الورد");
                 }
                 else {
                     for (int i = 0; i < usersGroups.size(); i++)
@@ -72,6 +74,7 @@ public class ScheduleNotification extends BroadcastReceiver {
                             SendMessage(receiverUserID);
                         }
                     }
+                    SendCopyMessageToAdmin("من لم يقرا الورد");
                 }
             }
 
@@ -81,6 +84,29 @@ public class ScheduleNotification extends BroadcastReceiver {
             }
         });
     }
+
+    // send copy to admin
+    private void SendCopyMessageToAdmin (String r) {
+
+        Calendar calendar = Calendar.getInstance();
+        SimpleDateFormat currentDate = new SimpleDateFormat("MMM dd, yyyy");
+        String CurrentDate = currentDate.format(calendar.getTime());
+        SimpleDateFormat currentTime = new SimpleDateFormat("HH:mm:ss a");
+        String CurrentTime = currentTime.format(calendar.getTime());
+
+        HashMap<String, String> AdminMap = new HashMap<>();
+        AdminMap.put("groupNum", groupNum);
+        AdminMap.put("groupName", groupName);
+        AdminMap.put("from", senderUserID);
+        AdminMap.put("body", "ارسلت الى " +r+"\n \n" + body);
+        AdminMap.put("senderName"," نسخة للمدير-"+ fullName);
+        AdminMap.put("time", CurrentTime);
+        AdminMap.put("date", CurrentDate);
+        MessagesRef.child(senderUserID).push().setValue(AdminMap);
+
+    }
+
+
 
     private void SendMessage (String receiverUserID) {
         Calendar calendar = Calendar.getInstance();

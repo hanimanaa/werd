@@ -107,6 +107,19 @@ public class NotifcationActivity extends AppCompatActivity {
                     if (checkedUsers.size() == 0) {
                         MakeToast("","يجب اختيار المرسل لهم  !!!",R.drawable.error1);
                     } else {
+
+                        // send copy to admin
+                        HashMap<String, String> AdminMap = new HashMap<>();
+                        AdminMap.put("groupNum", groupNum);
+                        AdminMap.put("groupName", groupname);
+                        AdminMap.put("from", senderUserID);
+                        AdminMap.put("body", "ارسلت الى " +checkedUsers.size()+" اعضاء"+"\n \n" + message);
+                        AdminMap.put("senderName"," نسخة للمدير-"+ fullName);
+                        AdminMap.put("time", CurrentTime);
+                        AdminMap.put("date", CurrentDate);
+                        MessagesRef.child(senderUserID).push().setValue(AdminMap);
+
+
                         for (int i = 0; i < checkedUsers.size(); i++) {
 
                             HashMap<String, String> NotificationMap = new HashMap<>();
