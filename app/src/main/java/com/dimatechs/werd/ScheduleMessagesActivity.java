@@ -223,11 +223,13 @@ public class ScheduleMessagesActivity extends AppCompatActivity {
                                                             ScheduleIntent.putExtra("body", etMessage.getText().toString());
                                                             ScheduleIntent.putExtra("receiver", receiver);
 
+
                                                             calendar.set(Calendar.HOUR_OF_DAY, h);
                                                             calendar.set(Calendar.MINUTE, m);
 
                                                             pendingIntent = PendingIntent.getBroadcast(ScheduleMessagesActivity.this, Integer.parseInt(requestCode), ScheduleIntent, PendingIntent.FLAG_UPDATE_CURRENT);
-                                                            AutoAlarmManager.set(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), pendingIntent);
+                                                            AutoAlarmManager.setRepeating(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(),24*60*60*1000, pendingIntent);
+                                                            //AutoAlarmManager.set(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), pendingIntent);
                                                             Log.d("sc",String.valueOf(x-1));
 
                                                             loadNotification();

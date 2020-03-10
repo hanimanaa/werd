@@ -426,7 +426,8 @@ public class GroupMainActivity extends AppCompatActivity {
                                             String s=sdf.format(myCalender.getTime());
 
                                             pendingIntent = PendingIntent.getBroadcast(GroupMainActivity.this,0,AutoIntent,PendingIntent.FLAG_UPDATE_CURRENT);
-                                            AutoAlarmManager.set(AlarmManager.RTC_WAKEUP,calendar.getTimeInMillis(),pendingIntent);
+                                          //  AutoAlarmManager.set(AlarmManager.RTC_WAKEUP,calendar.getTimeInMillis(),pendingIntent);
+                                            AutoAlarmManager.setRepeating(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(),24*60*60*1000, pendingIntent);
 
 
                                             item.setTitle("التحديث القادم : "+s);
