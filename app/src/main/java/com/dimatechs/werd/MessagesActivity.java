@@ -2,6 +2,7 @@ package com.dimatechs.werd;
 
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Gravity;
@@ -120,6 +121,14 @@ public class MessagesActivity extends AppCompatActivity {
 
                     @Override
                     protected void onBindViewHolder(@NonNull final MessageViewHolder holder,final int position, @NonNull final Messages model) {
+                        if(model.getFrom().equals(phone))
+                        {
+                            holder.message_background.setBackgroundColor(Color.parseColor("#f2e2cd"));
+                        }
+                        else
+                        {
+                            holder.message_background.setBackgroundColor(Color.parseColor("#ffffff"));
+                        }
                         holder.txtName.setText(model.getSenderName());
                         holder.txtTime.setText(model.getDate() + "\n"+model.getTime());
                         holder.txtMessage.setText(model.getBody());
